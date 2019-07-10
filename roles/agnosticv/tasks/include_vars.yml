@@ -1,0 +1,29 @@
+---
+- include_vars:
+    name: merged_vars{{ idx }}
+    dir: "{{ item.dir }}"
+    files_matching: "{{ item.pattern }}"
+    depth: 1
+    extensions:
+      - yaml
+      - yml
+  loop:
+    - dir: "{{ repo_path }}"
+      pattern: ^common
+    - dir: "{{ repo_path }}/{{ account }}"
+      pattern: ^common
+    - dir: "{{ repo_path }}/{{ account }}"
+      pattern: ^account
+    - dir: "{{ repo_path }}/{{ account }}/{{ catalog_item }}"
+      pattern: ^common
+    - dir: "{{ repo_path }}/{{ account }}/{{ catalog_item }}"
+      pattern: ^{{ stage }}
+  loop_control:
+      index_var: idx
+
+# Merge the merged_vars0 .. merged_vars4 variables
+- set_fact:
+    merged_vars: "{{ vars.merged_vars0 | combine(vars.merged_vars1, vars.merged_vars2, vars.merged_vars3, vars.merged_vars4, recursive=True) }}"
+
+- debug:
+    var: merged_vars

@@ -1,0 +1,22 @@
+---
+- debug:
+    msg: |
+      {{ repo_path }} > {{ account }} > {{ catalog_item }} > {{ stage }}
+
+- include_tasks: include_vars.yml
+
+- name: Create output_dir directory
+  file:
+    state: directory
+    path: "{{ output_dir }}"
+
+- name: Generate Catalog item
+  template:
+    src: catalog_item.yml.j2
+    dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
+
+- name: Create OpenShift template object
+  k8s:
+    state: present
+    src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
+    namespace: agnosticv-operator

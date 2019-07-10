@@ -1,0 +1,6 @@
+---
+- version: v1
+  group: gpte.example.com
+  kind: AgnosticVRepo
+  role: /opt/ansible/roles/agnosticv
+  reconcilePeriod: 1h

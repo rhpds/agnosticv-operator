@@ -1,0 +1,8 @@
+apiVersion: gpte.example.com/v1
+kind: AgnosticVRepo
+metadata:
+  name: gpte-agnosticv
+spec:
+  url: git@github.com:redhat-gpe/agnosticv.git
+  ref: master
+  sshKey: agnosticv-operator-sshkey

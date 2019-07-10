@@ -1,0 +1,13 @@
+---
+# defaults file for agnosticv
+
+default_description: |-
+  Missing description, please define catalog_description in agnosticv
+default_message: |-
+  Missing message, please define catalog_message in agnosticv
+
+default_labels:
+  generated_by: agnosticv
+
+repo_path: /opt/ansible/agnosticv
+output_dir: /tmp/output_dir

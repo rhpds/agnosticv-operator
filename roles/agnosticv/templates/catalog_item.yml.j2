@@ -1,0 +1,29 @@
+---
+apiVersion: template.openshift.io/v1
+kind: templates
+metadata:
+  name: {{ account }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}
+  annotations:
+    description: "{{ vars.merged_vars.catalog_description | d(default_description) }}"
+  openshift.io/provider-display-name: Red Hat, Inc.
+  labels:
+    samples.operator.openshift.io/managed: "true"
+  tags: quickstart,babylon,{{ account }},{{ vars.merged_vars.catalog_tags | d('') }}
+message: "{{ vars.merged_vars.catalog_message | d(default_message) }}"
+objects:
+- apiVersion: gpte.redhat.com/v1
+  kind: AnarchySubject
+  metadata:
+    generateName: babylon1-agnosticd-
+  spec:
+    governor: babylon1-agnosticd
+    parameters:
+{% for key in vars.merged_vars %}
+      {{ key }}: {{ vars.merged_vars[key] | to_json }}
+{% endfor %}
+{% for param in vars.merged_vars.catalog_parameters | d([]) %}
+      {{ param.name | lower }}: ${ {{ param.name }} }
+{% endfor %}
+
+parameters: {{ vars.merged_vars.catalog_parameters | d([]) | to_json }}
+labels: {{ default_labels | combine(vars.merged_vars.catalog_labels | d({})) | to_json }}
