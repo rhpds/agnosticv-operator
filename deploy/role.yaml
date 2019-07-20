@@ -6,13 +6,6 @@ metadata:
 rules:
   - apiGroups:
     - ""
-    - template.openshift.io
-    resources:
-    - templates
-    verbs:
-      - '*'
-  - apiGroups:
-    - ""
     resources:
     - pods
     - services
