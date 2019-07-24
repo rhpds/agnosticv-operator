@@ -12,17 +12,25 @@ metadata:
 message: "{{ vars.merged_vars.catalog_message | d(default_message) }}"
 objects:
 - apiVersion: gpte.redhat.com/v1
-  kind: AnarchySubject
+  kind: ResourceClaim
   metadata:
-    generateName: babylon1-agnosticd-
+    generateName: anarchy-subject
   spec:
-    governor: babylon1-agnosticd
-    parameters:
+    template:
+      apiVersion: gpte.redhat.com/v1
+      kind: AnarchySubject
+      metadata:
+        generateName: babylon1-agnosticd-
+        labels:
+          governor: test
+      spec:
+        governor: babylon1-agnosticd
+        parameters:
 {% for key in vars.merged_vars %}
-      {{ key }}: {{ vars.merged_vars[key] | to_json }}
+          {{ key }}: {{ vars.merged_vars[key] | to_json }}
 {% endfor %}
 {% for param in vars.merged_vars.catalog_parameters | d([]) %}
-      {{ param.name | lower }}: ${ {{ param.name }} }
+          {{ param.name | lower }}: ${ {{ param.name }} }
 {% endfor %}
 
 parameters: {{ vars.merged_vars.catalog_parameters | d([]) | to_json }}
