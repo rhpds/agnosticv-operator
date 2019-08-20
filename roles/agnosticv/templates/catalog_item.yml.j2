@@ -22,7 +22,7 @@ objects:
       metadata:
         generateName: {{ account | replace('_', '-') }}.{{ catalog_item | lower | replace('_', '-') }}.{{ stage }}-
         labels:
-          governor: test
+          governor: {{ account | replace('_', '-') }}.{{ catalog_item | lower | replace('_', '-') }}.{{ stage }}
       spec:
         governor: {{ account | replace('_', '-') }}.{{ catalog_item | lower | replace('_', '-') }}.{{ stage }}
         parameters:
