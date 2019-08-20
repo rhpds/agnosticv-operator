@@ -62,6 +62,7 @@
     loop_var: c_i
     label: c_i.path
   include_tasks: generate_catalog_item.yml
+  when: account != 'EXAMPLE_ACCOUNT'
   vars:
     account: "{{ c_i.path.split('/')[-3] }}"
     catalog_item: "{{ c_i.path.split('/')[-2] }}"

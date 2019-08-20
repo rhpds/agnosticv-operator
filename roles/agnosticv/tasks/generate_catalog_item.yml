@@ -15,15 +15,21 @@
     src: catalog_item.yml.j2
     dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
 
+- name: Generate Catalog item governor
+  template:
+    src: governor.yaml.j2
+    dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_governor.yml"
+
 - set_fact:
     _namespace: "agnosticv-operator"
 
 - name: Use namespace defined in the catalog item YAML
   set_fact:
-    _namespace: "{{ merged_vars.catalog_namespace }}"
+    _namespace: "{{ merged_vars.agnosticv_meta.catalog_namespace }}"
   when:
-    - '"catalog_namespace" in merged_vars'
-    - merged_vars.catalog_namespace != ''
+    - '"agnosticv_meta" in merged_vars'
+    - '"catalog_namespace" in merged_vars.agnosticv_meta'
+    - merged_vars.agnosticv_meta.catalog_namespace != ''
 
 - name: Create Namespace
   k8s:
@@ -37,3 +43,9 @@
     state: present
     src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
     namespace: "{{ _namespace }}"
+
+- name: Create OpenShift Goverbor object
+  k8s:
+    state: present
+    namespace: "{{ _namespace }}"
+    src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_governor.yml"
