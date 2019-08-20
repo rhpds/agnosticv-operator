@@ -20,7 +20,6 @@ rules:
     - template.openshift.io
     resources:
     - templates
-    - anarchygovernors
     verbs:
       - '*'
 
@@ -28,7 +27,6 @@ rules:
     - ""
     - gpte.redhat.com
     resources:
-    - templates
     - anarchygovernors
     verbs:
       - '*'
