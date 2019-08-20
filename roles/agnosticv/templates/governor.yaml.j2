@@ -2,7 +2,7 @@
 apiVersion: gpte.redhat.com/v1
 kind: AnarchyGovernor
 metadata:
-  name: {{ account | replace('_', '-') }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}
+  name: {{ _name }}
   namespace: anarchy-operator
 spec:
   api: babylon

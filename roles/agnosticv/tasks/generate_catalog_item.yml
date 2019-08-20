@@ -14,11 +14,15 @@
   template:
     src: catalog_item.yml.j2
     dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
+  vars:
+    _name: "{{ account | replace('_', '-') }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}"
 
 - name: Generate Catalog item governor
   template:
     src: governor.yaml.j2
     dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_governor.yml"
+  vars:
+    _name: "{{ account | replace('_', '-') }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}"
 
 - set_fact:
     _namespace: "agnosticv-operator"

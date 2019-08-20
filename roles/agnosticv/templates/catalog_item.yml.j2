@@ -2,7 +2,7 @@
 apiVersion: template.openshift.io/v1
 kind: templates
 metadata:
-  name: {{ account | replace('_', '-') }}.{{ catalog_item | lower | replace('_', '-') }}.{{ stage }}
+  name: {{ _name }}
   annotations:
     description: "{{ vars.merged_vars.agnosticv_meta.catalog_description | d(default_description) }}"
   openshift.io/provider-display-name: Red Hat, Inc.
@@ -20,11 +20,11 @@ objects:
       apiVersion: gpte.redhat.com/v1
       kind: AnarchySubject
       metadata:
-        generateName: {{ account | replace('_', '-') }}.{{ catalog_item | lower | replace('_', '-') }}.{{ stage }}-
+        generateName: {{ _name }}-
         labels:
-          governor: {{ account | replace('_', '-') }}.{{ catalog_item | lower | replace('_', '-') }}.{{ stage }}
+          governor: {{ _name }}
       spec:
-        governor: {{ account | replace('_', '-') }}.{{ catalog_item | lower | replace('_', '-') }}.{{ stage }}
+        governor: {{ _name }}
         parameters:
 {% for key in vars.merged_vars if
   key in vars.merged_vars.agnosticv_meta.catalog_parameters | d([]) | json_query('[].name') %}
