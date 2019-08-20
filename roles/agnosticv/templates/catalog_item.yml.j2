@@ -26,12 +26,8 @@ objects:
       spec:
         governor: {{ _name }}
         parameters:
-{% for key in vars.merged_vars if
-  key in vars.merged_vars.agnosticv_meta.catalog_parameters | d([]) | json_query('[].name') %}
-    {{ key }}: {{ vars.merged_vars[key] | to_json }}
-{% endfor %}
 {% for param in vars.merged_vars.agnosticv_meta.catalog_parameters | d([]) %}
-          {{ param.name | lower }}: ${ {{ param.name }} }
+          {{ param.name | lower }}: {{ '${{' ~ param.name ~ '}}' }}
 {% endfor %}
 
 parameters: {{ vars.merged_vars.agnosticv_meta.catalog_parameters | d([]) | to_json }}
