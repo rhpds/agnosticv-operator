@@ -4,6 +4,7 @@ kind: AnarchyGovernor
 metadata:
   name: {{ _name }}
   namespace: anarchy-operator
+  resourceVersion: "{{ current_resource_version }}"
 spec:
   api: babylon
 
@@ -16,10 +17,10 @@ spec:
 {% endfor %}
 {% for secret in vars.merged_vars.agnosticv_meta.secrets %}
     aws_access_key_id:
-      SecretName: {{ secret }}
+      secretName: {{ secret }}
       secretKey: aws_access_key_id
     aws_secret_access_key:
-      SecretName: {{ secret }}
+      secretName: {{ secret }}
       secretKey: aws_secret_access_key
 {% endfor %}
 
