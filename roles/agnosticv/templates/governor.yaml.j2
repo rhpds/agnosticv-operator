@@ -9,7 +9,9 @@ spec:
 
   parameters:
 {% for key in vars.merged_vars if
-  key not in vars.merged_vars.agnosticv_meta.catalog_parameters | d([]) | json_query('[].name') %}
+  key not in vars.merged_vars.agnosticv_meta.catalog_parameters | d([]) | json_query('[].name') and
+  key != 'agnosticv_meta'
+  %}
     {{ key }}: {{ vars.merged_vars[key] | to_json }}
 {% endfor %}
 {% for secret in vars.merged_vars.agnosticv_meta.secrets %}
