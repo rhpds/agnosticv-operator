@@ -10,19 +10,22 @@
     state: directory
     path: "{{ output_dir }}"
 
+- set_fact:
+    catalog_item_name: "{{ account | replace('_', '-') }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}"
+
 - name: Generate Catalog item
   template:
     src: catalog_item.yml.j2
     dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
   vars:
-    _name: "{{ account | replace('_', '-') }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}"
+    _name: "{{ catalog_item_name }}"
 
 - name: Generate Catalog item governor
   template:
     src: governor.yaml.j2
     dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_governor.yml"
   vars:
-    _name: "{{ account | replace('_', '-') }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}"
+    _name: "{{ catalog_item_name }}"
 
 - set_fact:
     _namespace: "agnosticv-operator"
@@ -42,16 +45,24 @@
     kind: Namespace
     state: present
 
+- name: Delete OpenShift template object
+  k8s:
+    state: absent
+    src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
+    namespace: "{{ _namespace }}"
+
 - name: Create OpenShift template object
   k8s:
     state: present
     src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
     namespace: "{{ _namespace }}"
-    force: true
 
-- name: Create OpenShift Goverbor object
+- name: Delete OpenShift Governor object
+  k8s:
+    state: absent
+    src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_governor.yml"
+
+- name: Create OpenShift Governor object
   k8s:
     state: present
-    namespace: "{{ _namespace }}"
     src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_governor.yml"
-    force: true
