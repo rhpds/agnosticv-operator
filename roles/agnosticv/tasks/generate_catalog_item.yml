@@ -47,9 +47,11 @@
     state: present
     src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
     namespace: "{{ _namespace }}"
+    force: true
 
 - name: Create OpenShift Goverbor object
   k8s:
     state: present
     namespace: "{{ _namespace }}"
     src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_governor.yml"
+    force: true
