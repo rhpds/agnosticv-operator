@@ -16,6 +16,7 @@ parameters:
 - name: AGNOSTICV_SCM_SSH_KEY_SECRET
   value: agnosticv-repo-sshkey
 
+objects:
 - apiVersion: gpte.redhat.com/v1
   kind: AgnosticVRepo
   metadata:

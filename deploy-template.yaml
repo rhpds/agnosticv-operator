@@ -141,9 +141,9 @@ objects:
             value: ${AGNOSTICV_NAME}
           resources: {}
         serviceAccountName: ${AGNOSTICV_NAME}
-      volumes:
-        - name: runner
-          emptyDir: {}
+        volumes:
+          - name: runner
+            emptyDir: {}
 
 - kind: ClusterRole
   apiVersion: v1
@@ -177,7 +177,7 @@ objects:
     - '*'
 
 - kind: ClusterRoleBinding
-  apiVersion: rbac.automation.k8s.io/v1
+  apiVersion: rbac.authorization.k8s.io/v1
   metadata:
     name: ${AGNOSTICV_NAME}-clusterrolebinding
   roleRef:
