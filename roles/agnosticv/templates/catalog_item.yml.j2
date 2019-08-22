@@ -12,7 +12,7 @@ metadata:
   tags: quickstart,babylon,{{ account | replace('_', '-') }},{{ vars.merged_vars.agnosticv_meta.catalog_tags | d('') }}
 message: "{{ vars.merged_vars.agnosticv_meta.catalog_message | d(default_message) }}"
 objects:
-- apiVersion: gpte.redhat.com/v1
+- apiVersion: poolboy.gpte.redhat.com/v1
   kind: ResourceClaim
   metadata:
     generateName: anarchy-subject-
@@ -22,7 +22,7 @@ objects:
       kind: AnarchySubject
       metadata:
         annotations:
-          gpte.redhat.com/resource-provider-name: babylon
+          poolboy.gpte.redhat.com/resource-provider-name: babylon
         generateName: {{ _name }}-
         labels:
           governor: {{ _name }}
