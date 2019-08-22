@@ -1,0 +1,26 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  annotations:
+    description: agnosticv-repo deploy
+  name: agnosticv-repo-deploy
+
+parameters:
+- name: AGNOSTICV_REPO_NAME
+  value: agnosticv-repo
+- name: AGNOSTICV_SCM_URL
+  required: true
+- name: AGNOSTICV_SCM_REF
+  value: master
+- name: AGNOSTICV_SCM_SSH_KEY_SECRET
+  value: agnosticv-repo-sshkey
+
+- apiVersion: gpte.redhat.com/v1
+  kind: AgnosticVRepo
+  metadata:
+    name: ${AGNOSTICV_REPO_NAME}
+  spec:
+    url: ${AGNOSTICV_SCM_URL}
+    ref: ${AGNOSTICV_SCM_REF}
+    sshKey: ${AGNOSTICV_SCM_SSH_KEY_SECRET}

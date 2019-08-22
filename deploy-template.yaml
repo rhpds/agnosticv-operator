@@ -1,0 +1,210 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  annotations:
+    description: agnosticv-operator deploy
+  name: agnosticv-operator-deploy
+
+parameters:
+- name: AGNOSTICV_IMAGE
+  value: quay.io/gpte-devops-automation/agnosticv-operator:0.0.5
+- name: AGNOSTICV_NAME
+  value: agnosticv-operator
+- name: AGNOSTICV_NAMESPACE
+  value: agnosticv-operator
+
+objects:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: ${AGNOSTICV_NAMESPACE}
+    annotations:
+      openshift-provision/action: create
+
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: ${AGNOSTICV_NAME}
+    namespace: ${AGNOSTICV_NAMESPACE}
+
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
+  metadata:
+    creationTimestamp: null
+    name: ${AGNOSTICV_NAME}
+  rules:
+  - apiGroups:
+    - ""
+    resources:
+    - pods
+    - services
+    - endpoints
+    - persistentvolumeclaims
+    - events
+    - configmaps
+    - secrets
+    verbs:
+    - '*'
+  - apiGroups:
+    - apps
+    resources:
+    - deployments
+    - daemonsets
+    - replicasets
+    - statefulsets
+    verbs:
+    - '*'
+  - apiGroups:
+    - monitoring.coreos.com
+    resources:
+    - servicemonitors
+    verbs:
+    - get
+    - create
+  - apiGroups:
+    - apps
+    resourceNames:
+    - agnosticv-operator
+    resources:
+    - deployments/finalizers
+    verbs:
+    - update
+  - apiGroups:
+    - gpte.example.com
+    resources:
+    - '*'
+    verbs:
+    - '*'
+
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: ${AGNOSTICV_NAME}
+    namespace: ${AGNOSTICV_NAMESPACE}
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: Role
+    name: ${AGNOSTICV_NAME}
+  subjects:
+  - kind: ServiceAccount
+    name: ${AGNOSTICV_NAME}
+    namespace: ${AGNOSTICV_NAMESPACE}
+
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      name: ${AGNOSTICV_NAME}
+    name: ${AGNOSTICV_NAME}
+    namespace: ${AGNOSTICV_NAMESPACE}
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        name: ${AGNOSTICV_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${AGNOSTICV_NAME}
+      spec:
+        containers:
+        - name: ansible
+          command:
+          - /usr/local/bin/ao-logs
+          - /tmp/ansible-operator/runner
+          - stdout
+          image: ${AGNOSTICV_IMAGE}
+          imagePullPolicy: Always
+          volumeMounts:
+          - mountPath: /tmp/ansible-operator/runner
+            name: runner
+            readOnly: true
+        - name: operator
+          image: ${AGNOSTICV_IMAGE}
+          imagePullPolicy: Always
+          volumeMounts:
+          - mountPath: /tmp/ansible-operator/runner
+            name: runner
+          env:
+          - name: WATCH_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: OPERATOR_NAME
+            value: ${AGNOSTICV_NAME}
+          resources: {}
+        serviceAccountName: ${AGNOSTICV_NAME}
+      volumes:
+        - name: runner
+          emptyDir: {}
+
+- kind: ClusterRole
+  apiVersion: v1
+  metadata:
+    name: ${AGNOSTICV_NAME}
+  rules:
+  - apiGroups:
+    - ""
+    resources:
+    - namespaces
+    - namespaces/status
+    verbs:
+    - get
+    - list
+    - watch
+    - create
+    - patch
+  - apiGroups:
+    - ""
+    - template.openshift.io
+    resources:
+    - templates
+    verbs:
+    - "*"
+  - apiGroups:
+    - ""
+    - gpte.redhat.com
+    resources:
+    - anarchygovernors
+    verbs:
+    - '*'
+
+- kind: ClusterRoleBinding
+  apiVersion: rbac.automation.k8s.io/v1
+  metadata:
+    name: ${AGNOSTICV_NAME}-clusterrolebinding
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: ${AGNOSTICV_NAME}
+  subjects:
+  - kind: ServiceAccount
+    name: ${AGNOSTICV_NAME}
+    namespace: ${AGNOSTICV_NAMESPACE}
+
+- apiVersion: apiextensions.k8s.io/v1beta1
+  kind: CustomResourceDefinition
+  metadata:
+    name: agnosticvrepos.gpte.redhat.com
+  spec:
+    group: gpte.redhat.com
+    names:
+      kind: AgnosticVRepo
+      listKind: AgnosticVRepoList
+      plural: agnosticvrepos
+      singular: agnosticvrepo
+    scope: Namespaced
+    subresources:
+      status: {}
+    version: v1
+    versions:
+    - name: v1
+      served: true
+      storage: true
