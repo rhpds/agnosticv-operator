@@ -5,75 +5,79 @@
 
 - include_tasks: include_vars.yml
 
-- name: Create output_dir directory
-  file:
-    state: directory
-    path: "{{ output_dir }}"
+# If the catalog item defines some __meta__ then it's a candidate
+- when: "'__meta__' in merged_vars"
+  block:
+    - name: Create output_dir directory
+      file:
+        state: directory
+        path: "{{ output_dir }}"
 
-- set_fact:
-    catalog_item_name: "{{ account | replace('_', '-') }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}"
+    - set_fact:
+        catalog_item_name: "{{ account | replace('_', '-') }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}"
 
-- set_fact:
-    _namespace: "agnosticv-operator"
+    - set_fact:
+        _namespace: "agnosticv-operator"
 
-- name: Use namespace defined in the catalog item YAML
-  set_fact:
-    _namespace: "{{ merged_vars.agnosticv_meta.catalog_namespace }}"
-  when:
-    - '"agnosticv_meta" in merged_vars'
-    - '"catalog_namespace" in merged_vars.agnosticv_meta'
-    - merged_vars.agnosticv_meta.catalog_namespace != ''
+    - name: Use namespace defined in the catalog item YAML
+      set_fact:
+        _namespace: "{{ merged_vars.__meta__.catalog.namespace }}"
+      when:
+        - '"__meta__" in merged_vars'
+        - '"catalog" in merged_vars.__meta__'
+        - '"namespace" in merged_vars.__meta__.catalog'
+        - merged_vars.__meta__.catalog.namespace != ''
 
-- name: Get k8s fact for the template
-  k8s_facts:
-    api_version: template.openshift.io/v1
-    kind: templates
-    name: "{{ catalog_item_name }}"
-    namespace: "{{ _namespace }}"
-  register: template_facts
+    - name: Get k8s fact for the template
+      k8s_facts:
+        api_version: template.openshift.io/v1
+        kind: templates
+        name: "{{ catalog_item_name }}"
+        namespace: "{{ _namespace }}"
+      register: template_facts
 
-- name: Generate Catalog item
-  template:
-    src: catalog_item.yml.j2
-    dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
-  vars:
-    _name: "{{ catalog_item_name }}"
-    current_resource_version: >-
-      {{ template_facts.resources[0].metadata.resourceVersion if template_facts.resources else '' }}
+    - name: Generate Catalog item
+      template:
+        src: catalog_item.yml.j2
+        dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
+      vars:
+        _name: "{{ catalog_item_name }}"
+        current_resource_version: >-
+          {{ template_facts.resources[0].metadata.resourceVersion if template_facts.resources else '' }}
 
-- name: Get k8s fact for the Governor
-  k8s_facts:
-    api_version: gpte.redhat.com/v1
-    kind: AnarchyGovernor
-    name: "{{ catalog_item_name }}"
-    namespace: anarchy-operator
-  register: governor_facts
+    - name: Get k8s fact for the Governor
+      k8s_facts:
+        api_version: gpte.redhat.com/v1
+        kind: AnarchyGovernor
+        name: "{{ catalog_item_name }}"
+        namespace: anarchy-operator
+      register: governor_facts
 
-- name: Generate Catalog item governor
-  template:
-    src: governor.yaml.j2
-    dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_governor.yml"
-  vars:
-    _name: "{{ catalog_item_name }}"
-    current_resource_version: >-
-      {{ governor_facts.resources[0].metadata.resourceVersion if governor_facts.resources else '' }}
+    - name: Generate Catalog item governor
+      template:
+        src: governor.yaml.j2
+        dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_governor.yml"
+      vars:
+        _name: "{{ catalog_item_name }}"
+        current_resource_version: >-
+          {{ governor_facts.resources[0].metadata.resourceVersion if governor_facts.resources else '' }}
 
-- name: Create Namespace
-  k8s:
-    name: "{{ _namespace }}"
-    api_version: v1
-    kind: Namespace
-    state: present
+    - name: Create Namespace
+      k8s:
+        name: "{{ _namespace }}"
+        api_version: v1
+        kind: Namespace
+        state: present
 
-- name: Create / Update OpenShift template object
-  k8s:
-    state: present
-    src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
-    namespace: "{{ _namespace }}"
-    force: yes
+    - name: Create / Update OpenShift template object
+      k8s:
+        state: present
+        src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
+        namespace: "{{ _namespace }}"
+        force: yes
 
-- name: Create / Update OpenShift Governor object
-  k8s:
-    state: present
-    src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_governor.yml"
-    force: yes
+    - name: Create / Update OpenShift Governor object
+      k8s:
+        state: present
+        src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_governor.yml"
+        force: yes

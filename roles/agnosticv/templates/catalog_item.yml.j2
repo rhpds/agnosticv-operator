@@ -4,13 +4,13 @@ kind: templates
 metadata:
   name: {{ _name }}
   annotations:
-    description: "{{ vars.merged_vars.agnosticv_meta.catalog_description | d(default_description) }}"
+    description: "{{ vars.merged_vars.__meta__.catalog.description | d(default_description) }}"
   resourceVersion: "{{ current_resource_version }}"
   openshift.io/provider-display-name: Red Hat, Inc.
   labels:
     samples.operator.openshift.io/managed: "true"
-  tags: quickstart,babylon,{{ account | replace('_', '-') }},{{ vars.merged_vars.agnosticv_meta.catalog_tags | d('') }}
-message: "{{ vars.merged_vars.agnosticv_meta.catalog_message | d(default_message) }}"
+  tags: quickstart,babylon,{{ account | replace('_', '-') }},{{ vars.merged_vars.__meta__.catalog.tags | d('') }}
+message: "{{ vars.merged_vars.__meta__.catalog.message | d(default_message) }}"
 objects:
 - apiVersion: poolboy.gpte.redhat.com/v1
   kind: ResourceClaim
@@ -29,9 +29,9 @@ objects:
       spec:
         governor: {{ _name }}
         parameters:
-{% for param in vars.merged_vars.agnosticv_meta.catalog_parameters | d([]) %}
+{% for param in vars.merged_vars.__meta__.catalog.parameters | d([]) %}
           {{ param.name | lower }}: {{ '${{' ~ param.name ~ '}}' }}
 {% endfor %}
 
-parameters: {{ vars.merged_vars.agnosticv_meta.catalog_parameters | d([]) | to_json }}
-labels: {{ default_labels | combine(vars.merged_vars.agnosticv_meta.catalog_labels | d({})) | to_json }}
+parameters: {{ vars.merged_vars.__meta__.catalog.parameters | d([]) | to_json }}
+labels: {{ default_labels | combine(vars.merged_vars.__meta__.catalog.labels | d({})) | to_json }}
