@@ -71,7 +71,7 @@ objects:
     verbs:
     - update
   - apiGroups:
-    - gpte.example.com
+    - gpte.redhat.com
     resources:
     - '*'
     verbs:
