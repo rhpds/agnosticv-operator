@@ -41,7 +41,7 @@ rules:
     verbs:
     - update
   - apiGroups:
-    - gpte.example.com
+    - gpte.gpte.com
     resources:
     - '*'
     verbs:
