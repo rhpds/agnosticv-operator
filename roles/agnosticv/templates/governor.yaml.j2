@@ -23,7 +23,7 @@ spec:
 {% endfor %}
 
   subjectEventHandlers:
-  - event: add
+  - event: create
     tasks:
     - name: Set state provision-scheduled in subject status
       anarchy_subject_update:
