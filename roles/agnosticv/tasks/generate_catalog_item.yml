@@ -47,7 +47,7 @@
 
     - name: Get k8s fact for the Governor
       k8s_facts:
-        api_version: gpte.redhat.com/v1
+        api_version: anarchy.gpte.redhat.com/v1
         kind: AnarchyGovernor
         name: "{{ catalog_item_name }}"
         namespace: anarchy-operator
