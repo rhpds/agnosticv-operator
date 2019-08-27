@@ -5,10 +5,11 @@ metadata:
   name: {{ _name }}
   annotations:
     description: "{{ vars.merged_vars.__meta__.catalog.description | d(default_description) }}"
+    template.openshift.io/bindable: "false"
   resourceVersion: "{{ current_resource_version }}"
   openshift.io/provider-display-name: Red Hat, Inc.
   labels:
-    samples.operator.openshift.io/managed: "true"
+    gpte.redhat.com/agnosticv: "true"
   tags: quickstart,babylon,{{ account | replace('_', '-') }},{{ vars.merged_vars.__meta__.catalog.tags | d('') }}
 message: "{{ vars.merged_vars.__meta__.catalog.message | d(default_message) }}"
 objects:
