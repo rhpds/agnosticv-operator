@@ -72,7 +72,7 @@ objects:
     verbs:
     - update
   - apiGroups:
-    - anarchy.gpte.redhat.com
+    - gpte.redhat.com
     resources:
     - '*'
     verbs:
