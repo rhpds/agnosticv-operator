@@ -114,7 +114,7 @@ spec:
       parameters:
         ACTION: stop
     vars:
-      deployer_entry_point: ansible/lifecycle.yml
+      deployer_entry_point: ansible/lifecycle_entry_point.yml
     eventHandlers:
     - event: started
       tasks:
@@ -174,7 +174,7 @@ spec:
       parameters:
         ACTION: start
     vars:
-      deployer_entry_point: ansible/lifecycle.yml
+      deployer_entry_point: ansible/lifecycle_entry_point.yml
     eventHandlers:
     - event: started
       tasks:
