@@ -4,14 +4,14 @@ kind: templates
 metadata:
   name: {{ _name }}
   annotations:
-    description: "{{ vars.merged_vars.__meta__.catalog.description | d(default_description) }}"
+    description: {{ merged_vars.__meta__.catalog.description | d(default_description) | to_json }}
     template.openshift.io/bindable: "false"
   resourceVersion: "{{ current_resource_version }}"
   openshift.io/provider-display-name: Red Hat, Inc.
   labels:
     gpte.redhat.com/agnosticv: "true"
-  tags: quickstart,babylon,{{ account | replace('_', '-') }},{{ vars.merged_vars.__meta__.catalog.tags | d('') }}
-message: "{{ vars.merged_vars.__meta__.catalog.message | d(default_message) }}"
+  tags: quickstart,babylon,{{ account | replace('_', '-') }},{{ merged_vars.__meta__.catalog.tags |  default([]) | join(',') }}
+message: {{ merged_vars.__meta__.catalog.message | d(default_message) | to_json }}
 objects:
 - apiVersion: poolboy.gpte.redhat.com/v1
   kind: ResourceClaim
@@ -34,5 +34,5 @@ objects:
           {{ param.name | lower }}: {{ '${{' ~ param.name ~ '}}' }}
 {% endfor %}
 
-parameters: {{ vars.merged_vars.__meta__.catalog.parameters | d([]) | to_json }}
-labels: {{ default_labels | combine(vars.merged_vars.__meta__.catalog.labels | d({})) | to_json }}
+parameters: {{ merged_vars.__meta__.catalog.parameters | d([]) | to_json }}
+labels: {{ default_labels | combine(merged_vars.__meta__.catalog.labels | d({})) | to_json }}
