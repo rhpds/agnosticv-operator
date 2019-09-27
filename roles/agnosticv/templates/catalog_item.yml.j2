@@ -18,20 +18,21 @@ objects:
   metadata:
     generateName: anarchy-subject-
   spec:
-    template:
-      apiVersion: anarchy.gpte.redhat.com/v1
-      kind: AnarchySubject
-      metadata:
-        annotations:
-          poolboy.gpte.redhat.com/resource-provider-name: babylon
-        generateName: {{ _name }}-
-        labels:
+    resources:
+    - template:
+        apiVersion: anarchy.gpte.redhat.com/v1
+        kind: AnarchySubject
+        metadata:
+          annotations:
+            poolboy.gpte.redhat.com/resource-provider-name: babylon
+          generateName: {{ _name }}-
+          labels:
+            governor: {{ _name }}
+        spec:
           governor: {{ _name }}
-      spec:
-        governor: {{ _name }}
-        parameters:
+          parameters:
 {% for param in vars.merged_vars.__meta__.catalog.parameters | d([]) %}
-          {{ param.name | lower }}: {{ '${{' ~ param.name ~ '}}' }}
+            {{ param.name | lower }}: {{ '${{' ~ param.name ~ '}}' }}
 {% endfor %}
 
 parameters: {{ merged_vars.__meta__.catalog.parameters | d([]) | to_json }}
