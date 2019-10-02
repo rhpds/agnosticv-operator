@@ -100,14 +100,18 @@ spec:
               state: started
           status:
             state: started
+{% if 'stop_after_provision' in merged_vars.__meta__ or 'idle_after_deploy' in merged_vars.__meta__ %}
       - name: Schedule stop
         anarchy_schedule_action:
           action: stop
-          after: 8h
+          after: {{ merged_vars.__meta__.stop_after_provision | default(merged_vars.__meta__.idle_after_deploy) }}
+{% endif %}
+{% if 'destroy_after_provision' in merged_vars.__meta__ %}
       - name: Schedule destroy
         anarchy_schedule_action:
           action: destroy
-          after: 6d
+          after: {{ merged_vars.__meta__.destroy_after_provision }}
+{% endif %}
 
   - name: stop
     request:
@@ -194,10 +198,12 @@ spec:
               state: started
           status:
             state: started
+{% if 'stop_after_start' in merged_vars.__meta__ or 'idle_after_start' in merged_vars.__meta__ %}
       - name: Schedule stop
         anarchy_schedule_action:
           action: stop
-          after: 8h
+          after: {{ merged_vars.__meta__.stop_after_start | default(merged_vars.__meta__.idle_after_start) }}
+{% endif %}
 
   - name: destroy
     request:
