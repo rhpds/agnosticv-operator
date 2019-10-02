@@ -13,14 +13,9 @@ spec:
   key not in vars.merged_vars.__meta__.catalog.parameters | d([]) | json_query('[].name') %}
     {{ key }}: {{ vars.merged_vars[key] | to_json }}
 {% endfor %}
-{% for secret in vars.merged_vars.__meta__.secrets %}
-    aws_access_key_id:
-      secretName: {{ secret }}
-      secretKey: aws_access_key_id
-    aws_secret_access_key:
-      secretName: {{ secret }}
-      secretKey: aws_secret_access_key
-{% endfor %}
+
+  parameterSecrets: {{ vars.merged_vars.__meta__.secrets | default([]) | to_json }}
+
   vars:
     tower_organization: {{ account | to_json }}
 
