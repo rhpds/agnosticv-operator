@@ -2,7 +2,7 @@
 apiVersion: template.openshift.io/v1
 kind: templates
 metadata:
-  name: {{ _name }}
+  name: {{ merged_vars.__meta__.catalog.name| default(_name) | to_json }}
   annotations:
     description: {{ merged_vars.__meta__.catalog.description | d(default_description) | to_json }}
     template.openshift.io/bindable: "false"
