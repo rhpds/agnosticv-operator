@@ -32,10 +32,14 @@ objects:
             governor: {{ _name }}
         spec:
           governor: {{ _name }}
+{% if vars.merged_vars.__meta__.catalog.parameters %}
           parameters:
-{% for param in vars.merged_vars.__meta__.catalog.parameters | d([]) %}
+{%   for param in vars.merged_vars.__meta__.catalog.parameters %}
             {{ param.name | lower }}: {{ '${{' ~ param.name ~ '}}' }}
-{% endfor %}
+{%   endfor %}
+{% else %}
+          parameters: {}
+{% endif %}
 
 parameters: {{ merged_vars.__meta__.catalog.parameters | d([]) | to_json }}
 labels: {{ default_labels | combine(merged_vars.__meta__.catalog.labels | d({})) | to_json }}
