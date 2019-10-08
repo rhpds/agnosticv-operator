@@ -2,9 +2,11 @@
 apiVersion: template.openshift.io/v1
 kind: templates
 metadata:
-  name: {{ merged_vars.__meta__.catalog.name| default(_name) | to_json }}
+  name: {{ _name | to_json }}
   annotations:
     description: {{ merged_vars.__meta__.catalog.description | d(default_description) | to_json }}
+    openshift.io/display-name: {{ merged_vars.__meta__.catalog.display_name| default(_name) | to_json }}
+    openshift.io/long-description: {{ merged_vars.__meta__.catalog.long_description | d('') | to_json }}
     template.openshift.io/bindable: "false"
   resourceVersion: "{{ current_resource_version }}"
   openshift.io/provider-display-name: Red Hat, Inc.
