@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=${VERSION:-v0.0.17}
+VERSION=${VERSION:-v0.0.18}
 
 # Now build the Operator
 operator-sdk build quay.io/gpte-devops-automation/agnosticv-operator:${VERSION}
