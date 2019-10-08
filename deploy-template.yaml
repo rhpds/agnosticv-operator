@@ -8,7 +8,7 @@ metadata:
 
 parameters:
 - name: AGNOSTICV_IMAGE
-  value: quay.io/gpte-devops-automation/agnosticv-operator:v0.0.15
+  value: quay.io/gpte-devops-automation/agnosticv-operator:v0.0.16
 - name: AGNOSTICV_NAME
   value: agnosticv-operator
 - name: AGNOSTICV_NAMESPACE
