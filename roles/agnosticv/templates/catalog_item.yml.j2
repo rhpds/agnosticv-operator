@@ -32,7 +32,7 @@ objects:
             governor: {{ _name }}
         spec:
           governor: {{ _name }}
-{% if vars.merged_vars.__meta__.catalog.parameters %}
+{% if vars.merged_vars.__meta__.catalog.parameters | default(None) %}
           parameters:
 {%   for param in vars.merged_vars.__meta__.catalog.parameters %}
             {{ param.name | lower }}: {{ '${{' ~ param.name ~ '}}' }}
