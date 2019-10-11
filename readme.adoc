@@ -1,0 +1,73 @@
+:toc2:
+= AgnosticV Operator
+
+AgnosticV is vars for link:https://github.com/redhat-cop/agnosticd[agnosticD].
+
+This is the operator that takes care of updating the Catalog, based on several agnosticV repos.
+
+The output of the operator, the final catalog, is composed of OpenShift resources:
+
+* OpenShift Templates
+* AnarchyGovernors
+
+
+See also the link:https://github.com/redhat-cop/babylon[Babylon] Project.
+
+== Installation
+
+=== Create the operator
+
+This link:deploy-template.yaml[template] will take care of most of the things you need:
+
+* serviceaccount/agnosticv-operator
+* role.rbac.authorization.k8s.io/agnosticv-operator
+* rolebinding.rbac.authorization.k8s.io/agnosticv-operator
+* deployment.apps/agnosticv-operator
+* clusterrole.authorization.openshift.io/agnosticv-operator
+* clusterrolebinding.rbac.authorization.k8s.io/agnosticv-operator-clusterrolebinding
+* customresourcedefinition.apiextensions.k8s.io/agnosticvrepos.gpte.redhat.com
+* namespaces "agnosticv-operator"
+
+Just run the following:
+
+[source,shell]
+----
+oc process -f https://raw.githubusercontent.com/redhat-gpte-devopsautomation/agnosticv-operator/master/deploy-template.yaml|oc create -f -
+
+----
+
+
+=== Create agnosticV repos
+
+The agnosticv-operator is listening on several agnosticV repos. This is represented by the Custom Resource `AgnosticVRepo`.
+
+Here is an example for a private github repo.
+
+.agnosticv-gpte-private-repo.yaml
+[source,yaml]
+----
+apiVersion: gpte.redhat.com/v1
+kind: AgnosticVRepo
+metadata:
+  generation: 1
+  name: gpte-agnosticv
+  namespace: "agnosticv-operator"
+  selfLink: /apis/gpte.redhat.com/v1/namespaces/agnosticv-operator/agnosticvrepos/gpte-agnosticv
+spec:
+  ref: master
+  sshKey: agnosticv-operator-sshkey
+  url: git@github.com:redhat-gpe/agnosticv.git
+----
+
+[source,shell]
+----
+oc create -f agnosticv-gpte-private-repo.yaml
+----
+
+If you repo is public, then you can use HTTP repo for `spec.url` and you don't need the following steps.
+
+.Import the SSH private key needed to checkout the private repo
+[source,shell]
+----
+oc create secret generic -n agnosticv-operator agnosticv-operator-sshkey --from-file=id_rsa=/home/ec2-user/.ssh/id_rsa
+----
