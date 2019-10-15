@@ -124,6 +124,7 @@ spec:
               state: stopping
           status:
             state: stopping
+
       - name: Update desiredState stopped in subject resource handle
         when: >-
           'poolboy.gpte.redhat.com/resource-handle-name' in anarchy_subject.metadata.annotations and
@@ -143,6 +144,8 @@ spec:
               template:
                 spec:
                   desiredState: stopped
+        ignore_errors: true
+
       - name: Update desiredState stopped in subject resource claim
         when: >-
           'poolboy.gpte.redhat.com/resource-claim-name' in anarchy_subject.metadata.annotations and
@@ -162,6 +165,8 @@ spec:
               template:
                 spec:
                   desiredState: stopped
+        ignore_errors: true
+
     - event: complete
       tasks:
       - name: Set state stopped in subject status
@@ -198,6 +203,7 @@ spec:
           status:
             state: started
 {% if 'schedule_stop_after_start' in merged_vars.__meta__ or 'idle_after_start' in merged_vars.__meta__ %}
+
       - name: Schedule stop
         anarchy_schedule_action:
           action: stop
@@ -216,6 +222,7 @@ spec:
       - name: Delete anarchy subject
         anarchy_subject_delete:
           remove_finalizers: true
+
       - name: Delete resource handle
         when: >-
           'poolboy.gpte.redhat.com/resource-handle-name' in anarchy_subject.metadata.annotations and
@@ -230,6 +237,8 @@ spec:
             {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-handle-namespace'] }}
 {% endraw %}
           state: absent
+        ignore_errors: true
+
       - name: Delete resource claim
         when: >-
           'poolboy.gpte.redhat.com/resource-claim-name' in anarchy_subject.metadata.annotations and
@@ -244,3 +253,4 @@ spec:
             {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-claim-namespace'] }}
 {% endraw %}
           state: absent
+        ignore_errors: true
