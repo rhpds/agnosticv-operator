@@ -131,10 +131,12 @@ spec:
         k8s:
           api_version: poolboy.gpte.redhat.com/v1
           kind: ResourceHandle
+{% raw %}
           name: >-
-            {% raw %}{{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-handle-name'] }}{% endraw %}
+            {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-handle-name'] }}
           namespace: >-
-            {% raw %}{{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-handle-namespace'] }}{% endraw %}
+            {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-handle-namespace'] }}
+{% endraw %}
           merge_type: merge
           definition:
             spec:
@@ -148,10 +150,12 @@ spec:
         k8s:
           api_version: poolboy.gpte.redhat.com/v1
           kind: ResourceClaim
+{% raw %}
           name: >-
-            {% raw %}{{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-claim-name'] }}{% endraw %}
+            {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-claim-name'] }}
           namespace: >-
-            {% raw %}{{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-claim-namespace'] }}{% endraw %}
+            {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-claim-namespace'] }}
+{% endraw %}
           merge_type: merge
           definition:
             spec:
@@ -219,10 +223,12 @@ spec:
         k8s:
           api_version: poolboy.gpte.redhat.com/v1
           kind: ResourceHandle
+{% raw %}
           name: >-
-            {% raw %}{{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-handle-name'] }}{% endraw %}
+            {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-handle-name'] }}
           namespace: >-
-            {% raw %}{{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-handle-namespace'] }}{% endraw %}
+            {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-handle-namespace'] }}
+{% endraw %}
           state: absent
       - name: Delete resource claim
         when: >-
@@ -231,8 +237,10 @@ spec:
         k8s:
           api_version: poolboy.gpte.redhat.com/v1
           kind: ResourceClaim
+{% raw %}
           name: >-
-            {% raw %}{{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-claim-name'] }}{% endraw %}
+            {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-claim-name'] }}
           namespace: >-
-            {% raw %}{{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-claim-namespace'] }}{% endraw %}
+            {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-claim-namespace'] }}
+{% endraw %}
           state: absent
