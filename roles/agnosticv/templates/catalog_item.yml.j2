@@ -33,12 +33,13 @@ objects:
         spec:
           governor: {{ _name }}
 {% if vars.merged_vars.__meta__.catalog.parameters | default(None) %}
-          parameters:
+          vars:
+            job_vars:
 {%   for param in vars.merged_vars.__meta__.catalog.parameters %}
-            {{ param.name | lower }}: {{ '${{' ~ param.name ~ '}}' }}
+              {{ param.name | lower }}: {{ '${{' ~ param.name ~ '}}' }}
 {%   endfor %}
 {% else %}
-          parameters: {}
+          vars: {}
 {% endif %}
 
 parameters: {{ merged_vars.__meta__.catalog.parameters | d([]) | to_json }}

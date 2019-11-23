@@ -101,18 +101,21 @@ spec:
           url: https://{{ babylon_tower.hostname }}/api/v2/job_templates/job-runner/launch/
           url_username: "{{ babylon_tower.user }}"
           url_password: "{{ babylon_tower.password }}"
+          force_basic_auth: true
           validate_certs: false
           method: POST
           return_content: true
+          status_code: 201
           body_format: json
           body:
             extra_vars:
               job_vars: >-
-                {{ anarchy_subject.vars.job_vars | default({})
-                 | combine(anarchy_governor.vars.job_vars, recursive=True)
+                {{ vars.anarchy_subject.vars.job_vars | default({})
+                 | combine(vars.anarchy_governor.vars.job_vars, recursive=True)
                  | combine({
                      'ACTION': 'provision',
                      '__meta__': {
+                       'callback': {'token': anarchy_action_callback_token, 'url': anarchy_action_callback_url},
                        'deployer': {'entry_point': 'ansible/main.yml'},
                        'tower': {'action': 'provision'}
                      }
@@ -162,18 +165,21 @@ spec:
           url: https://{{ babylon_tower.hostname }}/api/v2/job_templates/job-runner/launch/
           url_username: "{{ babylon_tower.user }}"
           url_password: "{{ babylon_tower.password }}"
+          force_basic_auth: true
           validate_certs: false
           method: POST
           return_content: true
+          status_code: 201
           body_format: json
           body:
             extra_vars:
               job_vars: >-
-                {{ anarchy_subject.vars.job_vars | default({})
-                 | combine(anarchy_governor.vars.job_vars, recursive=True)
+                {{ vars.anarchy_subject.vars.job_vars | default({})
+                 | combine(vars.anarchy_governor.vars.job_vars, recursive=True)
                  | combine({
                      'ACTION': 'stop',
                      '__meta__': {
+                       'callback': {'token': anarchy_action_callback_token, 'url': anarchy_action_callback_url},
                        'deployer': {'entry_point': 'ansible/lifecycle_entry_point.yml'},
                        'tower': {'action': 'stop'}
                      }
@@ -242,18 +248,21 @@ spec:
           url: https://{{ babylon_tower.hostname }}/api/v2/job_templates/job-runner/launch/
           url_username: "{{ babylon_tower.user }}"
           url_password: "{{ babylon_tower.password }}"
+          force_basic_auth: true
           validate_certs: false
           method: POST
           return_content: true
+          status_code: 201
           body_format: json
           body:
             extra_vars:
               job_vars: >-
-                {{ anarchy_subject.vars.job_vars | default({})
-                 | combine(anarchy_governor.vars.job_vars, recursive=True)
+                {{ vars.anarchy_subject.vars.job_vars | default({})
+                 | combine(vars.anarchy_governor.vars.job_vars, recursive=True)
                  | combine({
                      'ACTION': 'start',
                      '__meta__': {
+                       'callback': {'token': anarchy_action_callback_token, 'url': anarchy_action_callback_url},
                        'deployer': {'entry_point': 'ansible/lifecycle_entry_point.yml'},
                        'tower': {'action': 'start'}
                      }
@@ -298,19 +307,22 @@ spec:
           url: https://{{ babylon_tower.hostname }}/api/v2/job_templates/job-runner/launch/
           url_username: "{{ babylon_tower.user }}"
           url_password: "{{ babylon_tower.password }}"
+          force_basic_auth: true
           validate_certs: false
           method: POST
           return_content: true
+          status_code: 201
           body_format: json
           body:
             extra_vars:
               job_vars: >-
-                {{ anarchy_subject.vars.job_vars | default({})
-                 | combine(anarchy_governor.vars.job_vars, recursive=True)
+                {{ vars.anarchy_subject.vars.job_vars | default({})
+                 | combine(vars.anarchy_governor.vars.job_vars, recursive=True)
                  | combine({
                      'ACTION': 'destroy',
                      '__meta__': {
-                       'deployer': {'entry_point': 'ansible/lifecycle_entry_point.yml'},
+                       'callback': {'token': anarchy_action_callback_token, 'url': anarchy_action_callback_url},
+                       'deployer': {'entry_point': 'ansible/destroy.yml'},
                        'tower': {'action': 'destroy'}
                      }
                    }, recursive=True)
