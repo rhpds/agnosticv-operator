@@ -125,6 +125,14 @@ spec:
         # FIXME - Handle API errors
         #ignore_errors: true
 
+      - name: Set job launch id subject status for provision
+        anarchy_subject_update:
+          status:
+            towerJobs:
+              provision:
+                launchJob: '{{ r_api_response.json.job | default(None) }}'
+                launchTimestamp: '{{ anarchy_run_timestamp }}'
+
       callbackHandlers:
         started:
           tasks:
@@ -135,6 +143,11 @@ spec:
                   state: provisioning
               status:
                 state: provisioning
+                towerJobs:
+                  provision:
+                    deployerJob: '{{ anarchy_action_callback_data.data.id | default(None) }}'
+                    deployerTimestamp: '{{ anarchy_run_timestamp }}'
+
         complete:
           tasks:
           - name: Set state started in subject status
@@ -144,6 +157,9 @@ spec:
                   state: started
               status:
                 state: started
+                towerJobs:
+                  provision:
+                    completeTimestamp: '{{ anarchy_run_timestamp }}'
 {% endraw %}
 {% if 'schedule_stop_after_provision' in merged_vars.__meta__ or 'idle_after_deploy' in merged_vars.__meta__ %}
           - name: Schedule stop
@@ -189,6 +205,14 @@ spec:
         # FIXME - Handle API errors
         #ignore_errors: true
 
+      - name: Set job launch id subject status for stop
+        anarchy_subject_update:
+          status:
+            towerJobs:
+              stop:
+                launchJob: '{{ r_api_response.json.job | default(None) }}'
+                launchTimestamp: '{{ anarchy_run_timestamp }}'
+
       callbackHandlers:
         started:
           tasks:
@@ -199,6 +223,11 @@ spec:
                   state: stopping
               status:
                 state: stopping
+                towerJobs:
+                  stop:
+                    deployerJob: '{{ anarchy_action_callback_data.data.id | default(None) }}'
+                    deployerTimestamp: '{{ anarchy_run_timestamp }}'
+
           - name: Update desiredState stopped in subject resource handle
             when:
             - poolboy_resource_handle_name != ''
@@ -215,6 +244,7 @@ spec:
                     spec:
                       desiredState: stopped
             ignore_errors: true
+
           - name: Update desiredState stopped in subject resource claim
             when:
             - poolboy_resource_claim_name != ''
@@ -231,6 +261,7 @@ spec:
                     spec:
                       desiredState: stopped
             ignore_errors: true
+
         complete:
           tasks:
           - name: Set state stopped in subject status
@@ -240,6 +271,9 @@ spec:
                   state: stopped
               status:
                 state: stopped
+                towerJobs:
+                  stop:
+                    completeTimestamp: '{{ anarchy_run_timestamp }}'
 
     start:
       tasks:
@@ -272,6 +306,14 @@ spec:
         # FIXME - Handle API errors
         #ignore_errors: true
 
+      - name: Set job launch id subject status for start
+        anarchy_subject_update:
+          status:
+            towerJobs:
+              start:
+                launchJob: '{{ r_api_response.json.job | default(None) }}'
+                launchTimestamp: '{{ anarchy_run_timestamp }}'
+
       callbackHandlers:
         started:
           tasks:
@@ -282,6 +324,11 @@ spec:
                   state: starting
               status:
                 state: starting
+                towerJobs:
+                  start:
+                    deployerJob: '{{ anarchy_action_callback_data.data.id | default(None) }}'
+                    deployerTimestamp: '{{ anarchy_run_timestamp }}'
+
         complete:
           tasks:
           - name: Set state started in subject status
@@ -291,6 +338,9 @@ spec:
                   state: started
               status:
                 state: started
+                towerJobs:
+                  start:
+                    completeTimestamp: '{{ anarchy_run_timestamp }}'
 {% endraw %}
 {% if 'schedule_stop_after_start' in merged_vars.__meta__ or 'idle_after_start' in merged_vars.__meta__ %}
           - name: Schedule stop
@@ -331,12 +381,35 @@ spec:
         # FIXME - Handle API errors
         #ignore_errors: true
 
+      - name: Set job launch id subject status for destroy
+        anarchy_subject_update:
+          status:
+            towerJobs:
+              destroy:
+                launchJob: '{{ r_api_response.json.job | default(None) }}'
+                launchTimestamp: '{{ anarchy_run_timestamp }}'
+
       callbackHandlers:
+        started:
+          tasks:
+          - name: Set state destroying in subject status
+            anarchy_subject_update:
+              metadata:
+                labels:
+                  state: destroying
+              status:
+                state: destroying
+                towerJobs:
+                  destroy:
+                    deployerJob: '{{ anarchy_action_callback_data.data.id | default(None) }}'
+                    deployerTimestamp: '{{ anarchy_run_timestamp }}'
+
         complete:
           tasks:
           - name: Delete anarchy subject
             anarchy_subject_delete:
               remove_finalizers: true
+
           - name: Delete resource handle
             when:
             - poolboy_resource_handle_name != ''
@@ -348,6 +421,7 @@ spec:
               namespace: "{{ poolboy_resource_handle_namespace }}"
               state: absent
             ignore_errors: true
+
           - name: Delete resource claim
             when:
             - poolboy_resource_claim_name != ''
