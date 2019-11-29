@@ -13,34 +13,45 @@
 #     msg: "{{ msg.split('\n') }}"
 #   tags: debug_info
 
-- name: Get SSH secret key
-  k8s_facts:
-    api_version: v1
-    kind: Secret
-    name: "{{ ssh_key }}"
-    namespace: agnosticv-operator
-  register: ssh_key_r
-  no_log: true
+- when: ssh_key is defined
+  block:
+    - name: Get SSH secret key
+      k8s_facts:
+        api_version: v1
+        kind: Secret
+        name: "{{ ssh_key }}"
+        namespace: agnosticv-operator
+      register: ssh_key_r
+      no_log: true
 
-- file:
-    path: ~/.ssh
-    state: directory
-    mode: 0700
+    - file:
+        path: ~/.ssh
+        state: directory
+        mode: 0700
 
-- name: Import SSH deploy key to pull the repo
-  copy:
-    dest: ~/.ssh/id_rsa
-    mode: 0600
-    content: "{{ ssh_key_r.resources[0].data.id_rsa | b64decode }}"
-  no_log: true
+    - name: Import SSH deploy key to pull the repo
+      copy:
+        dest: ~/.ssh/id_rsa
+        mode: 0600
+        content: "{{ ssh_key_r.resources[0].data.id_rsa | b64decode }}"
+      no_log: true
 
-- name: Clone agnosticv repo
+    - name: Clone agnosticv repo
+      git:
+        accept_hostkey: true
+        repo: "{{ url }}"
+        version: "{{ ref }}"
+        dest: "{{ repo_path }}"
+        key_file: ~/.ssh/id_rsa
+
+- when: ssh_key is not defined
+  name: Clone agnosticv repo
   git:
     accept_hostkey: true
     repo: "{{ url }}"
     version: "{{ ref }}"
     dest: "{{ repo_path }}"
-    key_file: ~/.ssh/id_rsa
+
 
 - name: Find all catalog items
   find:
