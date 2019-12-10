@@ -71,3 +71,14 @@ If you repo is public, then you can use HTTP repo for `spec.url` and you don't n
 ----
 oc create secret generic -n agnosticv-operator agnosticv-operator-sshkey --from-file=id_rsa=/home/ec2-user/.ssh/id_rsa
 ----
+
+== Troubleshooting
+
+.Look at the logs of the operator
+----
+[root@clientvm 0 ~]# oc project agnosticv-operator
+[root@clientvm 0 ~]# oc get pods
+NAME                                  READY   STATUS    RESTARTS   AGE
+agnosticv-operator-7d6f867c56-jkwcn   2/2     Running   0          105s
+[root@clientvm 0 ~]# oc logs -f agnosticv-operator-7d6f867c56-jkwcn -c ansible
+----
