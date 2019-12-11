@@ -33,7 +33,7 @@ objects:
   metadata:
     creationTimestamp: null
     name: ${AGNOSTICV_NAME}
-    namespace: ${AGNOSTICV_NAME}
+    namespace: ${AGNOSTICV_NAMESPACE}
   rules:
   - apiGroups:
     - ""
