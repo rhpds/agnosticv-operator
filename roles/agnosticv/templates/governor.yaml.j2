@@ -46,44 +46,47 @@ spec:
   subjectEventHandlers:
     create:
       tasks:
-      - name: Set state provision-scheduled in subject status
+      - name: Update AnarchySubject {{ anarchy_subject_name }} for provision-pending
         anarchy_subject_update:
           metadata:
             labels:
-              state: provision-scheduled
-          status:
-            state: provision-scheduled
+              state: provision-pending
+          spec:
+            vars:
+              desired_state: provision-pending
       - name: Start Provision
         anarchy_schedule_action:
           action: provision
 
     update:
       tasks:
-      - when: >-
-          'started' == anarchy_subject.spec.desiredState | default('') and
-          'stopped' == anarchy_subject.status.state | default('')
+      - when:
+        - current_state == 'stopped'
+        - desired_state == 'started'
         block:
-        - name: Set state start-scheduled in subject status
+        - name: Set current_state start-pending
           anarchy_subject_update:
             metadata:
               labels:
-                state: start-scheduled
-            status:
-              state: start-scheduled
-        - name: Start Resume
+                state: start-pending
+            spec:
+              vars:
+                current_state: start-pending
+        - name: Schedule start
           anarchy_schedule_action:
             action: start
       - when: >-
-          'stopped' == anarchy_subject.spec.desiredState | default('') and
-          'started' == anarchy_subject.status.state | default('')
+        - current_state == 'started'
+        - desired_state == 'stopped'
         block:
-        - name: Set state stop-pending in subject status
+        - name: Set current_state stop-pending
           anarchy_subject_update:
             metadata:
               labels:
                 state: stop-pending
-            status:
-              state: stop-pending
+            spec:
+              vars:
+                current_state: stop-pending
         - name: Schedule stop
           anarchy_schedule_action:
             action: stop
@@ -141,8 +144,10 @@ spec:
               metadata:
                 labels:
                   state: provisioning
+              spec:
+                vars:
+                  current_state: provisioning
               status:
-                state: provisioning
                 towerJobs:
                   provision:
                     deployerJob: '{{ anarchy_action_callback_data.data.id | default(None) }}'
@@ -155,8 +160,10 @@ spec:
               metadata:
                 labels:
                   state: started
+              spec:
+                vars:
+                  current_state: started
               status:
-                state: started
                 towerJobs:
                   provision:
                     completeTimestamp: '{{ anarchy_run_timestamp }}'
@@ -221,56 +228,58 @@ spec:
               metadata:
                 labels:
                   state: stopping
+              spec:
+                vars:
+                  current_state: stopping
               status:
-                state: stopping
                 towerJobs:
                   stop:
                     deployerJob: '{{ anarchy_action_callback_data.data.id | default(None) }}'
                     deployerTimestamp: '{{ anarchy_run_timestamp }}'
 
-          - name: Update desiredState stopped in subject resource handle
+          - name: Set desired_state stopped in resource handle
             when:
             - poolboy_resource_handle_name != ''
             - poolboy_resource_handle_namespace != ''
-            k8s:
-              api_version: poolboy.gpte.redhat.com/v1
-              kind: ResourceHandle
-              name: "{{ poolboy_resource_handle_name }}"
-              namespace: "{{ poolboy_resource_handle_namespace }}"
-              merge_type: merge
-              definition:
-                spec:
-                  template:
-                    spec:
-                      desiredState: stopped
+            command: >-
+              oc patch resourcehandles.poolboy.gpte.redhat.com --type=json
+              -n {{ poolboy_resource_handle_namespace | quote }}
+              {{ poolboy_resource_handle_name | quote }}
+              --patch={{ json_patch | to_json | quote }}
+            vars:
+              json_patch:
+              - op: replace
+                path: /spec/resources/{{ poolboy_resource_index }}/template/spec/vars/desired_state
+                value: stopped
             ignore_errors: true
 
-          - name: Update desiredState stopped in subject resource claim
+          - name: Update desired_state stopped in resource claim
             when:
             - poolboy_resource_claim_name != ''
             - poolboy_resource_claim_namespace != ''
-            k8s:
-              api_version: poolboy.gpte.redhat.com/v1
-              kind: ResourceClaim
-              name: "{{ poolboy_resource_claim_name }}"
-              namespace: "{{ poolboy_resource_claim_name }}"
-              merge_type: merge
-              definition:
-                spec:
-                  template:
-                    spec:
-                      desiredState: stopped
+            command: >-
+              oc patch resourceclaims.poolboy.gpte.redhat.com --type=json
+              -n {{ poolboy_resource_claim_namespace | quote }}
+              {{ poolboy_resource_claim_name | quote }}
+              --patch={{ json_patch | to_json | quote }}
+            vars:
+              json_patch:
+              - op: replace
+                path: /spec/resources/{{ poolboy_resource_index }}/template/spec/vars/desired_state
+                value: stopped
             ignore_errors: true
 
         complete:
           tasks:
-          - name: Set state stopped in subject status
+          - name: Set state stopped in subject
             anarchy_subject_update:
               metadata:
                 labels:
                   state: stopped
+              spec:
+                vars:
+                  current_state: stopped
               status:
-                state: stopped
                 towerJobs:
                   stop:
                     completeTimestamp: '{{ anarchy_run_timestamp }}'
@@ -317,13 +326,15 @@ spec:
       callbackHandlers:
         started:
           tasks:
-          - name: Set state starting in subject status
+          - name: Update AnarchySubject {{ anarchy_subject_name }} for start started
             anarchy_subject_update:
               metadata:
                 labels:
                   state: starting
+              spec:
+                vars:
+                  current_state: starting
               status:
-                state: starting
                 towerJobs:
                   start:
                     deployerJob: '{{ anarchy_action_callback_data.data.id | default(None) }}'
@@ -331,13 +342,15 @@ spec:
 
         complete:
           tasks:
-          - name: Set state started in subject status
+          - name: Update AnarchySubject {{ anarchy_subject_name }} for start complete
             anarchy_subject_update:
               metadata:
                 labels:
                   state: started
+              spec:
+                vars:
+                  current_state: started
               status:
-                state: started
                 towerJobs:
                   start:
                     completeTimestamp: '{{ anarchy_run_timestamp }}'
@@ -392,13 +405,15 @@ spec:
       callbackHandlers:
         started:
           tasks:
-          - name: Set state destroying in subject status
+          - name: Update AnarchySubject {{ anarchy_subject_name }} for destroy started
             anarchy_subject_update:
               metadata:
                 labels:
                   state: destroying
+              spec:
+                vars:
+                  current_state: destroying
               status:
-                state: destroying
                 towerJobs:
                   destroy:
                     deployerJob: '{{ anarchy_action_callback_data.data.id | default(None) }}'
