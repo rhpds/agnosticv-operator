@@ -75,7 +75,7 @@ spec:
         - name: Schedule start
           anarchy_schedule_action:
             action: start
-      - when: >-
+      - when:
         - current_state == 'started'
         - desired_state == 'stopped'
         block:
