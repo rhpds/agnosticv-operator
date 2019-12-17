@@ -6,7 +6,9 @@
 - include_tasks: include_vars.yml
 
 # If the catalog item defines some __meta__ then it's a candidate
-- when: "'__meta__' in merged_vars"
+- when:
+  - "'__meta__' in merged_vars"
+  - "'catalog' in merged_vars.__meta__"
   block:
     - name: Create output_dir directory
       file:
