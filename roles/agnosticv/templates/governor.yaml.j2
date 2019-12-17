@@ -10,6 +10,11 @@ spec:
   api: babylon
 
   vars:
+    # Defaults state vars
+    current_state: unknown
+    desired_state: unknown
+
+    # Variables for poolboy integration
     poolboy_resource_index: >-
       {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-index'] | default('') }}
     poolboy_resource_claim_name: >-
