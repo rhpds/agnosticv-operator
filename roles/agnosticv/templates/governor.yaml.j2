@@ -46,8 +46,8 @@ spec:
 {% for secret in vars.merged_vars.__meta__.secrets | default([]) %}
   {% if secret is mapping %}
     {% if 'name' in secret %}
-    {% set sname = secret.name | replace('_', '-') %}
-  - {{ secret | combine({'var':'job_vars','name':sname}) | to_json }}
+    {% set sanitized_name = secret.name | replace('_', '-') %}
+  - {{ secret | combine({'var':'job_vars','name':sanitized_name}) | to_json }}
     {% endif %}
   {% else %}
   - name: {{ secret | replace('_', '-') | to_json }}
