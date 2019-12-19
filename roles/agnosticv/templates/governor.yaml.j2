@@ -43,8 +43,12 @@ spec:
   - name: babylon-tower
     var: babylon_tower
 {% for secret in vars.merged_vars.__meta__.secrets | default([]) %}
+  {% if secret is mapping %}
+  - {{ secret | combine({'var':'job_vars'}) | to_json }}
+  {% else %}
   - name: {{ secret | to_json }}
     var: job_vars
+  {% endif %}
 {% endfor %}
 
 {% raw %}
