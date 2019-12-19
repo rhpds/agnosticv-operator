@@ -55,6 +55,7 @@ spec:
   - name: {{ secret | replace('_', '-') | to_json }}
     var: job_vars
 {%   endif %}
+{% endfor %}
 
 {% raw %}
   subjectEventHandlers:
