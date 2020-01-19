@@ -18,6 +18,10 @@ objects:
 - apiVersion: poolboy.gpte.redhat.com/v1
   kind: ResourceClaim
   metadata:
+    annotations:
+      description: {{ merged_vars.__meta__.catalog.description | d(default_description) | to_json }}
+      openshift.io/display-name: {{ merged_vars.__meta__.catalog.display_name| default(_name) | to_json }}
+      openshift.io/long-description: {{ merged_vars.__meta__.catalog.long_description | d('') | to_json }}
     generateName: {{ _name }}-
   spec:
     resources:
