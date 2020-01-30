@@ -5,34 +5,22 @@ metadata:
   name: {{ _name }}
   namespace: anarchy-operator
   resourceVersion: "{{ current_resource_version }}"
-{% raw %}
 spec:
-  api: babylon
-
+  ansibleGalaxyRequirements:
+    roles:
+    - name: babylon_anarchy_governor
+      src: {{ ('git+' ~ babylon_anarchy_governor_repo) | to_json }}
+      version: {{ babylon_anarchy_governor_version | to_json }}
   vars:
-    # Defaults state vars
-    current_state: unknown
-    desired_state: unknown
+    # Flags to modify scheduled action behavior
+    schedule_destroy_after_provision: {{ merged_vars.__meta__.schedule_destroy_after_provision | default('disabled') }}
+    schedule_stop_after_provision: {{ merged_vars.__meta__.schedule_stop_after_provision | default(merged_vars.__meta__.idle_after_deploy ~ 'h' if merged_vars.__meta__.idle_after_deploy is defined else 'disabled') }}
+    schedule_stop_after_start: {{ merged_vars.__meta__.schedule_stop_after_start | default(merged_vars.__meta__.idle_after_start ~ 'h' if merged_vars.__meta__.idle_after_start is defined else 'disabled') }}
 
-    # Variables for poolboy integration
-    poolboy_resource_index: >-
-      {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-index'] | default('') }}
-    poolboy_resource_claim_name: >-
-      {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-claim-name'] | default('') }}
-    poolboy_resource_claim_namespace: >-
-      {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-claim-namespace'] | default('') }}
-    poolboy_resource_handle_name: >-
-      {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-handle-name'] | default('') }}
-    poolboy_resource_handle_namespace: >-
-      {{ anarchy_subject.metadata.annotations['poolboy.gpte.redhat.com/resource-handle-namespace'] | default('') }}
-
+    # Job variables to pass to Ansible Tower job runner (dark tower)
     job_vars:
       __meta__:
-        callback:
-          token: "{{ anarchy_action_callback_token }}"
-          url: "{{ anarchy_action_callback_url }}"
         tower:
-{% endraw %}
           organization: {{ account | to_json }}
 {% for key in vars.merged_vars if
   key not in vars.merged_vars.__meta__.catalog.parameters | d([]) | json_query('[].name') %}
@@ -57,410 +45,59 @@ spec:
 {%   endif %}
 {% endfor %}
 
-{% raw %}
   subjectEventHandlers:
     create:
-      tasks:
-      - name: Update AnarchySubject {{ anarchy_subject_name }} for provision-pending
-        anarchy_subject_update:
-          metadata:
-            labels:
-              state: provision-pending
-          spec:
-            vars:
-              current_state: provision-pending
-      - name: Start Provision
-        anarchy_schedule_action:
-          action: provision
-
+      roles:
+      - role: babylon_anarchy_governor
     update:
-      tasks:
-      - when:
-        - current_state == 'stopped'
-        - desired_state == 'started'
-        block:
-        - name: Set current_state start-pending
-          anarchy_subject_update:
-            metadata:
-              labels:
-                state: start-pending
-            spec:
-              vars:
-                current_state: start-pending
-        - name: Schedule start
-          anarchy_schedule_action:
-            action: start
-      - when:
-        - current_state == 'started'
-        - desired_state == 'stopped'
-        block:
-        - name: Set current_state stop-pending
-          anarchy_subject_update:
-            metadata:
-              labels:
-                state: stop-pending
-            spec:
-              vars:
-                current_state: stop-pending
-        - name: Schedule stop
-          anarchy_schedule_action:
-            action: stop
+      roles:
+      - role: babylon_anarchy_governor
     delete:
-      tasks:
-      - name: Schedule destroy
-        anarchy_schedule_action:
-          action: destroy
+      roles:
+      - role: babylon_anarchy_governor
 
   actions:
+    # anarchy_action_name
     provision:
-      tasks:
-      - name: Call API
-        uri:
-          url: https://{{ babylon_tower.hostname }}/api/v2/job_templates/job-runner/launch/
-          url_username: "{{ babylon_tower.user }}"
-          url_password: "{{ babylon_tower.password }}"
-          force_basic_auth: true
-          validate_certs: false
-          method: POST
-          return_content: true
-          status_code: 201
-          body_format: json
-          body:
-            extra_vars:
-              job_vars: >-
-                {{ vars.anarchy_subject.vars.job_vars | default({})
-                 | combine(vars.anarchy_governor.vars.job_vars, recursive=True)
-                 | combine({
-                     'ACTION': 'provision',
-                     '__meta__': {
-                       'callback': {'token': anarchy_action_callback_token, 'url': anarchy_action_callback_url},
-                       'deployer': {'entry_point': 'ansible/main.yml'},
-                       'tower': {'action': 'provision'}
-                     }
-                   }, recursive=True)
-                }}
-        register: r_api_response
-        # FIXME - Handle API errors
-        #ignore_errors: true
-
-      - name: Set job launch id subject status for provision
-        anarchy_subject_update:
-          status:
-            towerJobs:
-              provision:
-                launchJob: '{{ r_api_response.json.job | default(None) }}'
-                launchTimestamp: '{{ anarchy_run_timestamp }}'
-
+      roles:
+      - role: babylon_anarchy_governor
       callbackHandlers:
+        # anarchy_action_name
+        # anarchy_action_callback_name
+        # anarchy_action_callback_data
         started:
-          tasks:
-          - name: Set state provisioning in subject status
-            anarchy_subject_update:
-              metadata:
-                labels:
-                  state: provisioning
-              spec:
-                vars:
-                  current_state: provisioning
-              status:
-                towerJobs:
-                  provision:
-                    deployerJob: '{{ anarchy_action_callback_data.data.id | default(None) }}'
-                    deployerTimestamp: '{{ anarchy_run_timestamp }}'
-
+          roles:
+          - role: babylon_anarchy_governor
         complete:
-          tasks:
-          - name: Set state started in subject status
-            anarchy_subject_update:
-              metadata:
-                labels:
-                  state: started
-              spec:
-                vars:
-                  current_state: started
-              status:
-                towerJobs:
-                  provision:
-                    completeTimestamp: '{{ anarchy_run_timestamp }}'
-{% endraw %}
-{% if 'schedule_stop_after_provision' in merged_vars.__meta__ or 'idle_after_deploy' in merged_vars.__meta__ %}
-          - name: Schedule stop
-            anarchy_schedule_action:
-              action: stop
-              after: {{ merged_vars.__meta__.schedule_stop_after_provision | default(merged_vars.__meta__.idle_after_deploy) }}
-{% endif %}
-{% if 'schedule_destroy_after_provision' in merged_vars.__meta__ %}
-          - name: Schedule destroy
-            anarchy_schedule_action:
-              action: destroy
-              after: {{ merged_vars.__meta__.schedule_destroy_after_provision }}
-{% endif %}
-{% raw %}
+          roles:
+          - role: babylon_anarchy_governor
     stop:
-      tasks:
-      - name: Call API
-        uri:
-          url: https://{{ babylon_tower.hostname }}/api/v2/job_templates/job-runner/launch/
-          url_username: "{{ babylon_tower.user }}"
-          url_password: "{{ babylon_tower.password }}"
-          force_basic_auth: true
-          validate_certs: false
-          method: POST
-          return_content: true
-          status_code: 201
-          body_format: json
-          body:
-            extra_vars:
-              job_vars: >-
-                {{ vars.anarchy_subject.vars.job_vars | default({})
-                 | combine(vars.anarchy_governor.vars.job_vars, recursive=True)
-                 | combine({
-                     'ACTION': 'stop',
-                     '__meta__': {
-                       'callback': {'token': anarchy_action_callback_token, 'url': anarchy_action_callback_url},
-                       'deployer': {'entry_point': 'ansible/lifecycle_entry_point.yml'},
-                       'tower': {'action': 'stop'}
-                     }
-                   }, recursive=True)
-                }}
-        register: r_api_response
-        # FIXME - Handle API errors
-        #ignore_errors: true
-
-      - name: Set job launch id subject status for stop
-        anarchy_subject_update:
-          status:
-            towerJobs:
-              stop:
-                launchJob: '{{ r_api_response.json.job | default(None) }}'
-                launchTimestamp: '{{ anarchy_run_timestamp }}'
-
+      roles:
+      - role: babylon_anarchy_governor
       callbackHandlers:
         started:
-          tasks:
-          - name: Set state stopping in subject status
-            anarchy_subject_update:
-              metadata:
-                labels:
-                  state: stopping
-              spec:
-                vars:
-                  current_state: stopping
-              status:
-                towerJobs:
-                  stop:
-                    deployerJob: '{{ anarchy_action_callback_data.data.id | default(None) }}'
-                    deployerTimestamp: '{{ anarchy_run_timestamp }}'
-
-          - name: Set desired_state stopped in resource handle
-            when:
-            - poolboy_resource_handle_name != ''
-            - poolboy_resource_handle_namespace != ''
-            command: >-
-              oc patch resourcehandles.poolboy.gpte.redhat.com --type=json
-              -n {{ poolboy_resource_handle_namespace | quote }}
-              {{ poolboy_resource_handle_name | quote }}
-              --patch={{ json_patch | to_json | quote }}
-            vars:
-              json_patch:
-              - op: replace
-                path: /spec/resources/{{ poolboy_resource_index }}/template/spec/vars/desired_state
-                value: stopped
-            ignore_errors: true
-
-          - name: Update desired_state stopped in resource claim
-            when:
-            - poolboy_resource_claim_name != ''
-            - poolboy_resource_claim_namespace != ''
-            command: >-
-              oc patch resourceclaims.poolboy.gpte.redhat.com --type=json
-              -n {{ poolboy_resource_claim_namespace | quote }}
-              {{ poolboy_resource_claim_name | quote }}
-              --patch={{ json_patch | to_json | quote }}
-            vars:
-              json_patch:
-              - op: replace
-                path: /spec/resources/{{ poolboy_resource_index }}/template/spec/vars/desired_state
-                value: stopped
-            ignore_errors: true
-
+          roles:
+          - role: babylon_anarchy_governor
         complete:
-          tasks:
-          - name: Set state stopped in subject
-            anarchy_subject_update:
-              metadata:
-                labels:
-                  state: stopped
-              spec:
-                vars:
-                  current_state: stopped
-              status:
-                towerJobs:
-                  stop:
-                    completeTimestamp: '{{ anarchy_run_timestamp }}'
-
+          roles:
+          - role: babylon_anarchy_governor
     start:
-      tasks:
-      - name: Call API
-        uri:
-          url: https://{{ babylon_tower.hostname }}/api/v2/job_templates/job-runner/launch/
-          url_username: "{{ babylon_tower.user }}"
-          url_password: "{{ babylon_tower.password }}"
-          force_basic_auth: true
-          validate_certs: false
-          method: POST
-          return_content: true
-          status_code: 201
-          body_format: json
-          body:
-            extra_vars:
-              job_vars: >-
-                {{ vars.anarchy_subject.vars.job_vars | default({})
-                 | combine(vars.anarchy_governor.vars.job_vars, recursive=True)
-                 | combine({
-                     'ACTION': 'start',
-                     '__meta__': {
-                       'callback': {'token': anarchy_action_callback_token, 'url': anarchy_action_callback_url},
-                       'deployer': {'entry_point': 'ansible/lifecycle_entry_point.yml'},
-                       'tower': {'action': 'start'}
-                     }
-                   }, recursive=True)
-                }}
-        register: r_api_response
-        # FIXME - Handle API errors
-        #ignore_errors: true
-
-      - name: Set job launch id subject status for start
-        anarchy_subject_update:
-          status:
-            towerJobs:
-              start:
-                launchJob: '{{ r_api_response.json.job | default(None) }}'
-                launchTimestamp: '{{ anarchy_run_timestamp }}'
-
+      roles:
+      - role: babylon_anarchy_governor
       callbackHandlers:
         started:
-          tasks:
-          - name: Update AnarchySubject {{ anarchy_subject_name }} for start started
-            anarchy_subject_update:
-              metadata:
-                labels:
-                  state: starting
-              spec:
-                vars:
-                  current_state: starting
-              status:
-                towerJobs:
-                  start:
-                    deployerJob: '{{ anarchy_action_callback_data.data.id | default(None) }}'
-                    deployerTimestamp: '{{ anarchy_run_timestamp }}'
-
+          roles:
+          - role: babylon_anarchy_governor
         complete:
-          tasks:
-          - name: Update AnarchySubject {{ anarchy_subject_name }} for start complete
-            anarchy_subject_update:
-              metadata:
-                labels:
-                  state: started
-              spec:
-                vars:
-                  current_state: started
-              status:
-                towerJobs:
-                  start:
-                    completeTimestamp: '{{ anarchy_run_timestamp }}'
-{% endraw %}
-{% if 'schedule_stop_after_start' in merged_vars.__meta__ or 'idle_after_start' in merged_vars.__meta__ %}
-          - name: Schedule stop
-            anarchy_schedule_action:
-              action: stop
-              after: {{ merged_vars.__meta__.schedule_stop_after_start | default(merged_vars.__meta__.idle_after_start) }}
-{% endif %}
-{% raw %}
-
+          roles:
+          - role: babylon_anarchy_governor
     destroy:
-      tasks:
-      - name: Call API
-        uri:
-          url: https://{{ babylon_tower.hostname }}/api/v2/job_templates/job-runner/launch/
-          url_username: "{{ babylon_tower.user }}"
-          url_password: "{{ babylon_tower.password }}"
-          force_basic_auth: true
-          validate_certs: false
-          method: POST
-          return_content: true
-          status_code: 201
-          body_format: json
-          body:
-            extra_vars:
-              job_vars: >-
-                {{ vars.anarchy_subject.vars.job_vars | default({})
-                 | combine(vars.anarchy_governor.vars.job_vars, recursive=True)
-                 | combine({
-                     'ACTION': 'destroy',
-                     '__meta__': {
-                       'callback': {'token': anarchy_action_callback_token, 'url': anarchy_action_callback_url},
-                       'deployer': {'entry_point': 'ansible/destroy.yml'},
-                       'tower': {'action': 'destroy'}
-                     }
-                   }, recursive=True)
-                }}
-        register: r_api_response
-        # FIXME - Handle API errors
-        #ignore_errors: true
-
-      - name: Set job launch id subject status for destroy
-        anarchy_subject_update:
-          status:
-            towerJobs:
-              destroy:
-                launchJob: '{{ r_api_response.json.job | default(None) }}'
-                launchTimestamp: '{{ anarchy_run_timestamp }}'
-
+      roles:
+      - role: babylon_anarchy_governor
       callbackHandlers:
         started:
-          tasks:
-          - name: Update AnarchySubject {{ anarchy_subject_name }} for destroy started
-            anarchy_subject_update:
-              metadata:
-                labels:
-                  state: destroying
-              spec:
-                vars:
-                  current_state: destroying
-              status:
-                towerJobs:
-                  destroy:
-                    deployerJob: '{{ anarchy_action_callback_data.data.id | default(None) }}'
-                    deployerTimestamp: '{{ anarchy_run_timestamp }}'
-
+          roles:
+          - role: babylon_anarchy_governor
         complete:
-          tasks:
-          - name: Delete anarchy subject
-            anarchy_subject_delete:
-              remove_finalizers: true
-
-          - name: Delete resource handle
-            when:
-            - poolboy_resource_handle_name != ''
-            - poolboy_resource_handle_namespace != ''
-            k8s:
-              api_version: poolboy.gpte.redhat.com/v1
-              kind: ResourceHandle
-              name: "{{ poolboy_resource_handle_name }}"
-              namespace: "{{ poolboy_resource_handle_namespace }}"
-              state: absent
-            ignore_errors: true
-
-          - name: Delete resource claim
-            when:
-            - poolboy_resource_claim_name != ''
-            - poolboy_resource_claim_namespace != ''
-            k8s:
-              api_version: poolboy.gpte.redhat.com/v1
-              kind: ResourceClaim
-              name: "{{ poolboy_resource_claim_name }}"
-              namespace: "{{ poolboy_resource_claim_namespace }}"
-              state: absent
-            ignore_errors: true
-{% endraw %}
+          roles:
+          - role: babylon_anarchy_governor
