@@ -6,3 +6,5 @@ spec:
   url: git@github.com:redhat-gpe/agnosticv.git
   ref: master
   sshKey: agnosticv-operator-sshkey
+  babylonAnarchyGovernorRepo: https://github.com/redhat-gpte-devopsautomation/babylon_anarchy_governor.git
+  babylonAnarchyGovernorVersion: master
