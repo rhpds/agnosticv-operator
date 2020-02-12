@@ -3,8 +3,10 @@ apiVersion: anarchy.gpte.redhat.com/v1
 kind: AnarchyGovernor
 metadata:
   name: {{ _name }}
-  namespace: anarchy-operator
+  namespace: {{ lookup('env','WATCH_NAMESPACE') }}
+{% if current_resource_version != '' %}
   resourceVersion: "{{ current_resource_version }}"
+{% endif %}
 spec:
   ansibleGalaxyRequirements:
     roles:

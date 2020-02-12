@@ -19,7 +19,7 @@
         catalog_item_name: "{{ account | replace('_', '-') }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}"
 
     - set_fact:
-        _namespace: "agnosticv-operator"
+        _namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
 
     - name: Use namespace defined in the catalog item YAML
       set_fact:
@@ -52,7 +52,7 @@
         api_version: anarchy.gpte.redhat.com/v1
         kind: AnarchyGovernor
         name: "{{ catalog_item_name }}"
-        namespace: anarchy-operator
+        namespace: "{{ _namespace }}"
       register: governor_facts
 
     - name: Generate Catalog item governor
