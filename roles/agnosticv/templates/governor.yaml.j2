@@ -13,6 +13,11 @@ spec:
     - name: babylon_anarchy_governor
       src: {{ ('git+' ~ babylon_anarchy_governor_repo) | to_json }}
       version: {{ babylon_anarchy_governor_version | to_json }}
+{% if merged_vars.__meta__.aws_sandboxed | default(false) %}
+    - name: babylon_aws_sandbox
+      src: {{ ('git+' ~ babylon_aws_sandbox_repo) | to_json }}
+      version: {{ babylon_aws_sandbox_version | to_json }}
+{% endif %}
   vars:
     # Flags to modify scheduled action behavior
     schedule_destroy_after_provision: {{ merged_vars.__meta__.schedule_destroy_after_provision | default('disabled') }}
@@ -36,9 +41,13 @@ spec:
 {%   if secret is mapping %}
 {%     if 'name' in secret %}
   - name: {{ secret.name | replace('_', '-') | to_json }}
-    var: job_vars
 {%       if 'namespace' in secret %}
     namespace: {{ secret.namespace | to_json }}
+{%       endif %}
+{%       if 'var' in secret %}
+    var: {{ secret.var | to_json }}
+{%       else %}
+    var: job_vars
 {%       endif %}
 {%     endif %}
 {%   else %}
@@ -62,6 +71,9 @@ spec:
     # anarchy_action_name
     provision:
       roles:
+{% if merged_vars.__meta__.aws_sandboxed | default(false) %}
+      - role: babylon_aws_sandbox
+{% endif %}
       - role: babylon_anarchy_governor
       callbackHandlers:
         # anarchy_action_name
@@ -75,6 +87,9 @@ spec:
           - role: babylon_anarchy_governor
     stop:
       roles:
+{% if merged_vars.__meta__.aws_sandboxed | default(false) %}
+      - role: babylon_aws_sandbox
+{% endif %}
       - role: babylon_anarchy_governor
       callbackHandlers:
         started:
@@ -85,6 +100,9 @@ spec:
           - role: babylon_anarchy_governor
     start:
       roles:
+{% if merged_vars.__meta__.aws_sandboxed | default(false) %}
+      - role: babylon_aws_sandbox
+{% endif %}
       - role: babylon_anarchy_governor
       callbackHandlers:
         started:
@@ -95,6 +113,9 @@ spec:
           - role: babylon_anarchy_governor
     destroy:
       roles:
+{% if merged_vars.__meta__.aws_sandboxed | default(false) %}
+      - role: babylon_aws_sandbox
+{% endif %}
       - role: babylon_anarchy_governor
       callbackHandlers:
         started:
@@ -102,4 +123,7 @@ spec:
           - role: babylon_anarchy_governor
         complete:
           roles:
+{% if merged_vars.__meta__.aws_sandboxed | default(false) %}
+          - role: babylon_aws_sandbox
+{% endif %}
           - role: babylon_anarchy_governor
