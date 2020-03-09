@@ -135,7 +135,7 @@ objects:
           - name: WATCH_NAMESPACE
             valueFrom:
               fieldRef:
-                fieldPath: metadata.name
+                fieldPath: metadata.namespace
           - name: POD_NAME
             valueFrom:
               fieldRef:
