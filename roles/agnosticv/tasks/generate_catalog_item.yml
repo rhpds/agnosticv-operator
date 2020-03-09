@@ -22,7 +22,7 @@
       set_fact:
         governor_namespace: "{{ lookup('env','ANARCHY_NAMESPACE') }}"
 
-    - name: Use the default namespace anarch-operator for Governors objects
+    - name: Use the default namespace anarchy-operator for Governors objects
       set_fact:
         governor_namespace: anarchy-operator
       when: governor_namespace == ''
