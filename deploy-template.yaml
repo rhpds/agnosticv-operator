@@ -13,7 +13,7 @@ parameters:
   value: agnosticv-operator
 - name: AGNOSTICV_NAMESPACE
   value: agnosticv-operator
-- name: WATCH_NAMESPACE
+- name: ANARCHY_NAMESPACE
   value: anarchy-operator
 
 objects:
@@ -133,13 +133,17 @@ objects:
             name: runner
           env:
           - name: WATCH_NAMESPACE
-            value: ${WATCH_NAMESPACE}
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
           - name: POD_NAME
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
           - name: OPERATOR_NAME
             value: ${AGNOSTICV_NAME}
+          - name: ANARCHY_NAMESPACE
+            value: ${ANARCHY_NAMESPACE}
           resources: {}
         serviceAccountName: ${AGNOSTICV_NAME}
         volumes:
