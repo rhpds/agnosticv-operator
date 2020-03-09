@@ -18,24 +18,26 @@
     - set_fact:
         catalog_item_name: "{{ account | replace('_', '-') }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}"
 
-    - set_fact:
-        _namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
+    - name: Get the namespace for Governor objects from environment variables
+      set_fact:
+        governor_namespace: "{{ lookup('env','ANARCHY_NAMESPACE') }}"
+
+    - name: Use the default namespace anarchy-operator for Governors objects
+      set_fact:
+        governor_namespace: anarchy-operator
+      when: governor_namespace == ''
 
     - name: Use namespace defined in the catalog item YAML
       set_fact:
-        _namespace: "{{ merged_vars.__meta__.catalog.namespace }}"
-      when:
-        - '"__meta__" in merged_vars'
-        - '"catalog" in merged_vars.__meta__'
-        - '"namespace" in merged_vars.__meta__.catalog'
-        - merged_vars.__meta__.catalog.namespace != ''
+        template_namespace: >-
+          {{ merged_vars.__meta__.catalog.namespace | default('openshift') }}
 
     - name: Get k8s fact for the template
       k8s_facts:
         api_version: template.openshift.io/v1
         kind: templates
         name: "{{ catalog_item_name }}"
-        namespace: "{{ _namespace }}"
+        namespace: "{{ template_namespace }}"
       register: template_facts
 
     - name: Generate Catalog item
@@ -52,7 +54,7 @@
         api_version: anarchy.gpte.redhat.com/v1
         kind: AnarchyGovernor
         name: "{{ catalog_item_name }}"
-        namespace: "{{ _namespace }}"
+        namespace: "{{ governor_namespace }}"
       register: governor_facts
 
     - name: Generate Catalog item governor
@@ -66,16 +68,19 @@
 
     - name: Create Namespace
       k8s:
-        name: "{{ _namespace }}"
+        name: "{{ item }}"
         api_version: v1
         kind: Namespace
         state: present
+      loop:
+        - "{{ governor_namespace }}"
+        - "{{ template_namespace }}"
 
     - name: Create / Update OpenShift template object
       k8s:
         state: present
         src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
-        namespace: "{{ _namespace }}"
+        namespace: "{{ template_namespace }}"
         force: yes
 
     - name: Create / Update OpenShift Governor object
@@ -83,3 +88,4 @@
         state: present
         src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_governor.yml"
         force: yes
+        namespace: "{{ governor_namespace }}"

@@ -13,6 +13,8 @@ parameters:
   value: agnosticv-operator
 - name: AGNOSTICV_NAMESPACE
   value: agnosticv-operator
+- name: ANARCHY_NAMESPACE
+  value: anarchy-operator
 
 objects:
 - apiVersion: v1
@@ -140,6 +142,8 @@ objects:
                 fieldPath: metadata.name
           - name: OPERATOR_NAME
             value: ${AGNOSTICV_NAME}
+          - name: ANARCHY_NAMESPACE
+            value: ${ANARCHY_NAMESPACE}
           resources: {}
         serviceAccountName: ${AGNOSTICV_NAME}
         volumes:
