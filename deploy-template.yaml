@@ -13,6 +13,8 @@ parameters:
   value: agnosticv-operator
 - name: AGNOSTICV_NAMESPACE
   value: agnosticv-operator
+- name: WATCH_NAMESPACE
+  value: anarchy-operator
 
 objects:
 - apiVersion: v1
@@ -131,9 +133,7 @@ objects:
             name: runner
           env:
           - name: WATCH_NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
+            value: ${WATCH_NAMESPACE}
           - name: POD_NAME
             valueFrom:
               fieldRef:
