@@ -12,6 +12,11 @@ spec:
     - name: babylon_anarchy_governor
       src: {{ ('git+' ~ babylon_anarchy_governor_repo) | to_json }}
       version: {{ babylon_anarchy_governor_version | to_json }}
+{% if gpte_reporting %}
+    - name: babylon_gpte_reporting
+      src: {{ ('git+' ~ babylon_gpte_reporting_repo) | to_json }}
+      version: {{ babylon_gpte_reporting_version | to_json }}
+{% endif %}
 {% if merged_vars.__meta__.aws_sandboxed | default(false) %}
     - name: babylon_aws_sandbox
       src: {{ ('git+' ~ babylon_aws_sandbox_repo) | to_json }}
@@ -80,9 +85,15 @@ spec:
         # anarchy_action_callback_data
         started:
           roles:
+{% if gpte_reporting %}
+          - role: babylon_gpte_reporting
+{% endif %}
           - role: babylon_anarchy_governor
         complete:
           roles:
+{% if gpte_reporting %}
+          - role: babylon_gpte_reporting
+{% endif %}
           - role: babylon_anarchy_governor
     stop:
       roles:
