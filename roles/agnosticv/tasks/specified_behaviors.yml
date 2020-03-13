@@ -1,0 +1,14 @@
+---
+# GPTE Reporting
+# Detect if reporting is needed for that catalog item.
+- name: GPTE Reporting is enabled
+  when: >-
+    {{ 'gpte_db' in
+    merged_vars.__meta__.secrets
+    | default([])
+    | selectattr('var', 'defined')
+    | list
+    | json_query('[].var') }}
+
+  set_fact:
+    gpte_reporting: true

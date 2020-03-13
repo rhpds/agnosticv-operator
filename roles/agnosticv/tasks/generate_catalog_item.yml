@@ -5,6 +5,8 @@
 
 - include_tasks: include_vars.yml
 
+- include_tasks: specified_behaviors.yml
+
 # If the catalog item defines some __meta__ then it's a candidate
 - when:
   - "'__meta__' in merged_vars"
