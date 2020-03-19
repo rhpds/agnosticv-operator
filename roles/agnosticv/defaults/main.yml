@@ -9,7 +9,7 @@ default_message: |-
 default_labels:
   generated_by: agnosticv
 
-repo_path: /opt/ansible/agnosticv
+repo_path: /opt/ansible/agnosticv/{{ url | b64encode }}
 output_dir: /tmp/output_dir
 
 babylon_anarchy_governor_repo: https://github.com/redhat-gpte-devopsautomation/babylon_anarchy_governor.git
