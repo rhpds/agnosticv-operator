@@ -1,5 +1,5 @@
 #!/bin/bash
-echo -n Version:
+echo -n "Version: "
 read VERSION
 
 # Now build the Operator
