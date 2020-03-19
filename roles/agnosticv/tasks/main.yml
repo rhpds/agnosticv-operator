@@ -43,6 +43,7 @@
         version: "{{ ref }}"
         dest: "{{ repo_path }}"
         key_file: /opt/ansible/.ssh/id_rsa
+      register: r_git_private
 
 - when: ssh_key is not defined
   name: Clone agnosticv repo
@@ -51,30 +52,36 @@
     repo: "{{ url }}"
     version: "{{ ref }}"
     dest: "{{ repo_path }}"
+  register: r_git_public
+
+- when: >-
+    r_git_private is changed
+    or r_git_public is changed
+
+  block:
+    - name: Find all catalog items
+      find:
+        recurse: yes
+        use_regex: yes
+        contains: '^__meta__:'
+        paths:
+          - "{{ repo_path }}"
+        excludes:
+          - ^common
+          - ^account
+          - '\\.git'
+        patterns:
+          - '.*ya?ml$'
+      register: r_catalogitems
 
 
-- name: Find all catalog items
-  find:
-    recurse: yes
-    use_regex: yes
-    paths:
-      - "{{ repo_path }}"
-    excludes:
-      - ^common
-      - ^account
-      - '\\.git'
-    patterns:
-      - '.*ya?ml$'
-  register: r_catalogitems
-
-
-- loop: "{{ r_catalogitems.files }}"
-  loop_control:
-    loop_var: c_i
-    label: c_i.path
-  include_tasks: generate_catalog_item.yml
-  when: account != 'EXAMPLE_ACCOUNT'
-  vars:
-    account: "{{ c_i.path.split('/')[-3] }}"
-    catalog_item: "{{ c_i.path.split('/')[-2] }}"
-    stage: "{{ c_i.path.split('/')[-1] | regex_replace('\\.ya?ml$', '') }}"
+    - loop: "{{ r_catalogitems.files }}"
+      loop_control:
+        loop_var: c_i
+        label: c_i.path
+      include_tasks: generate_catalog_item.yml
+      when: account != 'EXAMPLE_ACCOUNT'
+      vars:
+        account: "{{ c_i.path.split('/')[-3] }}"
+        catalog_item: "{{ c_i.path.split('/')[-2] }}"
+        stage: "{{ c_i.path.split('/')[-1] | regex_replace('\\.ya?ml$', '') }}"
