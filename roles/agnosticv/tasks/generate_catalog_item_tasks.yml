@@ -4,15 +4,6 @@
 - set_fact:
     catalog_item_name: "{{ account | replace('_', '-') }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}"
 
-- name: Get the namespace for Governor objects from environment variables
-  set_fact:
-    governor_namespace: "{{ lookup('env','ANARCHY_NAMESPACE') }}"
-
-- name: Use the default namespace anarchy-operator for Governors objects
-  set_fact:
-    governor_namespace: anarchy-operator
-  when: governor_namespace == ''
-
 - name: Use namespace defined in the catalog item YAML
   set_fact:
     template_namespace: >-
