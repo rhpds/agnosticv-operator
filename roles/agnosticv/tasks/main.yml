@@ -42,6 +42,7 @@
         repo: "{{ url }}"
         version: "{{ ref }}"
         dest: "{{ repo_path }}"
+        depth: 1
         key_file: /opt/ansible/.ssh/id_rsa
       register: r_git_private
 
@@ -51,6 +52,7 @@
     accept_hostkey: true
     repo: "{{ url }}"
     version: "{{ ref }}"
+    depth: 1
     dest: "{{ repo_path }}"
   register: r_git_public
 
