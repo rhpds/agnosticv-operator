@@ -125,6 +125,13 @@ objects:
           - mountPath: /tmp/ansible-operator/runner
             name: runner
             readOnly: true
+          resources:
+            limits:
+              cpu: 2
+              memory: 500Mi
+            requests:
+              cpu: 800m
+              memory: 500Mi
         - name: operator
           image: ${AGNOSTICV_IMAGE}
           imagePullPolicy: Always
@@ -144,7 +151,13 @@ objects:
             value: ${AGNOSTICV_NAME}
           - name: ANARCHY_NAMESPACE
             value: ${ANARCHY_NAMESPACE}
-          resources: {}
+          resources:
+            limits:
+              cpu: 1
+              memory: 500Mi
+            requests:
+              cpu: 800m
+              memory: 500Mi
         serviceAccountName: ${AGNOSTICV_NAME}
         volumes:
           - name: runner

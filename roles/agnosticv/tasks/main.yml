@@ -42,7 +42,9 @@
         repo: "{{ url }}"
         version: "{{ ref }}"
         dest: "{{ repo_path }}"
+        depth: 1
         key_file: /opt/ansible/.ssh/id_rsa
+      register: r_git_private
 
 - when: ssh_key is not defined
   name: Clone agnosticv repo
@@ -50,31 +52,52 @@
     accept_hostkey: true
     repo: "{{ url }}"
     version: "{{ ref }}"
+    depth: 1
     dest: "{{ repo_path }}"
+  register: r_git_public
+
+- when: >-
+    r_git_private is changed
+    or r_git_public is changed
+
+  block:
+    - name: Create output_dir directory
+      file:
+        state: directory
+        path: "{{ output_dir }}"
+
+    - name: Get the namespace for Governor objects from environment variables
+      set_fact:
+        governor_namespace: "{{ lookup('env','ANARCHY_NAMESPACE') }}"
+
+    - name: Use the default namespace anarchy-operator for Governors objects
+      set_fact:
+        governor_namespace: anarchy-operator
+      when: governor_namespace == ''
+
+    - name: Find all catalog items
+      find:
+        recurse: yes
+        use_regex: yes
+        contains: '^__meta__:'
+        paths:
+          - "{{ repo_path }}"
+        excludes:
+          - ^common
+          - ^account
+          - '\\.git'
+        patterns:
+          - '.*ya?ml$'
+      register: r_catalogitems
 
 
-- name: Find all catalog items
-  find:
-    recurse: yes
-    use_regex: yes
-    paths:
-      - "{{ repo_path }}"
-    excludes:
-      - ^common
-      - ^account
-      - '\\.git'
-    patterns:
-      - '.*ya?ml$'
-  register: r_catalogitems
-
-
-- loop: "{{ r_catalogitems.files }}"
-  loop_control:
-    loop_var: c_i
-    label: c_i.path
-  include_tasks: generate_catalog_item.yml
-  when: account != 'EXAMPLE_ACCOUNT'
-  vars:
-    account: "{{ c_i.path.split('/')[-3] }}"
-    catalog_item: "{{ c_i.path.split('/')[-2] }}"
-    stage: "{{ c_i.path.split('/')[-1] | regex_replace('\\.ya?ml$', '') }}"
+    - loop: "{{ r_catalogitems.files }}"
+      loop_control:
+        loop_var: c_i
+        label: c_i.path
+      include_tasks: generate_catalog_item.yml
+      when: account != 'EXAMPLE_ACCOUNT'
+      vars:
+        account: "{{ c_i.path.split('/')[-3] }}"
+        catalog_item: "{{ c_i.path.split('/')[-2] }}"
+        stage: "{{ c_i.path.split('/')[-1] | regex_replace('\\.ya?ml$', '') }}"
