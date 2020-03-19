@@ -61,6 +61,11 @@
     or r_git_public is changed
 
   block:
+    - name: Create output_dir directory
+      file:
+        state: directory
+        path: "{{ output_dir }}"
+
     - name: Find all catalog items
       find:
         recurse: yes
