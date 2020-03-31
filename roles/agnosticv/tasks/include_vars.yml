@@ -22,13 +22,16 @@
       index_var: idx
 
 # Merge the merged_vars0 .. merged_vars4 variables
+# TODO: change back to combine filter when there is a new version of ansible
+# in the ansible-operator image
 - set_fact:
     merged_vars: >-
       {{ vars.merged_vars0
-      | combine(vars.merged_vars1,
+      | combine_devel(vars.merged_vars1,
                 vars.merged_vars2,
                 vars.merged_vars3,
                 vars.merged_vars4,
+                list_merge='append',
                 recursive=True) }}
 
 - debug:
