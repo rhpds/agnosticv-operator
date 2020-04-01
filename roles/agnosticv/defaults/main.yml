@@ -25,4 +25,7 @@ babylon_gpte_reporting_version: master
 
 # Merge strategy of variables
 # How lists are merged. Possible values: replace, keep, append, prepend, append_rp, prepend_rp
-agnosticv_list_merge: append
+# Strategy for the __meta__ dictionary:
+meta_list_merge: append
+# Strategy for the rest of the vars:
+all_vars_list_merge: replace

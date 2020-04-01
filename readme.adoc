@@ -82,7 +82,7 @@ for example:
 == Merging strategy
 
 
-The merging strategy is:
+By default, the merging strategy for the `__meta__` variable is:
 
 - recursive
 - lists are appended, not replaced
@@ -126,6 +126,9 @@ __meta__:
 
 
 You can modify this behavior by changing the value of the `agnosticv_list_merge` variable. It defaults to '`append`'.
+
+
+NOTE: You can also modify this behavior for the rest of the rest of the vars by changing the variable `all_vars_list_merge`
 
 == Installation
 
