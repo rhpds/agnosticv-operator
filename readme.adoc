@@ -124,6 +124,9 @@ __meta__:
       namespace: gpte
 ----
 
+
+You can modify this behavior by changing the value of the `agnosticv_list_merge` variable. It defaults to '`append`'.
+
 == Installation
 
 === Create the operator

@@ -31,7 +31,7 @@
                 vars.merged_vars2,
                 vars.merged_vars3,
                 vars.merged_vars4,
-                list_merge='append',
+                list_merge=agnosticv_list_merge,
                 recursive=True) }}
 
 - debug:

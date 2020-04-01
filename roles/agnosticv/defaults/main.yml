@@ -21,3 +21,5 @@ babylon_aws_sandbox_version: master
 gpte_reporting: false
 babylon_gpte_reporting_repo: https://github.com/redhat-gpte-devopsautomation/babylon_gpte_reporting.git
 babylon_gpte_reporting_version: master
+
+agnosticv_list_merge: append
