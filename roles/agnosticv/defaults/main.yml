@@ -22,4 +22,7 @@ gpte_reporting: false
 babylon_gpte_reporting_repo: https://github.com/redhat-gpte-devopsautomation/babylon_gpte_reporting.git
 babylon_gpte_reporting_version: master
 
+
+# Merge strategy of variables
+# How lists are merged. Possible values: replace, keep, append, prepend, append_rp, prepend_rp
 agnosticv_list_merge: append
