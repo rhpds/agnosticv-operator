@@ -128,7 +128,7 @@ __meta__:
 You can modify this behavior by changing the value of the `agnosticv_list_merge` variable. It defaults to '`append`'.
 
 
-NOTE: You can also modify this behavior for the rest of the rest of the vars by changing the variable `all_vars_list_merge`
+NOTE: You can also modify this behavior for the rest of the rest of the vars by changing the variable `all_vars_list_merge`. The recusive option is also changeable, using repsectively `all_vars_recursive_merge` and `meta_recursive_merge` (both default to true)
 
 == Installation
 

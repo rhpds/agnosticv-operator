@@ -31,7 +31,7 @@
                       vars.merged_vars3,
                       vars.merged_vars4,
                       list_merge=all_vars_list_merge,
-                      recursive=True)
+                      recursive=all_vars_recursive_merge)
 
       | combine({'__meta__': merged_vars_meta},
                 recursive=True) }}
@@ -47,7 +47,7 @@
                       vars.merged_vars3.__meta__ | default({}),
                       vars.merged_vars4.__meta__ | default({}),
                       list_merge=meta_list_merge,
-                      recursive=True) }}
+                      recursive=meta_recursive_merge)
 
 
 
