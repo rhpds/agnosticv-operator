@@ -13,6 +13,117 @@ The output of the operator, the final catalog, is composed of OpenShift resource
 
 See also the link:https://github.com/redhat-cop/babylon[Babylon] Project.
 
+== Structure of an agnosticv repo
+
+----
+common.yaml
+
+ACCOUNT/
+    account.yaml
+
+   CATALOGITEM1/
+         common.yaml
+         dev.yaml
+         test.yaml
+         prod.yaml
+
+
+   CATALOGITEM2/
+         common.yaml
+         dev.yaml
+         test.yaml
+         prod.yaml
+----
+
+.Example
+----
+common.yaml
+
+gpte/
+   account.yaml
+
+   OCP4_CLUSTER/
+         common.yaml
+         dev.yaml
+         test.yaml
+         prod.yaml
+
+
+   OCP_CLIENTVM/
+         common.yaml
+         dev.yaml
+         test.yaml
+         prod.yaml
+----
+
+In this example above, agnosticv-operator will produce 6 catalog items:
+
+- gpte.ocp4-cluster.dev
+- gpte.ocp4-cluster.test
+- gpte.ocp4-cluster.prod
+- gpte.ocp-clientvm.dev
+- gpte.ocp-clientvm.test
+- gpte.ocp-clientvm.prod
+
+The files are merged in this order:
+
+. common.yml
+. ACCOUNT/account.yml
+. ACCOUNT/CATALOG_ITEM/common.yml
+. ACCOUNT/CATALOG_ITEM/STAGE.yml
+
+for example:
+
+. common.yml
+. gpte/account.yml
+. gpte/OCP4_CLUSTER/common.yml
+. gpte/OCP4_CLUSTER/dev.yml
+
+== Merging strategy
+
+
+The merging strategy is:
+
+- recursive
+- lists are appended, not replaced
+
+
+That means that if a list if defined in 2 files, then when it's merged, the lists are appended. For example:
+
+[source,yaml]
+.gpte/account.yaml
+----
+__meta__:
+  secrets:
+    - name: gpte-db
+      namespace: gpte
+      var: gpte_db
+----
+
+[source,yaml]
+.gpte/CATALOGITEM/common.yaml
+----
+__meta__:
+  secrets:
+    - name: aws-gpte-prod
+      namespace: gpte
+----
+
+
+Will produce:
+
+
+[source,yaml]
+----
+__meta__:
+  secrets:
+    - name: gpte-db
+      namespace: gpte
+      var: gpte_db
+    - name: aws-gpte-prod
+      namespace: gpte
+----
+
 == Installation
 
 === Create the operator
