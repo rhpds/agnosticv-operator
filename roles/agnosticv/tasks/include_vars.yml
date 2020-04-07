@@ -47,7 +47,7 @@
                       vars.merged_vars3.__meta__ | default({}),
                       vars.merged_vars4.__meta__ | default({}),
                       list_merge=meta_list_merge,
-                      recursive=meta_recursive_merge)
+                      recursive=meta_recursive_merge) }}
 
 
 
