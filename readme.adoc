@@ -134,7 +134,7 @@ NOTE: You can also modify this behavior for the rest of the rest of the vars by 
 
 === Create the operator
 
-This link:deploy-template.yaml[template] will take care of most of the things you need:
+This link:helm[Helm chart] will take care of most of the things you need:
 
 * serviceaccount/agnosticv-operator
 * role.rbac.authorization.k8s.io/agnosticv-operator
@@ -149,10 +149,8 @@ Just run the following:
 
 [source,shell]
 ----
-oc process -f https://raw.githubusercontent.com/redhat-gpte-devopsautomation/agnosticv-operator/master/deploy-template.yaml|oc create -f -
-
+helm install agnosticv-operator helm/
 ----
-
 
 === Create agnosticV repos
 

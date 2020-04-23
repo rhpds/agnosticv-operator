@@ -1,0 +1,10 @@
+{{- if .Values.namespace.create -}}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ include "agnosticv.namespaceName" . }}
+  labels:
+    {{- include "agnosticv.labels" . | nindent 4 }}
+  annotations:
+    openshift-provision/action: create
+{{- end -}}
