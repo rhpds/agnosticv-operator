@@ -22,6 +22,9 @@ spec:
       src: {{ ('git+' ~ babylon_aws_sandbox_repo) | to_json }}
       version: {{ babylon_aws_sandbox_version | to_json }}
 {% endif %}
+  pythonRequirements: |
+    awscli==1.18.92
+    pymysql==0.9.3
   vars:
     # Flags to modify scheduled action behavior
     schedule_destroy_after_provision: {{ merged_vars.__meta__.schedule_destroy_after_provision | default('disabled') }}
