@@ -1,9 +1,10 @@
 :toc2:
 = AgnosticV Operator
 
-AgnosticV is vars for link:https://github.com/redhat-cop/agnosticd[agnosticD].
+AgnosticV operator is an implementation of link:https://github.com/redhat-cop/agnosticv[agnosticv] running in OpenShift / k8s.
+In short, AgnosticV is vars for the deployer link:https://github.com/redhat-cop/agnosticd[agnosticD].
 
-This is the operator that takes care of updating the Catalog, based on several agnosticV repos.
+This is the operator that takes care of updating the Catalog in OpenShift, based on several agnosticV repos.
 
 The output of the operator, the final catalog, is composed of OpenShift resources:
 
