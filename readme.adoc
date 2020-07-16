@@ -150,6 +150,9 @@ Just run the following:
 [source,shell]
 ----
 helm install agnosticv-operator helm/
+
+# or with OpenShift Template
+oc process -f https://raw.githubusercontent.com/redhat-gpte-devopsautomation/agnosticv-operator/master/deploy-template.yaml|oc create -f -
 ----
 
 === Create agnosticV repos
