@@ -98,6 +98,10 @@ spec:
           - role: babylon_gpte_reporting
 {% endif %}
           - role: babylon_anarchy_governor
+    # Check provision status to detect failures
+    check:
+      roles:
+      - role: babylon_anarchy_governor
     stop:
       roles:
 {% if merged_vars.__meta__.aws_sandboxed | default(false) %}
