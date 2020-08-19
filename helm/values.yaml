@@ -14,7 +14,7 @@ crds:
   create: true
 
 image:
-  repository: quay.io/gpte-devops-automation/agnosticv-operator
+  repository: quay.io/redhat-gpte/agnosticv-operator
   pullPolicy: Always
   tagOverride:
 
