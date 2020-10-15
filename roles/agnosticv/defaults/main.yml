@@ -32,4 +32,4 @@ all_vars_list_merge: replace
 
 #  recursive=True parameter to not only override keys in the first hash, but also recurse into nested hashes and merge their keys too
 meta_recursive_merge: true
-all_vars_recursive_merge: true
+all_vars_recursive_merge: false
