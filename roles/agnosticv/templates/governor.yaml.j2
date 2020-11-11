@@ -98,36 +98,6 @@ spec:
           - role: babylon_gpte_reporting
 {% endif %}
           - role: babylon_anarchy_governor
-    # Check provision status to detect failures
-    check:
-      roles:
-      - role: babylon_anarchy_governor
-    stop:
-      roles:
-{% if merged_vars.__meta__.aws_sandboxed | default(false) %}
-      - role: babylon_aws_sandbox
-{% endif %}
-      - role: babylon_anarchy_governor
-      callbackHandlers:
-        started:
-          roles:
-          - role: babylon_anarchy_governor
-        complete:
-          roles:
-          - role: babylon_anarchy_governor
-    start:
-      roles:
-{% if merged_vars.__meta__.aws_sandboxed | default(false) %}
-      - role: babylon_aws_sandbox
-{% endif %}
-      - role: babylon_anarchy_governor
-      callbackHandlers:
-        started:
-          roles:
-          - role: babylon_anarchy_governor
-        complete:
-          roles:
-          - role: babylon_anarchy_governor
     destroy:
       roles:
 {% if merged_vars.__meta__.aws_sandboxed | default(false) %}
@@ -144,3 +114,22 @@ spec:
           - role: babylon_aws_sandbox
 {% endif %}
           - role: babylon_anarchy_governor
+    # Check provision status to detect failures
+    check:
+      roles:
+      - role: babylon_anarchy_governor
+{% for __action in ('start', 'stop', 'status') %}
+    {{ __action }}:
+      roles:
+{%   if merged_vars.__meta__.aws_sandboxed | default(false) %}
+      - role: babylon_aws_sandbox
+{%   endif %}
+      - role: babylon_anarchy_governor
+      callbackHandlers:
+        started:
+          roles:
+          - role: babylon_anarchy_governor
+        complete:
+          roles:
+          - role: babylon_anarchy_governor
+{% endfor %}
