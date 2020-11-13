@@ -23,22 +23,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: ansible
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          command:
-          - /usr/local/bin/ao-logs
-          - /tmp/ansible-operator/runner
-          - stdout
-          image: "{{ include "agnosticv.image" . }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          volumeMounts:
-          - mountPath: /tmp/ansible-operator/runner
-            name: runner
-            readOnly: true
-          resources:
-            {{- toYaml .Values.resources.ansible | nindent 12 }}
-        - name: operator
+        - name: {{ include "agnosticv.name" .  }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ include "agnosticv.image" . }}"
