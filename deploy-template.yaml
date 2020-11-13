@@ -114,25 +114,7 @@ objects:
           name: ${AGNOSTICV_NAME}
       spec:
         containers:
-        - name: ansible
-          command:
-          - /usr/local/bin/ao-logs
-          - /tmp/ansible-operator/runner
-          - stdout
-          image: ${AGNOSTICV_IMAGE}
-          imagePullPolicy: Always
-          volumeMounts:
-          - mountPath: /tmp/ansible-operator/runner
-            name: runner
-            readOnly: true
-          resources:
-            limits:
-              cpu: 2
-              memory: 500Mi
-            requests:
-              cpu: 800m
-              memory: 500Mi
-        - name: operator
+        - name: ${AGNOSTICV_NAME}
           image: ${AGNOSTICV_IMAGE}
           imagePullPolicy: Always
           volumeMounts:
