@@ -7,7 +7,7 @@ RUN yum clean all
 
 USER ${USER_UID}
 
-RUN curl --silent \
+RUN curl --silent --location \
     -o ${HOME}/agnosticv_cli \
     https://github.com/redhat-cop/agnosticv/releases/download/v0.1.0/agnosticv_linux_amd64
 RUN chmod +x ${HOME}/agnosticv_cli
