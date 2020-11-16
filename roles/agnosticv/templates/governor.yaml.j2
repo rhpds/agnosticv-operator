@@ -125,7 +125,7 @@ spec:
           - role: babylon_aws_sandbox
 {% endif %}
 {% if merged_vars.__meta__.scheduler.enable | default(false) %}
-      - role: babylon_agnostics
+          - role: babylon_agnostics
 {% endif %}
           - role: babylon_anarchy_governor
     # Check provision status to detect failures
