@@ -1,55 +1,13 @@
 ---
-- include_vars:
-    name: merged_vars{{ idx }}
-    dir: "{{ item.dir }}"
-    files_matching: "{{ item.pattern }}"
-    depth: 1
-    extensions:
-      - yaml
-      - yml
-  loop:
-    - dir: "{{ repo_path }}"
-      pattern: ^common
-    - dir: "{{ repo_path }}/{{ account }}"
-      pattern: ^common
-    - dir: "{{ repo_path }}/{{ account }}"
-      pattern: ^account
-    - dir: "{{ repo_path }}/{{ account }}/{{ catalog_item }}"
-      pattern: ^common
-    - dir: "{{ repo_path }}/{{ account }}/{{ catalog_item }}"
-      pattern: ^{{ stage }}
-  loop_control:
-      index_var: idx
+- name: Run AgnosticV client
+  command: >-
+    {{ agnosticv_client_path }} --merge {{ c_i.path }}
+  register:
+    r_agnosticv_client_merge
 
-- name: Merge all the variables
+- name: Set merged_vars
   set_fact:
-    # Merge the merged_vars0 .. merged_vars4 variables
-    merged_vars: >-
-      {{ vars.merged_vars0
-      | combine_devel(vars.merged_vars1,
-                      vars.merged_vars2,
-                      vars.merged_vars3,
-                      vars.merged_vars4,
-                      list_merge=all_vars_list_merge,
-                      recursive=all_vars_recursive_merge)
-
-      | combine({'__meta__': merged_vars_meta},
-                recursive=True) }}
-
-  # TODO: change back to combine filter when there is a new version of ansible
-  # in the ansible-operator image that allows list_merge.
-  # use list merge only for __meta__
-  vars:
-    merged_vars_meta: >-
-      {{ vars.merged_vars0.__meta__ | default({})
-      | combine_devel(vars.merged_vars1.__meta__ | default({}),
-                      vars.merged_vars2.__meta__ | default({}),
-                      vars.merged_vars3.__meta__ | default({}),
-                      vars.merged_vars4.__meta__ | default({}),
-                      list_merge=meta_list_merge,
-                      recursive=meta_recursive_merge) }}
-
-
+    merged_vars: "{{ r_agnosticv_client_merge.stdout | from_yaml }}"
 
 - debug:
     var: merged_vars
