@@ -26,13 +26,5 @@ babylon_gpte_reporting_version: master
 babylon_agnostics_repo: https://github.com/redhat-cop/babylon_agnostics.git
 babylon_agnostics_version: main
 
-# Merge strategy of variables
-# How lists are merged. Possible values: replace, keep, append, prepend, append_rp, prepend_rp
-# Strategy for the __meta__ dictionary:
-meta_list_merge: append
-# Strategy for the rest of the vars:
-all_vars_list_merge: replace
-
-#  recursive=True parameter to not only override keys in the first hash, but also recurse into nested hashes and merge their keys too
-meta_recursive_merge: true
-all_vars_recursive_merge: false
+# AgnosticV CLI
+agnosticv_client_path: /opt/ansible/agnosticv_cli

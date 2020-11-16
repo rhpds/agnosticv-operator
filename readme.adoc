@@ -82,54 +82,9 @@ for example:
 
 == Merging strategy
 
+The agnosticv-operator uses the default agnosticv implementation: agnosticv CLI written in go.
 
-By default, the merging strategy for the `__meta__` variable is:
-
-- recursive
-- lists are appended, not replaced
-
-
-That means that if a list if defined in 2 files, then when it's merged, the lists are appended. For example:
-
-[source,yaml]
-.gpte/account.yaml
-----
-__meta__:
-  secrets:
-    - name: gpte-db
-      namespace: gpte
-      var: gpte_db
-----
-
-[source,yaml]
-.gpte/CATALOGITEM/common.yaml
-----
-__meta__:
-  secrets:
-    - name: aws-gpte-prod
-      namespace: gpte
-----
-
-
-Will produce:
-
-
-[source,yaml]
-----
-__meta__:
-  secrets:
-    - name: gpte-db
-      namespace: gpte
-      var: gpte_db
-    - name: aws-gpte-prod
-      namespace: gpte
-----
-
-
-You can modify this behavior by changing the value of the `agnosticv_list_merge` variable. It defaults to '`append`'.
-
-
-NOTE: You can also modify this behavior for the rest of the rest of the vars by changing the variable `all_vars_list_merge`. The recusive option is also changeable, using repsectively `all_vars_recursive_merge` and `meta_recursive_merge` (both default to true)
+See the merging strategy here: https://github.com/redhat-cop/agnosticv#merging-strategies
 
 == Installation
 
