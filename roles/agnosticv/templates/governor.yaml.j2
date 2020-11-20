@@ -8,25 +8,7 @@ metadata:
 {% endif %}
 spec:
   ansibleGalaxyRequirements:
-    roles:
-    - name: babylon_anarchy_governor
-      src: {{ ('git+' ~ babylon_anarchy_governor_repo) | to_json }}
-      version: {{ babylon_anarchy_governor_version | to_json }}
-{% if gpte_reporting %}
-    - name: babylon_gpte_reporting
-      src: {{ ('git+' ~ babylon_gpte_reporting_repo) | to_json }}
-      version: {{ babylon_gpte_reporting_version | to_json }}
-{% endif %}
-{% if merged_vars.__meta__.aws_sandboxed | default(false) %}
-    - name: babylon_aws_sandbox
-      src: {{ ('git+' ~ babylon_aws_sandbox_repo) | to_json }}
-      version: {{ babylon_aws_sandbox_version | to_json }}
-{% endif %}
-{% if merged_vars.__meta__.scheduler.enable | default(false) %}
-    - name: babylon_agnostics
-      src: {{ ('git+' ~ babylon_agnostics_repo) | to_json }}
-      version: {{ babylon_agnostics_version | to_json }}
-{% endif %}
+    roles: {{ babylon_anarchy_roles | to_json }}
   pythonRequirements: |
     awscli==1.18.92
     pymysql==0.9.3
@@ -68,84 +50,30 @@ spec:
 {% endfor %}
 
   subjectEventHandlers:
-    create:
+{% for __event in ('create', 'update', 'delete') %}
+    {{ __event }}:
       roles:
-      - role: babylon_anarchy_governor
-    update:
-      roles:
-      - role: babylon_anarchy_governor
-    delete:
-      roles:
-      - role: babylon_anarchy_governor
+{%   for __role in babylon_anarchy_roles %}
+      - role: {{ __role.name }}
+{%   endfor %}
+{% endfor %}
 
   actions:
-    # anarchy_action_name
-    provision:
-      roles:
-{% if merged_vars.__meta__.aws_sandboxed | default(false) %}
-      - role: babylon_aws_sandbox
-{% endif %}
-{% if merged_vars.__meta__.scheduler.enable | default(false) %}
-      - role: babylon_agnostics
-{% endif %}
-      - role: babylon_anarchy_governor
-      callbackHandlers:
-        # anarchy_action_name
-        # anarchy_action_callback_name
-        # anarchy_action_callback_data
-        started:
-          roles:
-{% if gpte_reporting %}
-          - role: babylon_gpte_reporting
-{% endif %}
-          - role: babylon_anarchy_governor
-        complete:
-          roles:
-{% if gpte_reporting %}
-          - role: babylon_gpte_reporting
-{% endif %}
-          - role: babylon_anarchy_governor
-    destroy:
-      roles:
-{% if merged_vars.__meta__.aws_sandboxed | default(false) %}
-      - role: babylon_aws_sandbox
-{% endif %}
-{% if merged_vars.__meta__.scheduler.enable | default(false) %}
-      - role: babylon_agnostics
-{% endif %}
-      - role: babylon_anarchy_governor
-      callbackHandlers:
-        started:
-          roles:
-          - role: babylon_anarchy_governor
-        complete:
-          roles:
-{% if merged_vars.__meta__.aws_sandboxed | default(false) %}
-          - role: babylon_aws_sandbox
-{% endif %}
-{% if merged_vars.__meta__.scheduler.enable | default(false) %}
-          - role: babylon_agnostics
-{% endif %}
-          - role: babylon_anarchy_governor
-    # Check provision status to detect failures
-    check:
-      roles:
-      - role: babylon_anarchy_governor
-{% for __action in ('start', 'stop', 'status') %}
+{% for __action in ('provision', 'destroy', 'start', 'stop', 'status', 'check') %}
     {{ __action }}:
       roles:
-{%   if merged_vars.__meta__.aws_sandboxed | default(false) %}
-      - role: babylon_aws_sandbox
-{%   endif %}
-{% if merged_vars.__meta__.scheduler.enable | default(false) %}
-      - role: babylon_agnostics
-{% endif %}
+{%   for __role in babylon_anarchy_roles %}
+      - role: {{ __role.name }}
+{%   endfor %}
       - role: babylon_anarchy_governor
+{%   if __action != 'check' %}
       callbackHandlers:
-        started:
+{%     for __callback in ('started',  'complete') %}
+        {{ __callback }}:
           roles:
-          - role: babylon_anarchy_governor
-        complete:
-          roles:
-          - role: babylon_anarchy_governor
+{%       for __role in babylon_anarchy_roles %}
+          - role: {{ __role.name }}
+{%       endfor %}
+{%     endfor %}
+{%   endif %}
 {% endfor %}
