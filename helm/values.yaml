@@ -1,7 +1,4 @@
-# Default values for ..
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
+---
 namespace:
   # Specifies whether a namespace should be created
   create: true
@@ -9,17 +6,37 @@ namespace:
   # If not set and create is true, a name is generated using the name template
   name:
 
-# Installing CustomResourceDefinitions requires elevated privileges (typically cluster-admin)
-crds:
-  create: true
-
 image:
   repository: quay.io/redhat-gpte/agnosticv-operator
   pullPolicy: Always
   tagOverride:
 
+# AgnosticV Repositories list.
+# Ex:
+#agnosticvRepos:
+#- name: gpte-agnosticv
+#  url: git@github.com:redhat-gpe/agnosticv.git
+#  ref: master
+#  sshKey: |
+#    -----BEGIN RSA PRIVATE KEY-----
+#    ...
+#    -----END RSA PRIVATE KEY-----
+agnosticvRepos:
+- name: gpte-agnosticv
+  url: git@github.com:redhat-gpe/agnosticv.git
+  ref: master
+  sshKey: |
+    -----BEGIN RSA PRIVATE KEY-----
+    ...
+    -----END RSA PRIVATE KEY-----
+
 anarchy:
   namespace: anarchy-operator
+
+babylonAnarchyRoles:
+- name: anarchy
+  src: https://github.com/redhat-gpte-devopsautomation/babylon_anarchy_governor.git
+  version: master
 
 replicaCount: 1
 
@@ -36,17 +53,6 @@ serviceAccount:
   # If not set and create is true, a name is generated using the name template
   name:
 
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
 resources:
   ansible:
     limits:
@@ -62,16 +68,6 @@ resources:
     requests:
       cpu: 800m
       memory: 500Mi
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
 
 nodeSelector: {}
 
