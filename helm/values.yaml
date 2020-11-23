@@ -21,14 +21,7 @@ image:
 #    -----BEGIN RSA PRIVATE KEY-----
 #    ...
 #    -----END RSA PRIVATE KEY-----
-agnosticvRepos:
-- name: gpte-agnosticv
-  url: git@github.com:redhat-gpe/agnosticv.git
-  ref: master
-  sshKey: |
-    -----BEGIN RSA PRIVATE KEY-----
-    ...
-    -----END RSA PRIVATE KEY-----
+agnosticvRepos: []
 
 anarchy:
   namespace: anarchy-operator
