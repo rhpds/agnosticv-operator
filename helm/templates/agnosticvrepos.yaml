@@ -1,0 +1,24 @@
+{{- range $agnosticvRepo := .Values.agnosticvRepos -}}
+---
+apiVersion: gpte.redhat.com/v1
+kind: AgnosticVRepo
+metadata:
+  name: {{ $agnosticvRepo.name }}
+  namespace: {{ include "agnosticv.namespaceName" $ }}
+spec:
+  ref: {{ $agnosticvRepo.ref | default "master" | quote }}
+  url: {{ $agnosticvRepo.url | quote }}
+  babylonAnarchyRoles: 
+    {{- toYaml $.Values.babylonAnarchyRoles | nindent 4 }}
+  {{- with $agnosticvRepo.sshKey }}
+  sshKey: {{ $agnosticvRepo.name }}-sshkey
+---         
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $agnosticvRepo.name }}-sshkey
+  namespace: {{ include "agnosticv.namespaceName" $ }}
+data:
+  id_rsa: {{ . | b64enc }}
+  {{- end }}
+{{- end }}

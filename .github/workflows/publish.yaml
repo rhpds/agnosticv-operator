@@ -22,6 +22,12 @@ jobs:
         TAGS=('latest' "${VERSION}" "${VERSION%.*}")
         # Set IMAGE_TAGS output for use in next step
         ( IFS=$','; echo "::set-output name=IMAGE_TAGS::${TAGS[*]}" )
+        # Read version from helm/Chart.yaml
+        HELM_CHART_VERSION=$(sed -nr 's/^appVersion: (.*)/\1/p' helm/Chart.yaml)
+        if [[ "v${HELM_CHART_VERSION}" != "${VERSION}" ]]; then
+          echo "Helm chart version does not match tag!"
+          exit 1
+        fi
 
     - name: Build and publish image
       uses: docker/build-push-action@v1
@@ -32,13 +38,3 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
         tags: "${{ steps.get_version.outputs.IMAGE_TAGS }}"
-
-    - name: Build and publish image (legacy OCP3)
-      uses: docker/build-push-action@v1
-      with:
-        dockerfile: build/Dockerfile-ocp3
-        registry: ${{ secrets.REGISTRY_URI }}
-        repository: ${{ secrets.REGISTRY_REPOSITORY }}/agnosticv-operator
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-        tags: "${{ steps.get_version.outputs.IMAGE_TAGS }}-ocp3"

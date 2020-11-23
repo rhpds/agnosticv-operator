@@ -12,19 +12,11 @@ default_labels:
 repo_path: /opt/ansible/agnosticv/{{ url | b64encode }}
 output_dir: /tmp/output_dir
 
-babylon_anarchy_governor_repo: https://github.com/redhat-gpte-devopsautomation/babylon_anarchy_governor.git
-babylon_anarchy_governor_version: master
-
-babylon_aws_sandbox_repo: https://github.com/redhat-gpte-devopsautomation/babylon_aws_sandbox.git
-babylon_aws_sandbox_version: master
-
-gpte_reporting: false
-babylon_gpte_reporting_repo: https://github.com/redhat-gpte-devopsautomation/babylon_gpte_reporting.git
-babylon_gpte_reporting_version: master
-
-# AgnosticS
-babylon_agnostics_repo: https://github.com/redhat-cop/babylon_agnostics.git
-babylon_agnostics_version: main
+# Ansible roles to install with AnsibleGalaxy and order in which to execute
+babylon_anarchy_roles:
+- name: babylon_anarchy_governor
+  src: https://github.com/redhat-gpte-devopsautomation/babylon_anarchy_governor.git
+  version: master
 
 # AgnosticV CLI
 agnosticv_client_path: /opt/ansible/agnosticv_cli
