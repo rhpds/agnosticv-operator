@@ -65,7 +65,6 @@ spec:
 {%   for __role in babylon_anarchy_roles %}
       - role: {{ __role.name }}
 {%   endfor %}
-      - role: babylon_anarchy_governor
 {%   if __action != 'check' %}
       callbackHandlers:
 {%     for __callback in ('started',  'complete') %}
