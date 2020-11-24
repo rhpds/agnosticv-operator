@@ -48,7 +48,9 @@ Selector labels
 */}}
 {{- define "agnosticv.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "agnosticv.name" . }}
+{{-   if (ne .Release.Name "RELEASE-NAME") }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{-   end -}}
 {{- end -}}
 
 {{/*
@@ -77,5 +79,5 @@ Create the name of the namespace to use
 Define the image to deploy
 */}}
 {{- define "agnosticv.image" -}}
-{{- printf "%s:%s" .Values.image.repository (default .Chart.AppVersion .Values.image.tagOverride) -}}
+{{- printf "%s:v%s" .Values.image.repository (default .Chart.AppVersion .Values.image.tagOverride) -}}
 {{- end -}}
