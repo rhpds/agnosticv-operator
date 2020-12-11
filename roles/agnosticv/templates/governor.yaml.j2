@@ -8,6 +8,7 @@ metadata:
 {% endif %}
 spec:
   ansibleGalaxyRequirements:
+    collections: {{ babylon_anarchy_collections | to_json }}
     roles: {{ babylon_anarchy_roles | to_json }}
   pythonRequirements: |
     awscli==1.18.92
