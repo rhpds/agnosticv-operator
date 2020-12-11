@@ -12,6 +12,11 @@ default_labels:
 repo_path: /opt/ansible/agnosticv/{{ url | b64encode }}
 output_dir: /tmp/output_dir
 
+# Ansible collections to install with AnsibleGalaxy
+babylon_anarchy_collections:
+- name: awx.awx
+  version: 15.0.1
+
 # Ansible roles to install with AnsibleGalaxy and order in which to execute
 babylon_anarchy_roles:
 - name: babylon_anarchy_governor
