@@ -8,6 +8,9 @@ metadata:
 {% endif %}
 spec:
   ansibleGalaxyRequirements:
+    collections:
+    - name: awx.awx
+      version: 15.0.1
     roles: {{ babylon_anarchy_roles | to_json }}
   pythonRequirements: |
     awscli==1.18.92
