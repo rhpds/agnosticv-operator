@@ -60,20 +60,17 @@ spec:
 {% endfor %}
 
   actions:
-{% for __action in ('provision', 'destroy', 'start', 'stop', 'status', 'check') %}
+{% for __action in ('provision', 'destroy', 'start', 'stop', 'status') %}
     {{ __action }}:
       roles:
 {%   for __role in babylon_anarchy_roles %}
       - role: {{ __role.name }}
 {%   endfor %}
-{%   if __action != 'check' %}
+      finishOnSuccessfulRun: true
       callbackHandlers:
-{%     for __callback in ('started',  'complete') %}
-        {{ __callback }}:
+        complete:
           roles:
-{%       for __role in babylon_anarchy_roles %}
+{%   for __role in babylon_anarchy_roles %}
           - role: {{ __role.name }}
-{%       endfor %}
-{%     endfor %}
-{%   endif %}
+{%   endfor %}
 {% endfor %}
