@@ -74,3 +74,8 @@ spec:
           - role: {{ __role.name }}
 {%   endfor %}
 {% endfor %}
+
+  removeFinishedActions:
+    after: "{{ merged_vars.__meta__.anarchy.remove_finished_actions_after | default('12h') }}"
+  removeSuccessfulRuns:
+    after: "{{ merged_vars.__meta__.anarchy.remove_successful_runs_after | default('3h') }}"
