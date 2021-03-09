@@ -64,6 +64,6 @@ jobs:
       uses: docker/build-push-action@v2
       if: steps.image_tags.outputs.IMAGE_TAGS
       with:
-        file: Dockerfile
+        file: build/Dockerfile
         push: true
         tags: ${{ steps.image_tags.outputs.IMAGE_TAGS }}
