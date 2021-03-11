@@ -4,8 +4,4 @@
       {{ repo_path }} > {{ account }} > {{ catalog_item }} > {{ stage }}
 
 - include_tasks: include_vars.yml
-
-# If the catalog item defines some __meta__ then it's a candidate
-- when: >-
-    'catalog' in merged_vars.__meta__ | default({})
-  include_tasks: generate_catalog_item_tasks.yml
+- include_tasks: generate_catalog_item_tasks.yml

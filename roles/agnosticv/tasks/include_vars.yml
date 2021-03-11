@@ -1,7 +1,9 @@
 ---
 - name: Run AgnosticV client
   command: >-
-    {{ agnosticv_client_path }} --merge {{ c_i.path }}
+    {{ agnosticv_client_path }} --merge {{ c_i }}
+  args:
+    chdir: "{{ repo_path }}"
   register:
     r_agnosticv_client_merge
 
@@ -11,3 +13,4 @@
 
 - debug:
     var: merged_vars
+    verbosity: 2
