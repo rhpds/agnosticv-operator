@@ -76,28 +76,19 @@
       when: governor_namespace == ''
 
     - name: Find all catalog items
-      find:
-        recurse: yes
-        use_regex: yes
-        contains: '^__meta__:'
-        paths:
-          - "{{ repo_path }}"
-        excludes:
-          - ^common
-          - ^account
-          - '\\.git'
-        patterns:
-          - '.*ya?ml$'
+      command: >-
+        {{ agnosticv_client_path }} --list --has __meta__.catalog
+      args:
+        chdir: "{{ repo_path }}"
       register: r_catalogitems
 
-
-    - loop: "{{ r_catalogitems.files }}"
+    - loop: "{{ r_catalogitems.stdout_lines }}"
       loop_control:
         loop_var: c_i
-        label: c_i.path
+        label: c_i
       include_tasks: generate_catalog_item.yml
       when: account != 'EXAMPLE_ACCOUNT'
       vars:
-        account: "{{ c_i.path.split('/')[-3] }}"
-        catalog_item: "{{ c_i.path.split('/')[-2] }}"
-        stage: "{{ c_i.path.split('/')[-1] | regex_replace('\\.ya?ml$', '') }}"
+        account: "{{ c_i.split('/')[-3] }}"
+        catalog_item: "{{ c_i.split('/')[-2] }}"
+        stage: "{{ c_i.split('/')[-1] | regex_replace('\\.ya?ml$', '') }}"

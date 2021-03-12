@@ -1,4 +1,4 @@
-FROM quay.io/operator-framework/ansible-operator:v1.2.0
+FROM quay.io/operator-framework/ansible-operator:v1.4.2
 
 USER root
 
@@ -9,7 +9,7 @@ USER ${USER_UID}
 
 RUN curl --silent --location \
     -o ${HOME}/agnosticv_cli \
-    https://github.com/redhat-cop/agnosticv/releases/download/v0.1.1/agnosticv_linux_amd64
+    https://github.com/redhat-cop/agnosticv/releases/download/v0.1.2/agnosticv_linux_amd64
 RUN chmod +x ${HOME}/agnosticv_cli
 
 COPY ansible.cfg /etc/ansible/ansible.cfg
