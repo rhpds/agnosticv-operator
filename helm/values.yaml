@@ -29,7 +29,7 @@ anarchy:
 babylonAnarchyRoles:
 - name: anarchy
   src: https://github.com/redhat-gpte-devopsautomation/babylon_anarchy_governor.git
-  version: master
+  version: main
 
 replicaCount: 1
 
