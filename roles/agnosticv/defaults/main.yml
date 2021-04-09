@@ -10,6 +10,7 @@ default_labels:
   generated_by: agnosticv
 
 repo_path: /opt/ansible/agnosticv/{{ url | b64encode }}
+repo_context_dir: ''
 output_dir: /tmp/output_dir
 
 # Ansible collections to install with AnsibleGalaxy

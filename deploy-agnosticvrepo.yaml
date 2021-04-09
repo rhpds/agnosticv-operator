@@ -15,6 +15,8 @@ parameters:
   value: master
 - name: AGNOSTICV_SCM_SSH_KEY_SECRET
   value: agnosticv-repo-sshkey
+- name: AGNOSTICV_SCM_CONTEXT_DIR
+  required: false
 - name: BABYLON_ANARCHY_GOVERNOR_REPO
   description: Git repository for Ansible role containing Babylon AnarchyGovernor logic
   value: https://github.com/redhat-gpte-devopsautomation/babylon_anarchy_governor.git
@@ -30,6 +32,7 @@ objects:
   spec:
     url: ${AGNOSTICV_SCM_URL}
     ref: ${AGNOSTICV_SCM_REF}
+    contextDir: ${AGNOSTICV_SCM_CONTEXT_DIR}
     sshKey: ${AGNOSTICV_SCM_SSH_KEY_SECRET}
     babylon_anarchy_roles:
     - name: babylon_anarchy_governor

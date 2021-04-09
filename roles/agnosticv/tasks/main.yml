@@ -56,6 +56,8 @@
     dest: "{{ repo_path }}"
   register: r_git_public
 
+- when: contextDir
+
 - when: >-
     r_git_private is changed
     or r_git_public is changed
@@ -79,7 +81,7 @@
       command: >-
         {{ agnosticv_client_path }} --list --has __meta__.catalog
       args:
-        chdir: "{{ repo_path }}"
+        chdir: "{{ (repo_path, repo_context_dir) | join('/') }}"
       register: r_catalogitems
 
     - loop: "{{ r_catalogitems.stdout_lines }}"
