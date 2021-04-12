@@ -3,7 +3,7 @@
   command: >-
     {{ agnosticv_client_path }} --merge {{ c_i }}
   args:
-    chdir: "{{ (repo_path, repo_context_dir) | join('/') }}"
+    chdir: "{{ (repo_path, context_dir) | join('/') }}"
   register:
     r_agnosticv_client_merge
 
