@@ -56,8 +56,6 @@
     dest: "{{ repo_path }}"
   register: r_git_public
 
-- when: contextDir
-
 - when: >-
     r_git_private is changed
     or r_git_public is changed
