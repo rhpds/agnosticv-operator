@@ -79,7 +79,7 @@
       command: >-
         {{ agnosticv_client_path }} --list --has __meta__.catalog
       args:
-        chdir: "{{ repo_path }}"
+        chdir: "{{ (repo_path, context_dir) | join('/') }}"
       register: r_catalogitems
 
     - loop: "{{ r_catalogitems.stdout_lines }}"

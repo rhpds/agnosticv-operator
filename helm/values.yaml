@@ -17,6 +17,7 @@ image:
 #- name: gpte-agnosticv
 #  url: git@github.com:redhat-gpe/agnosticv.git
 #  ref: master
+#  contextDir: ''
 #  sshKey: |
 #    -----BEGIN RSA PRIVATE KEY-----
 #    ...
