@@ -13,4 +13,4 @@
 
 - debug:
     var: merged_vars
-    verbosity: 2
+    verbosity: 3
