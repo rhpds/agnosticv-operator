@@ -117,6 +117,9 @@ objects:
         - name: ${AGNOSTICV_NAME}
           image: ${AGNOSTICV_IMAGE}
           imagePullPolicy: Always
+          args:
+            - "--leader-election-id"
+            - ${AGNOSTICV_NAME}
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
             name: runner
@@ -129,8 +132,6 @@ objects:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
-          - name: OPERATOR_NAME
-            value: ${AGNOSTICV_NAME}
           - name: ANARCHY_NAMESPACE
             value: ${ANARCHY_NAMESPACE}
           resources:

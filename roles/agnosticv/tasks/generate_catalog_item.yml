@@ -1,7 +1,13 @@
 ---
-- debug:
-    msg: |
-      {{ repo_path }} > {{ account }} > {{ catalog_item }} > {{ stage }}
+- block:
+    - debug:
+        msg: |
+          {{ repo_path }} > {{ account }} > {{ catalog_item }} > {{ stage }}
 
-- include_tasks: include_vars.yml
-- include_tasks: generate_catalog_item_tasks.yml
+    - include_tasks: include_vars.yml
+    - include_tasks: generate_catalog_item_tasks.yml
+
+  rescue:
+    - debug:
+        msg: |
+          FAIL {{ repo_path }} > {{ account }} > {{ catalog_item }} > {{ stage }}

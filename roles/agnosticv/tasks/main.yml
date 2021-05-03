@@ -82,6 +82,12 @@
         chdir: "{{ (repo_path, context_dir) | join('/') }}"
       register: r_catalogitems
 
+    - name: Print stderr lines
+      loop: "{{ r_catalogitems.stderr_lines }}"
+      loop_control:
+        loop_var: line
+      include_tasks: print_error.yaml
+
     - loop: "{{ r_catalogitems.stdout_lines }}"
       loop_control:
         loop_var: c_i
