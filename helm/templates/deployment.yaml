@@ -24,6 +24,9 @@ spec:
         - name: {{ include "agnosticv.name" .  }}
           image: {{ include "agnosticv.image" . | quote }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - "--leader-election-id"
+            - "agnosticv-operator"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
             name: runner
@@ -36,8 +39,6 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
-          - name: OPERATOR_NAME
-            value: {{ include "agnosticv.name" . }}
           - name: ANARCHY_NAMESPACE
             value: {{ .Values.anarchy.namespace }}
           resources:
