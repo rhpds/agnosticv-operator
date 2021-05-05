@@ -82,6 +82,18 @@
         chdir: "{{ (repo_path, context_dir) | join('/') }}"
       register: r_catalogitems
 
+    - name: Debug with a loop
+      loop:
+        - 1
+        - 2
+        - 3
+      debug:
+        msg: "{{ item }}"
+
+    - name: Debug without loop
+      debug:
+        msg: "{{ [1,2,3] }}"
+
     - name: Print stderr lines
       loop: "{{ r_catalogitems.stderr_lines }}"
       loop_control:
