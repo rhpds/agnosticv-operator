@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  agnosticv-operator:
+  - apiVersion: v2
+    appVersion: 0.9.1
+    created: "2021-05-12T13:42:31.907116202Z"
+    description: A Helm chart for Agnosticv Operator
+    digest: 5031d0c32e7357696f17f89214b2365b9d9afeadb7a17d976f5776fcf573f41a
+    name: agnosticv-operator
+    type: application
+    urls:
+    - https://redhat-cop.github.io/agnosticv-operator/agnosticv-operator-0.9.1.tgz
+    version: 0.9.1
+generated: "2021-05-12T13:42:31.906216596Z"
