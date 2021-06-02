@@ -8,7 +8,9 @@ metadata:
 spec:
   ref: {{ $agnosticvRepo.ref | default "master" | quote }}
   url: {{ $agnosticvRepo.url | quote }}
+{{- if $agnosticvRepo.contextDir }}
   contextDir: {{ $agnosticvRepo.contextDir | quote }}
+{{- end }}
   babylonAnarchyRoles: 
     {{- toYaml $.Values.babylonAnarchyRoles | nindent 4 }}
   {{- with $agnosticvRepo.sshKey }}
