@@ -79,7 +79,12 @@
       command: >-
         {{ agnosticv_client_path }} --list --has __meta__.catalog
       args:
-        chdir: "{{ (repo_path, context_dir) | join('/') }}"
+        chdir: >-
+          {%- if context_dir is defined and context_dir is not none -%}
+          {{ (repo_path, context_dir) | join('/') }}
+          {%- else -%}
+          {{ repo_path }}
+          {%- endif -%}
       register: r_catalogitems
 
     - name: Print stderr lines
