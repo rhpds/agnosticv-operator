@@ -35,6 +35,8 @@ agnosticv_path: >-
 # AgnosticV CLI
 agnosticv_client_path: /opt/ansible/agnosticv_cli
 
+default_category: Other
+
 # default namespaces
 anarchy_namespace: >-
   {{ lookup('env','ANARCHY_NAMESPACE')
@@ -51,3 +53,4 @@ resource_provider_default_lifespan:
   relativeMaximum: 5d
 resource_provider_runtime_default: 4h
 resource_provider_runtime_maximum: 8h
+

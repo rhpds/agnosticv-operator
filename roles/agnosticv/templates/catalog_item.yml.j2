@@ -8,16 +8,14 @@ metadata:
     babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}
     babylon.gpte.redhat.com/icon: {{ _catalog.icon | default('') | to_json }}
     babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
-{% set _labels = default_labels | combine(_catalog.labels | d({})) %}
-{% if _labels | length > 0 %}
   labels:
+    babylon.gpte.redhat.com/category: {{ _catalog.category | default(default_category) | to_json }}
 {%   for _label_k, _label_v in default_labels.items() %}
     {{ _label_k }}: {{ _label_v | to_json }}
 {%   endfor %}
 {%   for _label_k, _label_v in (_catalog.labels | default({})).items() %}
     babylon.gpte.redhat.com/{{ _label_k }}: {{ _label_v | to_json }}
 {%   endfor %}
-{% endif %}
   name: {{ _name | to_json }}
   resourceVersion: "{{ current_resource_version }}"
 spec:
