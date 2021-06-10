@@ -62,7 +62,11 @@
     _namespace: "{{ catalog_item_namespace }}"
     # Use description.adoc first, then variables
     _description: >-
-      {{ lookup('file', c_i | dirname + '/description.adoc', errors='ignore')
+      {{ lookup('file',
+                ( agnosticv_path,
+                  c_i | dirname,
+                  'description.adoc') | join('/'),
+                  errors='ignore')
       | default(merged_vars.__meta__.catalog.description, true)
       | default(default_description)
       }}
@@ -70,9 +74,6 @@
       {{ template_facts.resources[0].metadata.resourceVersion
       if template_facts.resources else '' }}
 
-- debug:
-    msg: >-
-      {{ c_i | dirname + '/description.adoc' }}
 - name: Create / Update Babylon Catalog Item object
   k8s:
     state: present
@@ -84,7 +85,11 @@
     _name: "{{ catalog_item_name }}"
     # Use description.adoc first, then variables
     _description: >-
-      {{ lookup('file', c_i | dirname + '/description.adoc', errors='ignore')
+      {{ lookup('file',
+                ( agnosticv_path,
+                  c_i | dirname,
+                  'description.adoc') | join('/'),
+                  errors='ignore')
       | default(merged_vars.__meta__.catalog.description, true)
       | default(default_description)
       }}
