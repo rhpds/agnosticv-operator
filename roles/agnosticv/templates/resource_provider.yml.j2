@@ -20,7 +20,7 @@ spec:
     kind: AnarchySubject
     metadata:
       generateName: {{ _name }}-
-      namespace: {{ governor_namespace | to_json }}
+      namespace: {{ anarchy_namespace | to_json }}
     spec:
       governor: {{ _governor | to_json }}
       vars:
