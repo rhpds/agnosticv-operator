@@ -41,16 +41,5 @@ resource_provider_default_lifespan:
   default: 3d
   maximum: 14d
   relativeMaximum: 5d
-resource_provider_action_schedule:
-  default_runtime: 4h
-  maximum_runtime: 8h
-
-__meta__:
-  catalog:
-    lifespan:
-      default: 3d
-      maximum: 14d
-      relativeMaximum: 5d
-    schedule_runtime:
-      default_runtime: 4h
-      maximum_runtime: 8h
+resource_provider_runtime_default: 4h
+resource_provider_runtime_maximum: 8h
