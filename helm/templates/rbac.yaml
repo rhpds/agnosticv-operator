@@ -93,6 +93,20 @@ rules:
   - anarchygovernors
   verbs:
   - '*'
+- apiGroups:
+  - ""
+  - poolboy.gpte.redhat.com
+  resources:
+  - resourceproviders
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  - babylon.gpte.redhat.com
+  resources:
+  - catalogitems
+  verbs:
+  - '*'
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
