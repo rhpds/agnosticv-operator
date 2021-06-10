@@ -7,7 +7,7 @@ metadata:
     babylon.gpte.redhat.com/description: {{ _catalog.description | default(default_description) | to_json }}
     babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}
     babylon.gpte.redhat.com/icon: {{ _catalog.icon | default('') | to_json }}
-babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
+    babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
 {% set _labels = default_labels | combine(_catalog.labels | d({})) %}
 {% if _labels | length > 0 %}
   labels:
