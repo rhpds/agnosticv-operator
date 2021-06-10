@@ -9,6 +9,25 @@
     template_namespace: >-
       {{ merged_vars.__meta__.catalog.namespace | default('openshift') }}
 
+- name: Get k8s fact for the catalog item
+  k8s_facts:
+    api_version: babylon.gpte.redhat.com/v1
+    kind: catalogitems
+    name: "{{ catalog_item_name }}"
+    namespace: "{{ template_namespace }}"
+  register: catalogitems_facts
+
+- name: Generate Catalog item (CR)
+  template:
+    src: catalog_item.yml.j2
+    dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_cr.yml"
+  vars:
+    _catalog: "{{ merged_vars.__meta__.catalog }}"
+    _name: "{{ catalog_item_name }}"
+    current_resource_version: >-
+      {{ catalogitems_facts.resources[0].metadata.resourceVersion
+      if catalogitems_facts.resources else '' }}
+
 - name: Get k8s fact for the template
   k8s_facts:
     api_version: template.openshift.io/v1
@@ -17,14 +36,15 @@
     namespace: "{{ template_namespace }}"
   register: template_facts
 
-- name: Generate Catalog item
+- name: Generate Catalog item (template)
   template:
-    src: catalog_item.yml.j2
-    dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
+    src: template.yml.j2
+    dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_template.yml"
   vars:
     _name: "{{ catalog_item_name }}"
     current_resource_version: >-
-      {{ template_facts.resources[0].metadata.resourceVersion if template_facts.resources else '' }}
+      {{ template_facts.resources[0].metadata.resourceVersion
+      if template_facts.resources else '' }}
 
 - name: Get k8s fact for the Governor
   k8s_facts:
@@ -41,7 +61,28 @@
   vars:
     _name: "{{ catalog_item_name }}"
     current_resource_version: >-
-      {{ governor_facts.resources[0].metadata.resourceVersion if governor_facts.resources else '' }}
+      {{ governor_facts.resources[0].metadata.resourceVersion
+      if governor_facts.resources else '' }}
+
+- name: Get k8s fact for the ResourceProvider
+  k8s_facts:
+    api_version: poolboy.gpte.redhat.com/v1
+    kind: ResourceProvider
+    name: "{{ catalog_item_name }}"
+    namespace: "{{ poolboy_namespace }}"
+  register: resource_provider_facts
+
+- name: Generate Resource Provider
+  template:
+    src: resource_provider.yaml.j2
+    dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_resource_provider.yml"
+  vars:
+    _name: "{{ catalog_item_name }}"
+    _governor: "{{ catalog_item_name }}"
+    _catalog: "{{ merged_vars.__meta__.catalog }}"
+    current_resource_version: >-
+      {{ resource_provider_facts.resources[0].metadata.resourceVersion
+      if resource_provider_facts.resources else '' }}
 
 - name: Create Namespace
   k8s:
@@ -56,7 +97,14 @@
 - name: Create / Update OpenShift template object
   k8s:
     state: present
-    src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}.yml"
+    src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_template.yml"
+    namespace: "{{ template_namespace }}"
+    force: yes
+
+- name: Create / Update Babylon Catalog Item object
+  k8s:
+    state: present
+    src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_cr.yml"
     namespace: "{{ template_namespace }}"
     force: yes
 
@@ -66,3 +114,10 @@
     src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_governor.yml"
     force: yes
     namespace: "{{ governor_namespace }}"
+
+- name: Create / Update Poolboy ResourceProvider
+  k8s:
+    state: present
+    src: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_resource_provider.yml"
+    force: yes
+    namespace: "{{ poolboy_namespace }}"

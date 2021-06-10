@@ -1,50 +1,19 @@
 ---
-apiVersion: template.openshift.io/v1
-kind: templates
+apiVersion: babylon.gpte.redhat.com/v1
+kind: CatalogItem
 metadata:
-  name: {{ _name | to_json }}
   annotations:
-    description: {{ merged_vars.__meta__.catalog.description | d(default_description) | to_json }}
-    openshift.io/display-name: {{ merged_vars.__meta__.catalog.display_name| default(_name) | to_json }}
-    openshift.io/long-description: {{ merged_vars.__meta__.catalog.long_description | d('') | to_json }}
-    tags: quickstart,babylon,{{ account | replace('_', '-') }},{{ merged_vars.__meta__.catalog.tags |  default([]) | join(',') }}
-    template.openshift.io/bindable: "false"
+    babylon.gpte.redhat.com/description: {{ _catalog.description | default(default_description) | to_json }}
+    babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}
+    babylon.gpte.redhat.com/icon: {{ _catalog.icon | default('') | to_json }}
+    babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
+  labels: {{ default_labels | combine(_catalog.labels | d({})) | to_json }}
+  name: {{ _name | to_json }}
   resourceVersion: "{{ current_resource_version }}"
-  openshift.io/provider-display-name: Red Hat, Inc.
-  labels:
-    gpte.redhat.com/agnosticv: "true"
-message: {{ merged_vars.__meta__.catalog.message | d(default_message) | to_json }}
-objects:
-- apiVersion: poolboy.gpte.redhat.com/v1
-  kind: ResourceClaim
-  metadata:
-    annotations:
-      description: {{ merged_vars.__meta__.catalog.description | d(default_description) | to_json }}
-      openshift.io/display-name: {{ merged_vars.__meta__.catalog.display_name| default(_name) | to_json }}
-      openshift.io/long-description: {{ merged_vars.__meta__.catalog.long_description | d('') | to_json }}
-    generateName: {{ _name }}-
-  spec:
-    resources:
-    - template:
-        apiVersion: anarchy.gpte.redhat.com/v1
-        kind: AnarchySubject
-        metadata:
-          annotations:
-            poolboy.gpte.redhat.com/resource-provider-name: babylon
-          generateName: {{ _name }}-
-          labels:
-            governor: {{ _name }}
-        spec:
-          governor: {{ _name }}
-{% if vars.merged_vars.__meta__.catalog.parameters | default(None) %}
-          vars:
-            job_vars:
-{%   for param in vars.merged_vars.__meta__.catalog.parameters %}
-              {{ param.name | lower }}: {{ '${{' ~ param.name ~ '}}' }}
-{%   endfor %}
-{% else %}
-          vars: {}
-{% endif %}
-
-parameters: {{ merged_vars.__meta__.catalog.parameters | d([]) | to_json }}
-labels: {{ default_labels | combine(merged_vars.__meta__.catalog.labels | d({})) | to_json }}
+spec:
+  resources:
+  - provider:
+      apiVersion: poolboy.gpte.redhat.com/v1
+      kind: ResourceProvider
+      name: {{ _name | to_json }}
+      namespace: {{ poolboy_namespace | to_json }}

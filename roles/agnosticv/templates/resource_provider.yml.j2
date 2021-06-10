@@ -1,0 +1,87 @@
+---
+apiVersion: poolboy.gpte.redhat.com/v1
+kind: ResourceProvider
+metadata:
+  name: {{ _name | to_json }}
+  resourceVersion: "{{ current_resource_version }}"
+spec:
+  default:
+    spec:
+      vars:
+        action_schedule:
+          start: '{% raw %}{{ timestamp.utcnow }}{% endraw %}'
+          stop: '{% raw %}{{ timestamp.utcnow.add(resource_provider.spec.override.spec.vars.action_schedule.default_runtime) }}{% endraw %}'
+  lifespan:
+    default: 3d
+    maximum: 14d
+    relativeMaximum: 5d
+  matchIgnore:
+  - /spec/vars/action_schedule(/.*)?
+  override:
+    apiVersion: anarchy.gpte.redhat.com/v1
+    kind: AnarchySubject
+    metadata:
+      generateName: {{ _name }}-
+      namespace: {{ governor_namespace | to_json }}
+    spec:
+      governor: {{ _governor | to_json }}
+      vars:
+        action_schedule:
+          default_runtime: 4h
+          maximum_runtime: 8h
+        desired_state: |-
+          {% raw %}
+          {%- if resource_template.spec.vars.action_schedule.start | default('') == ''
+            or resource_template.spec.vars.action_schedule.stop | default('') == '' -%}
+          {{ resource_template.spec.vars.default_desired_state | default('stopped') }}
+          {%- elif timestamp(resource_template.spec.vars.action_schedule.start) > timestamp.utcnow
+            or timestamp(resource_template.spec.vars.action_schedule.stop) < timestamp.utcnow -%}
+          stopped
+          {%- else -%}
+          started
+          {%- endif -%}
+          {% endraw %}
+        healthy: true
+        job_vars:
+          guid: '{% raw %}{{ resource_handle.metadata.name[5:] if resource_handle.metadata.name.startswith(''guid-'') else resource_handle.metadata.name }}{% endraw %}'
+  template:
+    enable: true
+  updateFilters:
+  - allowedOps:
+    - add
+    - replace
+    pathMatch: /spec/vars/action_schedule/start
+  - allowedOps:
+    - add
+    - replace
+    pathMatch: /spec/vars/action_schedule/stop
+  - allowedOps:
+    - add
+    - replace
+    pathMatch: /spec/vars/desired_state
+  validation:
+    openAPIV3Schema:
+      additionalProperties: false
+      properties:
+        spec:
+          additionalProperties: false
+          properties:
+            vars:
+              additionalProperties: false
+              properties:
+                action_schedule:
+                  additionalProperties: false
+                  properties:
+                    start:
+                      pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$
+                      type: string
+                    stop:
+                      pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$
+                      type: string
+                  type: object
+              type: object
+          required:
+          - vars
+          type: object
+      required:
+      - spec
