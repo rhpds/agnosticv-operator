@@ -5,7 +5,7 @@ metadata:
   name: {{ _name | to_json }}
   namespace: {{ _namespace | to_json }}
   annotations:
-    description: {{ merged_vars.__meta__.catalog.description | d(default_description) | to_json }}
+    description: {{ _description | to_json }}
     openshift.io/display-name: {{ merged_vars.__meta__.catalog.display_name| default(_name) | to_json }}
     openshift.io/long-description: {{ merged_vars.__meta__.catalog.long_description | d('') | to_json }}
     tags: quickstart,babylon,{{ account | replace('_', '-') }},{{ merged_vars.__meta__.catalog.tags |  default([]) | join(',') }}

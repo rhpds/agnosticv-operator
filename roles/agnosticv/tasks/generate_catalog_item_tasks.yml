@@ -60,6 +60,12 @@
   vars:
     _name: "{{ catalog_item_name }}"
     _namespace: "{{ catalog_item_namespace }}"
+    # Use description.adoc first, then variables
+    _description: >-
+      {{ lookup('file', c_i | dirname + '/description.adoc', errors='ignore')
+      | default(merged_vars.__meta__.catalog.description, true)
+      | default(default_description)
+      }}
     current_resource_version: >-
       {{ template_facts.resources[0].metadata.resourceVersion
       if template_facts.resources else '' }}
@@ -73,6 +79,12 @@
     _catalog: "{{ merged_vars.__meta__.catalog }}"
     _namespace: "{{ catalog_item_namespace }}"
     _name: "{{ catalog_item_name }}"
+    # Use description.adoc first, then variables
+    _description: >-
+      {{ lookup('file', c_i | dirname + '/description.adoc', errors='ignore')
+      | default(merged_vars.__meta__.catalog.description, true)
+      | default(default_description)
+      }}
     current_resource_version: >-
       {{ catalogitems_facts.resources[0].metadata.resourceVersion
       if catalogitems_facts.resources else '' }}
