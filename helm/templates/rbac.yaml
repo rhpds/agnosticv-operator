@@ -87,21 +87,18 @@ rules:
   verbs:
   - "*"
 - apiGroups:
-  - ""
   - anarchy.gpte.redhat.com
   resources:
   - anarchygovernors
   verbs:
   - '*'
 - apiGroups:
-  - ""
   - poolboy.gpte.redhat.com
   resources:
   - resourceproviders
   verbs:
   - '*'
 - apiGroups:
-  - ""
   - babylon.gpte.redhat.com
   resources:
   - catalogitems
