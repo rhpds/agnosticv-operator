@@ -70,6 +70,9 @@
       {{ template_facts.resources[0].metadata.resourceVersion
       if template_facts.resources else '' }}
 
+- debug:
+    msg: >-
+      {{ c_i | dirname + '/description.adoc' }}
 - name: Create / Update Babylon Catalog Item object
   k8s:
     state: present
