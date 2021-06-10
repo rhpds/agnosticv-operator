@@ -74,7 +74,7 @@
 
 - name: Generate Resource Provider
   template:
-    src: resource_provider.yaml.j2
+    src: resource_provider.yml.j2
     dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_resource_provider.yml"
   vars:
     _name: "{{ catalog_item_name }}"
