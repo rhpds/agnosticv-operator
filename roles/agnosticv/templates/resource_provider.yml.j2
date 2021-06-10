@@ -3,6 +3,7 @@ apiVersion: poolboy.gpte.redhat.com/v1
 kind: ResourceProvider
 metadata:
   name: {{ _name | to_json }}
+  namespace: {{ _namespace | to_json }}
   resourceVersion: "{{ current_resource_version }}"
 spec:
   default:

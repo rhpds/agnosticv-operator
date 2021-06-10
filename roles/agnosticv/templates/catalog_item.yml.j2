@@ -2,6 +2,7 @@
 apiVersion: babylon.gpte.redhat.com/v1
 kind: CatalogItem
 metadata:
+  namespace: {{ _namespace | to_json }}
   annotations:
     babylon.gpte.redhat.com/description: {{ _catalog.description | default(default_description) | to_json }}
     babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}

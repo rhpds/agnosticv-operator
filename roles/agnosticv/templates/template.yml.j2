@@ -3,6 +3,7 @@ apiVersion: template.openshift.io/v1
 kind: templates
 metadata:
   name: {{ _name | to_json }}
+  namespace: {{ _namespace | to_json }}
   annotations:
     description: {{ merged_vars.__meta__.catalog.description | d(default_description) | to_json }}
     openshift.io/display-name: {{ merged_vars.__meta__.catalog.display_name| default(_name) | to_json }}
