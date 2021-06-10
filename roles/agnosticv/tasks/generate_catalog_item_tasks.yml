@@ -17,7 +17,7 @@
     namespace: "{{ template_namespace }}"
   register: catalogitems_facts
 
-- name: Generate Catalog item (CR)
+- name: Generate Catalog item (custom resource CatalogItem)
   template:
     src: catalog_item.yml.j2
     dest: "{{ output_dir }}/{{ account }}_{{ catalog_item }}_{{ stage }}_cr.yml"
