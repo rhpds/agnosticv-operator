@@ -10,7 +10,7 @@
       {{ merged_vars.__meta__.catalog.namespace | default('openshift') }}
 
 - name: Get k8s fact for the catalog item
-  k8s_facts:
+  k8s_info:
     api_version: babylon.gpte.redhat.com/v1
     kind: catalogitems
     name: "{{ catalog_item_name }}"
@@ -29,7 +29,7 @@
       if catalogitems_facts.resources else '' }}
 
 - name: Get k8s fact for the template
-  k8s_facts:
+  k8s_info:
     api_version: template.openshift.io/v1
     kind: templates
     name: "{{ catalog_item_name }}"
@@ -47,7 +47,7 @@
       if template_facts.resources else '' }}
 
 - name: Get k8s fact for the Governor
-  k8s_facts:
+  k8s_info:
     api_version: anarchy.gpte.redhat.com/v1
     kind: AnarchyGovernor
     name: "{{ catalog_item_name }}"
@@ -65,7 +65,7 @@
       if governor_facts.resources else '' }}
 
 - name: Get k8s fact for the ResourceProvider
-  k8s_facts:
+  k8s_info:
     api_version: poolboy.gpte.redhat.com/v1
     kind: ResourceProvider
     name: "{{ catalog_item_name }}"
