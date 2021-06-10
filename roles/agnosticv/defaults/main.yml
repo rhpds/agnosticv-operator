@@ -28,7 +28,7 @@ babylon_anarchy_roles:
 agnosticv_client_path: /opt/ansible/agnosticv_cli
 
 # default namespaces
-governor_namespace: >-
+anarchy_namespace: >-
   {{ lookup('env','ANARCHY_NAMESPACE')
   | default('anarchy-operator', true) }}
 
