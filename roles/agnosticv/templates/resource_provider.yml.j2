@@ -11,10 +11,7 @@ spec:
         action_schedule:
           start: '{% raw %}{{ timestamp.utcnow }}{% endraw %}'
           stop: '{% raw %}{{ timestamp.utcnow.add(resource_provider.spec.override.spec.vars.action_schedule.default_runtime) }}{% endraw %}'
-  lifespan:
-    default: 3d
-    maximum: 14d
-    relativeMaximum: 5d
+  lifespan: {{ _catalog.lifespan | default(resource_provider_default_lifespan) | to_json }}
   matchIgnore:
   - /spec/vars/action_schedule(/.*)?
   override:
@@ -26,9 +23,7 @@ spec:
     spec:
       governor: {{ _governor | to_json }}
       vars:
-        action_schedule:
-          default_runtime: 4h
-          maximum_runtime: 8h
+        action_schedule: {{ _catalog.action_schedule |default(resource_provider_action_schedule) | to_json }}
         desired_state: |-
           {% raw %}
           {%- if resource_template.spec.vars.action_schedule.start | default('') == ''

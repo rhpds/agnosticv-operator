@@ -71,16 +71,6 @@
         governor_namespace: "{{ lookup('env','ANARCHY_NAMESPACE') }}"
         poolboy_namespace: "{{ lookup('env','POOLBOY_NAMESPACE') }}"
 
-    - name: Use the default namespace anarchy-operator for Governors objects
-      set_fact:
-        governor_namespace: anarchy-operator
-      when: governor_namespace == ''
-
-    - name: Use the default namespace poolboy for poolboy objects
-      set_fact:
-        poolboy_namespace: poolboy
-      when: poolboy_namespace == ''
-
     - name: Find all catalog items
       command: >-
         {{ agnosticv_client_path }} --list --has __meta__.catalog
