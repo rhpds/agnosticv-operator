@@ -11,10 +11,10 @@ babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',')
 {% set _labels = default_labels | combine(_catalog.labels | d({})) %}
 {% if _labels | length > 0 %}
   labels:
-{%   for _label_k, _label_v in default_labels %}
+{%   for _label_k, _label_v in default_labels.items() %}
     {{ _label_k }}: {{ _label_v | to_json }}
 {%   endfor %}
-{%   for _label_k, _label_v in _catalog.labels | default({}) %}
+{%   for _label_k, _label_v in (_catalog.labels | default({})).items() %}
     babylon.gpte.redhat.com/{{ _label_k }}: {{ _label_v | to_json }}
 {%   endfor %}
 {% endif %}
