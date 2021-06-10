@@ -7,8 +7,17 @@ metadata:
     babylon.gpte.redhat.com/description: {{ _catalog.description | default(default_description) | to_json }}
     babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}
     babylon.gpte.redhat.com/icon: {{ _catalog.icon | default('') | to_json }}
-    babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
-  labels: {{ default_labels | combine(_catalog.labels | d({})) | to_json }}
+babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
+{% set _labels = default_labels | combine(_catalog.labels | d({})) %}
+{% if _labels | length > 0 %}
+  labels:
+{%   for _label_k, _label_v in default_labels %}
+    {{ _label_k }}: {{ _label_v | to_json }}
+{%   endfor %}
+{%   for _label_k, _label_v in _catalog.labels | default({}) %}
+    babylon.gpte.redhat.com/{{ _label_k }}: {{ _label_v | to_json }}
+{%   endfor %}
+{% endif %}
   name: {{ _name | to_json }}
   resourceVersion: "{{ current_resource_version }}"
 spec:
