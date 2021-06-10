@@ -28,8 +28,13 @@ babylon_anarchy_roles:
 agnosticv_client_path: /opt/ansible/agnosticv_cli
 
 # default namespaces
-governor_namespace: anarchy-operator
-poolboy_namespace: poolboy
+governor_namespace: >-
+  {{ lookup('env','ANARCHY_NAMESPACE')
+  | default('anarchy-operator', true) }}
+
+poolboy_namespace: >-
+  {{ lookup('env','POOLBOY_NAMESPACE')
+  | default('poolboy', true) }}
 
 # Resource provider
 resource_provider_default_lifespan:
@@ -39,3 +44,13 @@ resource_provider_default_lifespan:
 resource_provider_action_schedule:
   default_runtime: 4h
   maximum_runtime: 8h
+
+__meta__:
+  catalog:
+    lifespan:
+      default: 3d
+      maximum: 14d
+      relativeMaximum: 5d
+    schedule_runtime:
+      default_runtime: 4h
+      maximum_runtime: 8h
