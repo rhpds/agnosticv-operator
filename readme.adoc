@@ -9,8 +9,9 @@ This is the operator that takes care of updating the Catalog in OpenShift, based
 The output of the operator, the final catalog, is composed of OpenShift resources:
 
 * OpenShift Templates
-* AnarchyGovernors
-
+* Babylon CatalogItem
+* Poolboy link:https://github.com/redhat-cop/poolboy/blob/main/helm/crds/resourceproviders.yaml[ResourceProvider]
+* link:https://github.com/redhat-cop/anarchy/blob/main/helm/crds/anarchygovernors.yaml[AnarchyGovernors]
 
 See also the link:https://github.com/redhat-cop/babylon[Babylon] Project.
 
@@ -23,6 +24,7 @@ ACCOUNT/
     account.yaml
 
    CATALOGITEM1/
+         description.adoc <1>
          common.yaml
          dev.yaml
          test.yaml
@@ -30,11 +32,13 @@ ACCOUNT/
 
 
    CATALOGITEM2/
+         description.adoc
          common.yaml
          dev.yaml
          test.yaml
          prod.yaml
 ----
+<1> Description of the catalog item that will appear in Babylon UI
 
 .Example
 ----
@@ -44,6 +48,7 @@ gpte/
    account.yaml
 
    OCP4_CLUSTER/
+         description.adoc
          common.yaml
          dev.yaml
          test.yaml
@@ -51,6 +56,7 @@ gpte/
 
 
    OCP_CLIENTVM/
+         description.adoc
          common.yaml
          dev.yaml
          test.yaml
