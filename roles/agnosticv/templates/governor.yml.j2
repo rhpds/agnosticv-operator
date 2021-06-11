@@ -2,6 +2,7 @@
 apiVersion: anarchy.gpte.redhat.com/v1
 kind: AnarchyGovernor
 metadata:
+  namespace: {{ _namespace | to_json }}
   name: {{ _name }}
 {% if current_resource_version != '' %}
   resourceVersion: "{{ current_resource_version }}"

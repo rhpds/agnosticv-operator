@@ -66,25 +66,11 @@
         state: directory
         path: "{{ output_dir }}"
 
-    - name: Get the namespace for Governor objects from environment variables
-      set_fact:
-        governor_namespace: "{{ lookup('env','ANARCHY_NAMESPACE') }}"
-
-    - name: Use the default namespace anarchy-operator for Governors objects
-      set_fact:
-        governor_namespace: anarchy-operator
-      when: governor_namespace == ''
-
     - name: Find all catalog items
       command: >-
         {{ agnosticv_client_path }} --list --has __meta__.catalog
       args:
-        chdir: >-
-          {%- if context_dir is defined and context_dir is not none -%}
-          {{ (repo_path, context_dir) | join('/') }}
-          {%- else -%}
-          {{ repo_path }}
-          {%- endif -%}
+        chdir: "{{ agnosticv_path }}"
       register: r_catalogitems
 
     - name: Print stderr lines

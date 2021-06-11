@@ -2,7 +2,7 @@
 - block:
     - debug:
         msg: |
-          {{ repo_path }} > {{ account }} > {{ catalog_item }} > {{ stage }}
+          {{ agnosticv_path }} > {{ account }} > {{ catalog_item }} > {{ stage }}
 
     - include_tasks: include_vars.yml
     - include_tasks: generate_catalog_item_tasks.yml
@@ -10,4 +10,4 @@
   rescue:
     - debug:
         msg: |
-          FAIL {{ repo_path }} > {{ account }} > {{ catalog_item }} > {{ stage }}
+          FAIL {{ agnosticv_path }} > {{ account }} > {{ catalog_item }} > {{ stage }}

@@ -24,5 +24,33 @@ babylon_anarchy_roles:
   src: https://github.com/redhat-gpte-devopsautomation/babylon_anarchy_governor.git
   version: main
 
+# agnosticv dir can be inside the repository
+agnosticv_path: >-
+  {%- if context_dir is defined and context_dir is not none -%}
+  {{ (repo_path, context_dir) | join('/') }}
+  {%- else -%}
+  {{ repo_path }}
+  {%- endif -%}
+
 # AgnosticV CLI
 agnosticv_client_path: /opt/ansible/agnosticv_cli
+
+default_category: Other
+
+# default namespaces
+anarchy_namespace: >-
+  {{ lookup('env','ANARCHY_NAMESPACE')
+  | default('anarchy-operator', true) }}
+
+poolboy_namespace: >-
+  {{ lookup('env','POOLBOY_NAMESPACE')
+  | default('poolboy', true) }}
+
+# Resource provider
+resource_provider_default_lifespan:
+  default: 3d
+  maximum: 14d
+  relativeMaximum: 5d
+resource_provider_runtime_default: 4h
+resource_provider_runtime_maximum: 8h
+
