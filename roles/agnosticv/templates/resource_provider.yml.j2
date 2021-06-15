@@ -28,7 +28,7 @@ spec:
           default_runtime: {{ merged_vars.__meta__.runtime.default | default(resource_provider_runtime_default) | to_json }}
           maximum_runtime: {{ merged_vars.__meta__.runtime.maximum | default(resource_provider_runtime_maximum) | to_json }}
         desired_state: |-
-          {% raw %}
+{% raw %}
           {%- if resource_template.spec.vars.action_schedule.start | default('') == ''
             or resource_template.spec.vars.action_schedule.stop | default('') == '' -%}
           {{ resource_template.spec.vars.default_desired_state | default('stopped') }}
@@ -38,7 +38,7 @@ spec:
           {%- else -%}
           started
           {%- endif -%}
-          {% endraw %}
+{% endraw %}
         healthy: true
         job_vars:
           guid: '{% raw %}{{ resource_handle.metadata.name[5:] if resource_handle.metadata.name.startswith(''guid-'') else resource_handle.metadata.name }}{% endraw %}'
