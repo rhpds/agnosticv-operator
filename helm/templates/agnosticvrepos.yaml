@@ -1,4 +1,4 @@
-{{- range $agnosticvRepo := .Values.agnosticvRepos -}}
+{{- range $agnosticvRepo := .Values.agnosticvRepos }}
 ---
 apiVersion: gpte.redhat.com/v1
 kind: AgnosticVRepo
@@ -11,11 +11,11 @@ spec:
 {{- if $agnosticvRepo.contextDir }}
   contextDir: {{ $agnosticvRepo.contextDir | quote }}
 {{- end }}
-  babylonAnarchyRoles: 
+  babylonAnarchyRoles:
     {{- toYaml $.Values.babylonAnarchyRoles | nindent 4 }}
   {{- with $agnosticvRepo.sshKey }}
   sshKey: {{ $agnosticvRepo.name }}-sshkey
----         
+---
 apiVersion: v1
 kind: Secret
 metadata:
