@@ -6,6 +6,8 @@
 
 - name: Use namespace defined in the catalog item YAML
   set_fact:
+    anarchy_namespace: >-
+      {{ merged_vars.__meta__.anarchy.namespace | default(default_anarchy_namespace) }}
     catalog_item_namespace: >-
       {{ merged_vars.__meta__.catalog.namespace | default('openshift') }}
 
