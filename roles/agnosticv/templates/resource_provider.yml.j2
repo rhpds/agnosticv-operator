@@ -59,15 +59,23 @@ spec:
     pathMatch: /spec/vars/desired_state
   validation:
     openAPIV3Schema:
+      type: object
       additionalProperties: false
+      required:
+      - spec
       properties:
         spec:
+          type: object
           additionalProperties: false
+          required:
+          - vars
           properties:
             vars:
+              type: object
               additionalProperties: false
               properties:
                 action_schedule:
+                  type: object
                   additionalProperties: false
                   properties:
                     start:
@@ -76,10 +84,13 @@ spec:
                     stop:
                       pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$
                       type: string
+                job_vars:
                   type: object
-              type: object
-          required:
-          - vars
-          type: object
-      required:
-      - spec
+                  additionalProperties: false
+{% if merged_vars.__meta__.catalog.parameters | default([]) | length > 0 %}
+                  properties:
+{%   for parameter in merged_vars.__meta__.catalog.parameters %}
+                    {{ parameter.name }}: {{ parameter.openAPIV3Schema | default({}) | to_json }}
+{%   endfor %}
+                  required: {{ merged_vars.__meta__.catalog.parameters | json_query('[?required].name') | to_json }}
+{% endif %}

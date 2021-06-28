@@ -38,7 +38,7 @@ agnosticv_client_path: /opt/ansible/agnosticv_cli
 default_category: Other
 
 # default namespaces
-anarchy_namespace: >-
+default_anarchy_namespace: >-
   {{ lookup('env','ANARCHY_NAMESPACE')
   | default('anarchy-operator', true) }}
 
