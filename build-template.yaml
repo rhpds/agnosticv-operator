@@ -36,7 +36,7 @@ objects:
     source:
       git:
         uri: ${GIT_REPO}
-        ref: master
+        ref: main
     strategy:
       type: Docker
       dockerStrategy:
