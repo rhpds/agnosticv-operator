@@ -51,17 +51,10 @@ resources:
   ansible:
     limits:
       cpu: 2
-      memory: 500Mi
+      memory: 1Gi
     requests:
       cpu: 800m
-      memory: 500Mi
-  operator:
-    limits:
-      cpu: 1
-      memory: 500Mi
-    requests:
-      cpu: 800m
-      memory: 500Mi
+      memory: 768Mi
 
 nodeSelector: {}
 
