@@ -4,7 +4,9 @@ kind: ResourceProvider
 metadata:
   name: {{ _name | to_json }}
   namespace: {{ _namespace | to_json }}
+{% if current_resource_version | default('') != '' %}
   resourceVersion: "{{ current_resource_version }}"
+{% endif %}
 spec:
   default:
     spec:

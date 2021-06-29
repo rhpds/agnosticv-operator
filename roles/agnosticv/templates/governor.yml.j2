@@ -4,7 +4,7 @@ kind: AnarchyGovernor
 metadata:
   namespace: {{ _namespace | to_json }}
   name: {{ _name }}
-{% if current_resource_version != '' %}
+{% if current_resource_version | default('') != '' %}
   resourceVersion: "{{ current_resource_version }}"
 {% endif %}
 spec:

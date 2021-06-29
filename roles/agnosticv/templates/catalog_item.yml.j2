@@ -17,7 +17,9 @@ metadata:
     babylon.gpte.redhat.com/{{ _label_k }}: {{ _label_v | to_json }}
 {%   endfor %}
   name: {{ _name | to_json }}
+{% if current_resource_version | default('') != '' %}
   resourceVersion: "{{ current_resource_version }}"
+{% endif %}
 spec:
   resources:
   - provider:

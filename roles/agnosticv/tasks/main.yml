@@ -42,7 +42,6 @@
         repo: "{{ url }}"
         version: "{{ ref }}"
         dest: "{{ repo_path }}"
-        depth: 1
         key_file: /opt/ansible/.ssh/id_rsa_{{ ssh_key }}
       register: r_git_private
 
@@ -52,7 +51,6 @@
     accept_hostkey: true
     repo: "{{ url }}"
     version: "{{ ref }}"
-    depth: 1
     dest: "{{ repo_path }}"
   register: r_git_public
 
@@ -65,6 +63,20 @@
       file:
         state: directory
         path: "{{ output_dir }}"
+
+    - name: Get list of files changed
+      vars:
+        r_repo: >-
+          {{ r_git_private if r_git_private is changed
+          else r_git_public }}
+      when: r_repo.before
+      command: >-
+        git diff --name-only
+        {{ r_repo.before | quote }}
+        {{ r_repo.after | quote }}
+      args:
+        chdir: "{{ agnosticv_path }}"
+      register: r_changed
 
     - name: Find all catalog items
       command: >-
@@ -84,7 +96,32 @@
         loop_var: c_i
         label: c_i
       include_tasks: generate_catalog_item.yml
-      when: account != 'EXAMPLE_ACCOUNT'
+      # Process catalog item only if:
+      # - it changed in git
+      # - or if common.yaml changed in git
+      # - or if ACCOUNT/account.yaml changed in git
+      when: >-
+        account != 'EXAMPLE_ACCOUNT'
+        and (
+          r_changed is skipped
+
+          or
+
+          c_i | dirname in r_changed.stdout
+
+          or
+
+          ['common.yaml', 'common.yml']
+          | intersect(r_changed.stdout_lines) | length > 0
+
+          or
+
+          [ account+'/common.yaml',
+            account+'/common.yml',
+            account+'/account.yaml',
+            account+'/account.yml' ]
+          | intersect(r_changed.stdout_lines) | length > 0
+        )
       vars:
         account: "{{ c_i.split('/')[-3] }}"
         catalog_item: "{{ c_i.split('/')[-2] }}"
