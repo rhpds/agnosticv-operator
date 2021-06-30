@@ -10,7 +10,9 @@ metadata:
     openshift.io/long-description: {{ merged_vars.__meta__.catalog.long_description | d('') | to_json }}
     tags: quickstart,babylon,{{ account | replace('_', '-') }},{{ merged_vars.__meta__.catalog.tags |  default([]) | join(',') }}
     template.openshift.io/bindable: "false"
+{% if current_resource_version | default('') != '' %}
   resourceVersion: "{{ current_resource_version }}"
+{% endif %}
   openshift.io/provider-display-name: Red Hat, Inc.
   labels:
     gpte.redhat.com/agnosticv: "true"
