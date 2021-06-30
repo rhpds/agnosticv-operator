@@ -3,4 +3,4 @@
   group: gpte.redhat.com
   kind: AgnosticVRepo
   role: /opt/ansible/roles/agnosticv
-  reconcilePeriod: 2m
+  reconcilePeriod: 1m
