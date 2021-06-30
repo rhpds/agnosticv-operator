@@ -108,20 +108,20 @@
 
           or
 
-          context_prefix + c_i in r_changed.stdout_lines
+          (context_prefix + c_i) in r_changed.stdout_lines
 
           or
 
-          [ context_prefix + c_i | dirname +/common.yml',
-            context_prefix + c_i | dirname +/common.yaml']
+          [ context_prefix + c_i | dirname + '/common.yml',
+            context_prefix + c_i | dirname + '/common.yaml']
           | intersect(r_changed.stdout_lines) | length > 0
 
           or
 
-          [ context_prefix + account+'/common.yaml',
-            context_prefix + account+'/common.yml',
-            context_prefix + account+'/account.yaml',
-            context_prefix + account+'/account.yml' ]
+          [ context_prefix + account + '/common.yaml',
+            context_prefix + account + '/common.yml',
+            context_prefix + account + '/account.yaml',
+            context_prefix + account + '/account.yml' ]
           | intersect(r_changed.stdout_lines) | length > 0
 
           or
