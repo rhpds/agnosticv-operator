@@ -11,6 +11,12 @@ default_labels:
 
 repo_path: /opt/ansible/agnosticv/{{ url | b64encode }}
 context_dir: ''
+
+# Process only catalog items that changed in git
+# Set this to false if you want to process all catalog items
+# all the time.
+process_changes_only: true
+
 output_dir: /tmp/output_dir
 
 # Ansible collections to install with AnsibleGalaxy
