@@ -98,6 +98,7 @@
       include_tasks: generate_catalog_item.yml
       # Process catalog item only if:
       # - it changed in git
+      # - ACCOUNT/CATALOG_ITEM/common.yaml changed in git
       # - or if common.yaml changed in git
       # - or if ACCOUNT/account.yaml changed in git
       when: >-
@@ -107,22 +108,35 @@
 
           or
 
-          c_i | dirname in r_changed.stdout
+          context_prefix + c_i in r_changed.stdout_lines
 
           or
 
-          ['common.yaml', 'common.yml']
+          [ context_prefix + c_i | dirname +/common.yml',
+            context_prefix + c_i | dirname +/common.yaml']
           | intersect(r_changed.stdout_lines) | length > 0
 
           or
 
-          [ account+'/common.yaml',
-            account+'/common.yml',
-            account+'/account.yaml',
-            account+'/account.yml' ]
+          [ context_prefix + account+'/common.yaml',
+            context_prefix + account+'/common.yml',
+            context_prefix + account+'/account.yaml',
+            context_prefix + account+'/account.yml' ]
+          | intersect(r_changed.stdout_lines) | length > 0
+
+          or
+
+          [ context_prefix + 'common.yaml',
+            context_prefix + 'common.yml']
           | intersect(r_changed.stdout_lines) | length > 0
         )
       vars:
+        context_prefix: >-
+          {{ context_dir + '/'
+          if context_dir is defined
+          and context_dir is not none
+          and context_dir != ''
+          else '' }}
         account: "{{ c_i.split('/')[-3] }}"
         catalog_item: "{{ c_i.split('/')[-2] }}"
         stage: "{{ c_i.split('/')[-1] | regex_replace('\\.ya?ml$', '') }}"
