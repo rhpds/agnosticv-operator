@@ -76,6 +76,7 @@
         {{ r_repo.after | quote }}
       args:
         chdir: "{{ agnosticv_path }}"
+      # NOTE: git diff includes context_dir
       register: r_changed
 
     - name: Find all catalog items
