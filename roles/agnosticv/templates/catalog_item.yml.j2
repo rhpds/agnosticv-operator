@@ -19,6 +19,9 @@ metadata:
 {%   for _label_k, _label_v in (_catalog.labels | default({})).items() %}
     babylon.gpte.redhat.com/{{ _label_k }}: {{ _label_v | to_json }}
 {%   endfor %}
+{%   if _stage in ['dev','test','prod'] %}
+    babylon.gpte.redhat.com/stage: {{ _stage | to_json }}
+{%   endif %}
   name: {{ _name | to_json }}
 {% if current_resource_version | default('') != '' %}
   resourceVersion: "{{ current_resource_version }}"
