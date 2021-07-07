@@ -8,6 +8,9 @@ metadata:
     babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}
     babylon.gpte.redhat.com/icon: {{ _catalog.icon | default('') | to_json }}
     babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
+{%   for _key, _value in (_catalog.message_templates | default({})).items() %}
+    babylon.gpte.redhat.com/{{ _key | replace('_', '-') }}-message-template: {{ _value | to_json }}
+{%   endfor %}
   labels:
     babylon.gpte.redhat.com/category: {{ _catalog.category | default(default_category) | to_json }}
 {%   for _label_k, _label_v in default_labels.items() %}
