@@ -59,6 +59,9 @@ parameters:
 {%     if parameter.formLabel is defined %}
   displayName: {{ parameter.formLabel | to_json }}
 {%     endif %}
+{%     if parameter.required | default(false) | bool %}
+  required: true
+{%     endif %}
 {%     if parameter.value is defined %}
   value: {{ parameter.value | to_json }}
 {%     elif parameter.openAPIV3Schema.default is defined %}
