@@ -25,7 +25,7 @@ metadata:
 {% endif %}
 spec:
 {% if _catalog.parameters is defined %}
-  parameters: {{ _catalog.parameters.to_json }}
+  parameters: {{ _catalog.parameters | to_json }}
 {% endif %}
   resources:
   - provider:
