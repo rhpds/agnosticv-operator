@@ -57,7 +57,11 @@ parameters:
   description: {{ parameter.description | to_json }}
 {%     endif %}
 {%     if parameter.formLabel is defined %}
+{%       if parameter.formGroup is defined %}
+  displayName: {{ (parameter.formGroup ~ ' - ' ~ parameter.formLabel) | to_json }}
+{%       else %}
   displayName: {{ parameter.formLabel | to_json }}
+{%       endif %}
 {%     endif %}
 {%     if parameter.required | default(false) | bool %}
   required: true
