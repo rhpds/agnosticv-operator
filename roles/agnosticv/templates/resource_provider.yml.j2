@@ -92,7 +92,7 @@ spec:
 {% if merged_vars.__meta__.catalog.parameters | default([]) | length > 0 %}
                   properties:
 {%   for parameter in merged_vars.__meta__.catalog.parameters %}
-                    {{ parameter.name }}: {{ parameter.openAPIV3Schema | default({}) | to_json }}
+                    {{ parameter.name }}: {{ parameter.openAPIV3Schema | default({}) | combine({"description": parameter.description} if "description" in parameter else {}) | to_json }}
 {%   endfor %}
                   required: {{ merged_vars.__meta__.catalog.parameters | json_query('[?required].name') | to_json }}
 {% endif %}

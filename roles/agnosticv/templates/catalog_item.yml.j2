@@ -24,6 +24,9 @@ metadata:
   resourceVersion: "{{ current_resource_version }}"
 {% endif %}
 spec:
+{% if _catalog.parameters is defined %}
+  parameters: {{ _catalog.parameters | to_json }}
+{% endif %}
   resources:
   - provider:
       apiVersion: poolboy.gpte.redhat.com/v1

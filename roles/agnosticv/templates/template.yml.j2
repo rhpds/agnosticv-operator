@@ -49,5 +49,28 @@ objects:
           vars: {}
 {% endif %}
 
-parameters: {{ merged_vars.__meta__.catalog.parameters | d([]) | to_json }}
+{% if merged_vars.__meta__.catalog.parameters is defined %}
+parameters:
+{%   for parameter in merged_vars.__meta__.catalog.parameters %}
+- name: {{ parameter.name | to_json }}
+{%     if parameter.description is defined %}
+  description: {{ parameter.description | to_json }}
+{%     endif %}
+{%     if parameter.formLabel is defined %}
+{%       if parameter.formGroup is defined %}
+  displayName: {{ (parameter.formGroup ~ ' - ' ~ parameter.formLabel) | to_json }}
+{%       else %}
+  displayName: {{ parameter.formLabel | to_json }}
+{%       endif %}
+{%     endif %}
+{%     if parameter.required | default(false) | bool %}
+  required: true
+{%     endif %}
+{%     if parameter.value is defined %}
+  value: {{ parameter.value | to_json }}
+{%     elif parameter.openAPIV3Schema.default is defined %}
+  value: {{ parameter.openAPIV3Schema.default | to_json | to_json }}
+{%     endif %}
+{%   endfor %}
+{% endif %}
 labels: {{ default_labels | combine(merged_vars.__meta__.catalog.labels | d({})) | to_json }}
