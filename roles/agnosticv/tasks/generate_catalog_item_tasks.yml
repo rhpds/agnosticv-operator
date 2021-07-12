@@ -61,6 +61,13 @@
       | default(merged_vars.__meta__.catalog.description, true)
       | default(default_description)
       }}
+    _service_ready_message_template_html: >-
+      {{ lookup('file',
+                ( agnosticv_path,
+                  c_i | dirname,
+                  'service-ready-message-template.html.j2') | join('/'),
+                  errors='ignore')
+      }}
 
 - name: Create / Update OpenShift Governor object
   k8s:
