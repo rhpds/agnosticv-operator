@@ -27,8 +27,20 @@ spec:
 {% if _catalog.parameters is defined %}
   parameters: {{ _catalog.parameters | to_json }}
 {% endif %}
-{% if _catalog.message_templates is defined %}
-  messageTemplates: {{ _catalog.message_templates | to_json }}
+{% if _service_ready_message_template_html_j2 != '' or _service_deleted_message_template_html_j2 != '' %}
+  messageTemplates:
+{%   if _service_ready_message_template_html_j2 != '' %}
+    serviceReady:
+      template: {{ _service_ready_message_template_html_j2 | to_json }}
+      templateFormat: jinja2
+      outputFormat: html
+{%   endif %}
+{%   if _service_deleted_message_template_html_j2 != '' %}
+    serviceDeleted:
+      template: {{ _service_deleted_message_template_html_j2 | to_json }}
+      templateFormat: jinja2
+      outputFormat: html
+{%   endif %}
 {% endif %}
   resources:
   - provider:
