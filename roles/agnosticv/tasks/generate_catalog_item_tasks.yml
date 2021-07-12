@@ -68,6 +68,13 @@
                   'service-ready-message-template.html.j2') | join('/'),
                   errors='ignore')
       }}
+    _service_deleted_message_template_html: >-
+      {{ lookup('file',
+                ( agnosticv_path,
+                  c_i | dirname,
+                  'service-deleted-message-template.html.j2') | join('/'),
+                  errors='ignore')
+      }}
 
 - name: Create / Update OpenShift Governor object
   k8s:
