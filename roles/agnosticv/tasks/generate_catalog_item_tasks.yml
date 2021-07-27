@@ -47,6 +47,7 @@
     definition: "{{ lookup('template', 'catalog_item.yml.j2') | from_yaml }}"
     apply: true
   vars:
+    _bookbag: "{{ merged_vars.__meta__.bookbag | default({}) }}"
     _catalog: "{{ merged_vars.__meta__.catalog }}"
     _namespace: "{{ catalog_item_namespace }}"
     _name: "{{ catalog_item_name }}"
