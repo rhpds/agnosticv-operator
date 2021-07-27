@@ -24,6 +24,23 @@ metadata:
   resourceVersion: "{{ current_resource_version }}"
 {% endif %}
 spec:
+{% if _bookbag.git is defined %}
+  bookbag:
+    auth:
+      user: {{ _bookbag.auth.user | default('*') }}
+      password: {{ _bookbag.auth.password | default('') }}
+    git: {{ _bookbag.git | to_json }}
+    openShiftConsole: {{ _bookbag.openshift_console | default(false) | bool | to_json }}
+{%  if _bookbag.namespace is defined %}
+    namespace: {{ _bookbag.namespace | to_json }}
+{%  endif %}
+{%  if _bookbag.role is defined %}
+    role: {{ _bookbag.role | to_json }}
+{%  endif %}
+{%  if _bookbag.target_cluster is defined %}
+    targetCluster: {{ _bookbag.target_cluster | to_json }}
+{%  endif %}
+{% endif %}
 {% if _catalog.parameters is defined %}
   parameters: {{ _catalog.parameters | to_json }}
 {% endif %}
