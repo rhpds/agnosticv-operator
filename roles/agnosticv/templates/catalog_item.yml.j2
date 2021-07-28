@@ -24,28 +24,22 @@ metadata:
   resourceVersion: "{{ current_resource_version }}"
 {% endif %}
 spec:
-{% if _bookbag.git is defined or _bookbag.image is defined %}
+{% if _bookbag.image is defined or _bookbag.imageBuild is defined %}
   bookbag:
 {%   if _bookbag.auth is defined %}
     auth: {{ _bookbag.auth | to_json }}
 {%   endif %}
-{%   if _bookbag.git is defined %}
-    git: {{ _bookbag.git | to_json }}
-{%   endif %}
 {%   if _bookbag.image is defined %}
     image: {{ _bookbag.image | to_json }}
 {%   endif %}
-{%   if _bookbag.openshift_console %}
-    openShiftConsole: {{ _bookbag.openshift_console | bool | to_json }}
+{%   if _bookbag.imageBuild is defined %}
+    imageBuild: {{ _bookbag.imageBuild | to_json }}
 {%   endif %}
-{%   if _bookbag.namespace is defined %}
-    namespace: {{ _bookbag.namespace | to_json }}
+{%   if _bookbag.openshift_console is defined %}
+    openShiftConsole: {{ _bookbag.openshift_console | bool | to_json }}
 {%   endif %}
 {%   if _bookbag.role is defined %}
     role: {{ _bookbag.role | to_json }}
-{%   endif %}
-{%   if _bookbag.target_cluster is defined %}
-    targetCluster: {{ _bookbag.target_cluster | to_json }}
 {%   endif %}
 {% endif %}
 {% if _catalog.parameters is defined %}
