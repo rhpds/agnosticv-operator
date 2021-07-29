@@ -62,7 +62,7 @@ spec:
 {% endfor %}
 
   actions:
-{% for __action in ('provision', 'destroy', 'start', 'stop', 'status') %}
+{% for __action in ('provision', 'destroy', 'start', 'stop', 'status', 'update') %}
     {{ __action }}:
       roles:
 {%   for __role in babylon_anarchy_roles %}
