@@ -1,0 +1,34 @@
+---
+apiVersion: babylon.gpte.redhat.com/v1
+kind: CatalogItem
+metadata:
+  name: {{ (_name ~ '.user') | to_json }}
+  namespace: {{ _namespace | to_json }}
+  annotations:
+    babylon.gpte.redhat.com/description: {{ _description | to_json }}
+    babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}
+    babylon.gpte.redhat.com/icon: {{ _catalog.icon | default('') | to_json }}
+    babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
+  labels:
+    babylon.gpte.redhat.com/category: {{ _catalog.category | default(default_category) | to_json }}
+{%   for _label_k, _label_v in default_labels.items() %}
+    {{ _label_k }}: {{ _label_v | to_json }}
+{%   endfor %}
+{%   for _label_k, _label_v in (_catalog.labels | default({})).items() %}
+    babylon.gpte.redhat.com/{{ _label_k }}: {{ _label_v | to_json }}
+{%   endfor %}
+{%   if _stage in ['dev','test','prod'] %}
+    babylon.gpte.redhat.com/stage: {{ _stage | to_json }}
+{%   endif %}
+spec:
+  resources:
+  - provider:
+      apiVersion: poolboy.gpte.redhat.com/v1
+      kind: ResourceProvider
+      name: babylon-user-configmap
+      namespace: {{ poolboy_namespace | to_json }}
+    template:
+      metadata:
+        labels:
+          babylon.gpte.redhat.com/catalogItem: {{ (_name ~ '.user') | to_json }}
+

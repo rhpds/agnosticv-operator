@@ -2,10 +2,11 @@
 apiVersion: babylon.gpte.redhat.com/v1
 kind: CatalogItem
 metadata:
+  name: {{ _name | to_json }}
   namespace: {{ _namespace | to_json }}
   annotations:
     babylon.gpte.redhat.com/description: {{ _description | to_json }}
-    babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}
+    babylon.gpte.redhat.com/displayName: {{ (_catalog.display_name | default(_name) ~ (' (infra)' if _catalog.multiuser | default(false) | bool else '')) | to_json }}
     babylon.gpte.redhat.com/icon: {{ _catalog.icon | default('') | to_json }}
     babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
   labels:
@@ -19,7 +20,9 @@ metadata:
 {%   if _stage in ['dev','test','prod'] %}
     babylon.gpte.redhat.com/stage: {{ _stage | to_json }}
 {%   endif %}
-  name: {{ _name | to_json }}
+{%   if _catalog.multiuser | default(false) | bool %}
+    babylon.gpte.redhat.com/userCatalogItem: {{ (_name ~ '.user') | to_json }}
+{%   endif %}
 {% if current_resource_version | default('') != '' %}
   resourceVersion: "{{ current_resource_version }}"
 {% endif %}
