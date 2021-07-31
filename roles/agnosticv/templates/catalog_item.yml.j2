@@ -45,9 +45,6 @@ spec:
     role: {{ _bookbag.role | to_json }}
 {%   endif %}
 {% endif %}
-{% if _catalog.parameters is defined %}
-  parameters: {{ _catalog.parameters | to_json }}
-{% endif %}
 {% if _service_ready_message_template_html_j2 != '' or _service_deleted_message_template_html_j2 != '' %}
   messageTemplates:
 {%   if _service_ready_message_template_html_j2 != '' %}
@@ -63,9 +60,15 @@ spec:
       outputFormat: html
 {%   endif %}
 {% endif %}
+{% if _catalog.parameters is defined %}
+  parameters: {{ _catalog.parameters | to_json }}
+{% endif %}
   resources:
   - provider:
       apiVersion: poolboy.gpte.redhat.com/v1
       kind: ResourceProvider
       name: {{ _name | to_json }}
       namespace: {{ poolboy_namespace | to_json }}
+{% if _catalog.terms_of_service is defined %}
+  termsOfService: {{ _catalog.terms_of_service | to_json }}
+{% endif %}
