@@ -64,11 +64,20 @@ spec:
   parameters: {{ _catalog.parameters | to_json }}
 {% endif %}
   resources:
+{% for _component in vars.merged_vars.__meta__.components | default([]) %}
+  - provider:
+      apiVersion: poolboy.gpte.redhat.com/v1
+      kind: ResourceProvider
+      name: {{ _component.item | replace('_', '-') | replace('/', '.') | lower }}.{{ stage }}
+      namespace: {{ poolboy_namespace | to_json }}
+{% endfor %}
+{% if None != vars.merged_vars.__meta__.deployer.type | default(None) %}
   - provider:
       apiVersion: poolboy.gpte.redhat.com/v1
       kind: ResourceProvider
       name: {{ _name | to_json }}
       namespace: {{ poolboy_namespace | to_json }}
+{% endif %}
 {% if _catalog.terms_of_service is defined %}
   termsOfService: {{ _catalog.terms_of_service | to_json }}
 {% endif %}

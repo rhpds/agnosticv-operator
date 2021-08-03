@@ -22,7 +22,7 @@
     - "{{ anarchy_namespace }}"
     - "{{ catalog_item_namespace }}"
 
-- name: Create / Update OpenShift template object
+- name: OpenShift template
   k8s:
     state: present
     definition: "{{ lookup('template', 'template.yml.j2' ) | from_yaml }}"
@@ -84,7 +84,7 @@
     definition: "{{ lookup('template', 'user_catalog_item.yml.j2') | from_yaml }}"
     apply: true
   vars:
-    _catalog: "{{ merged_vars.__meta__.catalog }}"
+    _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
     _namespace: "{{ catalog_item_namespace }}"
     _name: "{{ catalog_item_name }}"
     _stage: "{{ stage }}"
@@ -95,11 +95,12 @@
                   c_i | dirname,
                   'description.adoc') | join('/'),
                   errors='ignore')
-      | default(merged_vars.__meta__.catalog.description, true)
+      | default(vars.merged_vars.__meta__.catalog.description, true)
       | default(default_description)
       }}
 
 - name: Create / Update OpenShift Governor object
+  when: None != vars.merged_vars.__meta__.deployer.type | default(None)
   k8s:
     state: present
     definition: "{{ lookup('template', 'governor.yml.j2') | from_yaml }}"
@@ -109,6 +110,7 @@
     _namespace: "{{ anarchy_namespace }}"
 
 - name: Create / Update Poolboy ResourceProvider
+  when: None != vars.merged_vars.__meta__.deployer.type | default(None)
   k8s:
     state: present
     definition: "{{ lookup('template', 'resource_provider.yml.j2') | from_yaml }}"
@@ -116,5 +118,5 @@
   vars:
     _name: "{{ catalog_item_name }}"
     _namespace: "{{ poolboy_namespace }}"
+    _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
     _governor: "{{ catalog_item_name }}"
-    _catalog: "{{ merged_vars.__meta__.catalog }}"

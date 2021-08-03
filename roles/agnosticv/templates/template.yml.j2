@@ -28,25 +28,37 @@ objects:
     generateName: {{ _name }}-
   spec:
     resources:
-    - template:
-        apiVersion: anarchy.gpte.redhat.com/v1
-        kind: AnarchySubject
-        metadata:
-          annotations:
-            poolboy.gpte.redhat.com/resource-provider-name: babylon
-          generateName: {{ _name }}-
-          labels:
-            governor: {{ _name }}
+{% for _component in vars.merged_vars.__meta__.components | default([]) %}
+    - provider:
+        apiVersion: poolboy.gpte.redhat.com/v1
+        kind: ResourceProvider
+        name: {{ _component.item | replace('_', '-') | replace('/', '.') | lower }}.{{ stage }}
+        namespace: {{ poolboy_namespace | to_json }}
+{%   if vars.merged_vars.__meta__.catalog.parameters | default([]) | json_query('[?resourceIndexes==`null` || contains(resourceIndexes, `' ~ loop.index0 ~ '`)]') %}
+      template:
         spec:
-          governor: {{ _name }}
-{% if vars.merged_vars.__meta__.catalog.parameters | default(None) %}
           vars:
             job_vars:
-{%   for param in vars.merged_vars.__meta__.catalog.parameters %}
-              {{ param.name | lower }}: {{ '${{' ~ param.name ~ '}}' }}
-{%   endfor %}
-{% else %}
-          vars: {}
+{%     for param in vars.merged_vars.__meta__.catalog.parameters | default([]) | json_query('[?resourceIndexes==`null` || contains(resourceIndexes, `' ~ loop.index0 ~ '`)]') %}
+              {{ param.name }}: {{ '${{' ~ param.name ~ '}}' }}
+{%     endfor %}
+{%   endif %}
+{% endfor %}
+{% if None != vars.merged_vars.__meta__.deployer.type | default(None) %}
+    - provider:
+        apiVersion: poolboy.gpte.redhat.com/v1
+        kind: ResourceProvider
+        name: {{ _name | to_json }}
+        namespace: {{ poolboy_namespace | to_json }}
+{%   if vars.merged_vars.__meta__.catalog.parameters | default([]) | json_query('[?resourceIndexes==`null` || contains(resourceIndexes, `"@"`)]') %}
+      template:
+        spec:
+          vars:
+            job_vars:
+{%     for param in vars.merged_vars.__meta__.catalog.parameters | default([]) | json_query('[?resourceIndexes==`null` || contains(resourceIndexes, `"@"`)]') %}
+              {{ param.name }}: {{ '${{' ~ param.name ~ '}}' }}
+{%     endfor %}
+{%   endif %}
 {% endif %}
 
 {% if merged_vars.__meta__.catalog.parameters is defined %}
