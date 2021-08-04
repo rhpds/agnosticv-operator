@@ -9,6 +9,11 @@ metadata:
     babylon.gpte.redhat.com/displayName: {{ (_catalog.display_name | default(_name) ~ (' (infra)' if _catalog.multiuser | default(false) | bool else '')) | to_json }}
     babylon.gpte.redhat.com/icon: {{ _catalog.icon | default('') | to_json }}
     babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
+{% for _component in vars.merged_vars.__meta__.components | default([]) %}
+{%   if _component.display_name is defined %}
+    babylon.gpte.redhat.com/displayNameComponent{{ loop.index0 }}: {{ _component.display_name | to_json }}
+{%   endif %}
+{% endfor %}
   labels:
     babylon.gpte.redhat.com/category: {{ _catalog.category | default(default_category) | to_json }}
 {%   for _label_k, _label_v in default_labels.items() %}
@@ -65,14 +70,16 @@ spec:
 {% endif %}
   resources:
 {% for _component in vars.merged_vars.__meta__.components | default([]) %}
-  - provider:
+  - name: {{ _component.name | default(_component.item | regex_replace('^.*/', '') | replace('_', '-') | lower) }}
+    provider:
       apiVersion: poolboy.gpte.redhat.com/v1
       kind: ResourceProvider
       name: {{ _component.item | replace('_', '-') | replace('/', '.') | lower }}.{{ stage }}
       namespace: {{ poolboy_namespace | to_json }}
 {% endfor %}
 {% if None != vars.merged_vars.__meta__.deployer.type | default(None) %}
-  - provider:
+  - name: {{ _component.name | default(catalog_item | replace('_', '-') | lower) }}
+    provider:
       apiVersion: poolboy.gpte.redhat.com/v1
       kind: ResourceProvider
       name: {{ _name | to_json }}
