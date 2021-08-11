@@ -105,9 +105,9 @@
       when: >-
         account != 'EXAMPLE_ACCOUNT'
         and (
-          r_changed is skipped
+          r_changed is not skipped
 
-          or
+          and (
 
           (context_prefix + c_i) in r_changed.stdout_lines
 
@@ -130,7 +130,7 @@
           [ context_prefix + 'common.yaml',
             context_prefix + 'common.yml']
           | intersect(r_changed.stdout_lines) | length > 0
-        )
+        ))
       vars:
         context_prefix: >-
           {{ context_dir + '/'
