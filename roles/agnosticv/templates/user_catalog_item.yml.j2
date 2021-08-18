@@ -20,6 +20,9 @@ metadata:
 {%   if _stage in ['dev','test','prod'] %}
     babylon.gpte.redhat.com/stage: {{ _stage | to_json }}
 {%   endif %}
+{% if _current_resource_version | default('') != '' %}
+  resourceVersion: "{{ _current_resource_version }}"
+{% endif %}
 spec:
   resources:
   - provider:

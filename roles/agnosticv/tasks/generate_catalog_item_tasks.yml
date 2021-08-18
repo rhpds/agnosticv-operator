@@ -41,27 +41,51 @@
       | default(default_description)
       }}
 
+# Need to get current resource version and force replace because catalog item
+# resources with descriptions are too large to apply.
+- name: Get current state of Babylon Catalog Item object
+  k8s_info:
+    api_version: babylon.gpte.redhat.com/v1
+    kind: CatalogItem
+    namespace: "{{ catalog_item_namespace }}"
+    name: "{{ catalog_item_name }}"
+  register: r_get_catalog_item
+
 - name: Create / Update Babylon Catalog Item object
   k8s:
     state: present
     definition: "{{ lookup('template', 'catalog_item.yml.j2') | from_yaml }}"
-    apply: true
+    force: true
   vars:
     _bookbag: "{{ merged_vars.__meta__.bookbag | default({}) }}"
     _catalog: "{{ merged_vars.__meta__.catalog }}"
+    _current_resource_version: "{{ r_get_catalog_item.resources[0].metadata.resourceVersion | default('') }}"
     _namespace: "{{ catalog_item_namespace }}"
     _name: "{{ catalog_item_name }}"
     _stage: "{{ stage }}"
     # Use description.adoc first, then variables
-    _description: >-
+    _description_adoc: >-
       {{ lookup('file',
                 ( agnosticv_path,
                   c_i | dirname,
                   'description.adoc') | join('/'),
                   errors='ignore')
+      }}
+    _description_html: >-
+      {{ lookup('file',
+                ( agnosticv_path,
+                  c_i | dirname,
+                  'description.html') | join('/'),
+                  errors='ignore')
+      }}
+    _description: >-
+      {{ _description_html
+      | default(_description_adoc, true)
       | default(merged_vars.__meta__.catalog.description, true)
       | default(default_description)
       }}
+    _description_format: >-
+      {{ (_description_html == '') | ternary('asciidoc', 'html') }}
     _service_ready_message_template_html_j2: >-
       {{ lookup('file',
                 ( agnosticv_path,
@@ -76,28 +100,42 @@
                   'service-deleted-message-template.html.j2') | join('/'),
                   errors='ignore')
       }}
+    register: create_catalog_item
 
-- name: Create / Update Babylon User Catalog Item object
+- name: Manage Babylon User Catalog Item object
   when: _catalog.multiuser | default(false) | bool
-  k8s:
-    state: present
-    definition: "{{ lookup('template', 'user_catalog_item.yml.j2') | from_yaml }}"
-    apply: true
-  vars:
-    _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
-    _namespace: "{{ catalog_item_namespace }}"
-    _name: "{{ catalog_item_name }}"
-    _stage: "{{ stage }}"
-    # Use description.adoc first, then variables
-    _description: >-
-      {{ lookup('file',
-                ( agnosticv_path,
-                  c_i | dirname,
-                  'description.adoc') | join('/'),
-                  errors='ignore')
-      | default(vars.merged_vars.__meta__.catalog.description, true)
-      | default(default_description)
-      }}
+  block:
+  # Need to get current resource version and force replace because catalog
+  # item resources with descriptions are too large to apply.
+  - name: Get current state of Babylon Catalog Item object
+    k8s_info:
+      api_version: babylon.gpte.redhat.com/v1
+      kind: CatalogItem
+      namespace: "{{ catalog_item_namespace }}"
+      name: "{{ catalog_item_name }}"
+    register: r_get_user_catalog_item
+
+  - name: Create / Update Babylon User Catalog Item object
+    k8s:
+      state: present
+      definition: "{{ lookup('template', 'user_catalog_item.yml.j2') | from_yaml }}"
+      force: true
+    vars:
+      _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
+      _current_resource_version: "{{ r_get_user_catalog_item.resources[0].metadata.resourceVersion | default('') }}"
+      _namespace: "{{ catalog_item_namespace }}"
+      _name: "{{ catalog_item_name }}"
+      _stage: "{{ stage }}"
+      # Use description.adoc first, then variables
+      _description: >-
+        {{ lookup('file',
+                  ( agnosticv_path,
+                    c_i | dirname,
+                    'description.adoc') | join('/'),
+                    errors='ignore')
+        | default(vars.merged_vars.__meta__.catalog.description, true)
+        | default(default_description)
+        }}
 
 - name: Create / Update OpenShift Governor object
   when: None != vars.merged_vars.__meta__.deployer.type | default(None)
