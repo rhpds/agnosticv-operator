@@ -40,10 +40,16 @@ spec:
           {%- else -%}
           started
           {%- endif -%}
-{% endraw %}
         healthy: true
         job_vars:
-          guid: '{% raw %}{{ resource_handle.metadata.name[5:] if resource_handle.metadata.name.startswith(''guid-'') else resource_handle.metadata.name }}{% endraw %}'
+          guid: '{{ resource_handle.metadata.name[5:] if resource_handle.metadata.name.startswith(''guid-'') else resource_handle.metadata.name }}'
+{% endraw %}
+{% if merged_vars.__meta__.catalog.requester_parameters | default([]) | length > 0 %}
+{%   for parameter in merged_vars.__meta__.catalog.requester_parameters %}
+          {{ parameter.name }}: {{ parameter.value | to_json }}
+{%   endfor %}
+  resourceRequiresClaim: true
+{% endif %}
   template:
     enable: true
   updateFilters:
