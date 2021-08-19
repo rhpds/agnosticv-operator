@@ -112,7 +112,7 @@
       api_version: babylon.gpte.redhat.com/v1
       kind: CatalogItem
       namespace: "{{ catalog_item_namespace }}"
-      name: "{{ catalog_item_name }}"
+      name: "{{ catalog_item_name }}.user"
     register: r_get_user_catalog_item
 
   - name: Create / Update Babylon User Catalog Item object
