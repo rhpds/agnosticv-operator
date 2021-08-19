@@ -48,8 +48,8 @@ spec:
 {%   for parameter in merged_vars.__meta__.catalog.requester_parameters %}
           {{ parameter.name }}: {{ parameter.value | to_json }}
 {%   endfor %}
-  resourceRequiresClaim: true
 {% endif %}
+  resourceRequiresClaim: {{ merged_vars.__meta__.catalog.provision_requires_request | default(merged_vars.__meta__.catalog.requester_parameters | default([]) | length > 0) | bool | to_json }}
   template:
     enable: true
   updateFilters:
