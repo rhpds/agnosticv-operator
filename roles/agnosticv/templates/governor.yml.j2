@@ -27,7 +27,8 @@ spec:
         tower:
           organization: {{ account | to_json }}
 {% for key in vars.merged_vars if
-  key not in vars.merged_vars.__meta__.catalog.parameters | d([]) | json_query('[].name') %}
+  key not in vars.merged_vars.__meta__.catalog.parameters | default([]) | json_query('[].name') and
+  key not in vars.merged_vars.__meta__.catalog.requester_parameters | default([]) | json_query('[].name') %}
       {{ key }}: {{ vars.merged_vars[key] | to_json }}
 {% endfor %}
 

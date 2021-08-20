@@ -103,16 +103,16 @@
     register: create_catalog_item
 
 - name: Manage Babylon User Catalog Item object
-  when: _catalog.multiuser | default(false) | bool
+  when: vars.merged_vars.__meta__.catalog.multiuser | default(false) | bool
   block:
   # Need to get current resource version and force replace because catalog
   # item resources with descriptions are too large to apply.
-  - name: Get current state of Babylon Catalog Item object
+  - name: Get current state of Babylon User Catalog Item object
     k8s_info:
       api_version: babylon.gpte.redhat.com/v1
       kind: CatalogItem
       namespace: "{{ catalog_item_namespace }}"
-      name: "{{ catalog_item_name }}"
+      name: "{{ catalog_item_name }}.user"
     register: r_get_user_catalog_item
 
   - name: Create / Update Babylon User Catalog Item object
