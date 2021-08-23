@@ -23,6 +23,7 @@
     - "{{ catalog_item_namespace }}"
 
 - name: OpenShift template
+  when: not merged_vars.__meta__.catalog.disable | default(false) | bool
   k8s:
     state: present
     definition: "{{ lookup('template', 'template.yml.j2' ) | from_yaml }}"
@@ -44,6 +45,7 @@
 # Need to get current resource version and force replace because catalog item
 # resources with descriptions are too large to apply.
 - name: Get current state of Babylon Catalog Item object
+  when: not merged_vars.__meta__.catalog.disable | default(false) | bool
   k8s_info:
     api_version: babylon.gpte.redhat.com/v1
     kind: CatalogItem
@@ -52,6 +54,7 @@
   register: r_get_catalog_item
 
 - name: Create / Update Babylon Catalog Item object
+  when: not merged_vars.__meta__.catalog.disable | default(false) | bool
   k8s:
     state: present
     definition: "{{ lookup('template', 'catalog_item.yml.j2') | from_yaml }}"
@@ -103,7 +106,9 @@
     register: create_catalog_item
 
 - name: Manage Babylon User Catalog Item object
-  when: vars.merged_vars.__meta__.catalog.multiuser | default(false) | bool
+  when:
+  - not merged_vars.__meta__.catalog.disable | default(false) | bool
+  - vars.merged_vars.__meta__.catalog.multiuser | default(false) | bool
   block:
   # Need to get current resource version and force replace because catalog
   # item resources with descriptions are too large to apply.
