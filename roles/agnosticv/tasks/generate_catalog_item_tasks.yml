@@ -7,20 +7,27 @@
 - name: Use namespace defined in the catalog item YAML
   set_fact:
     anarchy_namespace: >-
-      {{ merged_vars.__meta__.anarchy.namespace
-      | default(default_anarchy_namespace) }}
+      {{ lookup('template_string', merged_vars.__meta__.anarchy.namespace | default(default_anarchy_namespace)) }}
     catalog_item_namespace: >-
-      {{ merged_vars.__meta__.catalog.namespace | default('openshift') }}
+      {{ lookup('template_string', merged_vars.__meta__.catalog.namespace | default(default_catalog_namespace)) }}
 
-- name: Create Namespace
+# FIXME - Validate catalog namespace values? Control catalog namespace labels?
+- name: Create Catalog Namespace
   k8s:
-    name: "{{ item }}"
-    api_version: v1
-    kind: Namespace
-    state: present
-  loop:
-    - "{{ anarchy_namespace }}"
-    - "{{ catalog_item_namespace }}"
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ catalog_item_namespace }}"
+
+# FIXME - Deploy Anarchy into the namespace?
+- name: Create Anarchy Namespace
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ anarchy_namespace }}"
 
 - name: OpenShift template
   when: not merged_vars.__meta__.catalog.disable | default(false) | bool
