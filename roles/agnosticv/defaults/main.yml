@@ -48,6 +48,10 @@ default_anarchy_namespace: >-
   {{ lookup('env','ANARCHY_NAMESPACE')
   | default('anarchy-operator', true) }}
 
+default_catalog_namespace: >-
+  {{ lookup('env','CATALOG_NAMESPACE')
+  | default('babylon-catalog', true) }}
+
 poolboy_namespace: >-
   {{ lookup('env','POOLBOY_NAMESPACE')
   | default('poolboy', true) }}
