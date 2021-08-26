@@ -5,20 +5,22 @@
     catalog_item_name: "{{ account | replace('_', '-') }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}"
 
 - name: Use namespace defined in the catalog item YAML
+  vars:
+    _catalog_item_namespace: >-
+      {%- if merged_vars.__meta__.catalog.multiuser | default(false) | bool -%}
+      {{ merged_vars.__meta__.catalog.multiuser_infra_namespace | default(merged_vars.__meta__.catalog.namespace) | default(default_catalog_namespace) }}
+      {%- else -%}
+      {{ merged_vars.__meta__.catalog.namespace | default(default_catalog_namespace) }}
+      {%- endif -%}
+    _user_catalog_item_namespace: >-
+      {{ merged_vars.__meta__.catalog.namespace | default(default_catalog_namespace) }}
   set_fact:
     anarchy_namespace: >-
-      {{ lookup('template_string', merged_vars.__meta__.anarchy.namespace | default(default_anarchy_namespace)) }}
+      {{ lookup('template_string', merged_vars.__meta__.anarchy.namespace | default(default_anarchy_namespace)) | replace('_', '-') }}
     catalog_item_namespace: >-
-      {{ lookup('template_string', merged_vars.__meta__.catalog.namespace | default(default_catalog_namespace)) }}
-
-# FIXME - Validate catalog namespace values? Control catalog namespace labels?
-- name: Create Catalog Namespace
-  k8s:
-    definition:
-      apiVersion: v1
-      kind: Namespace
-      metadata:
-        name: "{{ catalog_item_namespace }}"
+      {{ lookup('template_string', _catalog_item_namespace) | replace('_', '-') }}
+    user_catalog_item_namespace: >-
+      {{ lookup('template_string', _user_catalog_item_namespace) | replace('_', '-') }}
 
 # FIXME - Deploy Anarchy into the namespace?
 - name: Create Anarchy Namespace
@@ -28,6 +30,16 @@
       kind: Namespace
       metadata:
         name: "{{ anarchy_namespace }}"
+
+# FIXME - Validate catalog namespace values? Control catalog namespace labels?
+- name: Create Catalog Namespace
+  when: not merged_vars.__meta__.catalog.disable | default(false) | bool
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ catalog_item_namespace }}"
 
 - name: OpenShift template
   when: not merged_vars.__meta__.catalog.disable | default(false) | bool
@@ -123,7 +135,7 @@
     k8s_info:
       api_version: babylon.gpte.redhat.com/v1
       kind: CatalogItem
-      namespace: "{{ catalog_item_namespace }}"
+      namespace: "{{ user_catalog_item_namespace }}"
       name: "{{ catalog_item_name }}.user"
     register: r_get_user_catalog_item
 
@@ -135,7 +147,7 @@
     vars:
       _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
       _current_resource_version: "{{ r_get_user_catalog_item.resources[0].metadata.resourceVersion | default('') }}"
-      _namespace: "{{ catalog_item_namespace }}"
+      _namespace: "{{ user_catalog_item_namespace }}"
       _name: "{{ catalog_item_name }}"
       _stage: "{{ stage }}"
       # Use description.adoc first, then variables
