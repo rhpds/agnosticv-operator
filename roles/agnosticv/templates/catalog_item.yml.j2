@@ -33,6 +33,9 @@ metadata:
   resourceVersion: "{{ _current_resource_version }}"
 {% endif %}
 spec:
+{% if vars.merged_vars.__meta__.allow_user_groups is defined %}
+  allowUserGroups: {{ vars.merged_vars.__meta__.allow_user_groups | to_json }}
+{% endif %}
 {% if _bookbag.image is defined or _bookbag.imageBuild is defined %}
   bookbag:
 {%   if _bookbag.auth is defined %}
