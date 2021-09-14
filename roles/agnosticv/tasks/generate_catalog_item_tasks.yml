@@ -151,15 +151,28 @@
       _name: "{{ catalog_item_name }}"
       _stage: "{{ stage }}"
       # Use description.adoc first, then variables
-      _description: >-
+      _description_adoc: >-
         {{ lookup('file',
                   ( agnosticv_path,
                     c_i | dirname,
                     'description.adoc') | join('/'),
                     errors='ignore')
-        | default(vars.merged_vars.__meta__.catalog.description, true)
+        }}
+      _description_html: >-
+        {{ lookup('file',
+                  ( agnosticv_path,
+                    c_i | dirname,
+                    'description.html') | join('/'),
+                    errors='ignore')
+        }}
+      _description: >-
+        {{ _description_html
+        | default(_description_adoc, true)
+        | default(merged_vars.__meta__.catalog.description, true)
         | default(default_description)
         }}
+      _description_format: >-
+        {{ (_description_html == '') | ternary('asciidoc', 'html') }}
 
 - name: Create / Update OpenShift Governor object
   when: None != vars.merged_vars.__meta__.deployer.type | default(None)
