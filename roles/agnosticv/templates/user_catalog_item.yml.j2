@@ -6,6 +6,7 @@ metadata:
   namespace: {{ _namespace | to_json }}
   annotations:
     babylon.gpte.redhat.com/description: {{ _description | to_json }}
+    babylon.gpte.redhat.com/descriptionFormat: {{ _description_format | to_json }}
     babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}
     babylon.gpte.redhat.com/icon: {{ _catalog.icon | default('') | to_json }}
     babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
