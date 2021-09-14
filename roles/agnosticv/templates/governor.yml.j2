@@ -63,7 +63,9 @@ spec:
 {% endfor %}
 
   actions:
-{% for __action in ('provision', 'destroy', 'start', 'stop', 'status', 'update') %}
+{% for __action in anarchy_governor_standard_actions
+ | union((merged_vars.__meta__.deployer.entry_points | default({})).keys() | list)
+%}
     {{ __action }}:
       roles:
 {%   for __role in babylon_anarchy_roles %}

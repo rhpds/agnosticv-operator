@@ -64,3 +64,9 @@ resource_provider_default_lifespan:
 resource_provider_runtime_default: 4h
 resource_provider_runtime_maximum: 8h
 
+anarchy_governor_standard_actions:
+- provision
+- destroy
+- start
+- stop
+- status
