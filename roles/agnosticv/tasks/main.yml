@@ -119,6 +119,12 @@
 
           or
 
+          [ context_prefix + c_i | dirname + '/description.adoc',
+            context_prefix + c_i | dirname + '/description.html']
+          | intersect(r_changed.stdout_lines) | length > 0
+
+          or
+
           [ context_prefix + account + '/common.yaml',
             context_prefix + account + '/common.yml',
             context_prefix + account + '/account.yaml',
