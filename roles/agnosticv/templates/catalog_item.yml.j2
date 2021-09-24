@@ -33,8 +33,17 @@ metadata:
   resourceVersion: "{{ _current_resource_version }}"
 {% endif %}
 spec:
-{% if vars.merged_vars.__meta__.allow_user_groups is defined %}
-  allowUserGroups: {{ vars.merged_vars.__meta__.allow_user_groups | to_json }}
+{% if vars.merged_vars.__meta__.access_control is defined %}
+  accessControl:
+{%   if vars.merged_vars.__meta__.access_control.allow_groups is defined %}
+    allowGroups: {{ vars.merged_vars.__meta__.access_control.allow_groups | to_json }}
+{%   endif %}
+{%   if vars.merged_vars.__meta__.access_control.deny_groups is defined %}
+    denyGroups: {{ vars.merged_vars.__meta__.access_control.deny_groups | to_json }}
+{%   endif %}
+{%   if vars.merged_vars.__meta__.access_control.view_only_groups is defined %}
+    viewOnlyGroups: {{ vars.merged_vars.__meta__.access_control.view_only_groups | to_json }}
+{%   endif %}
 {% endif %}
 {% if _bookbag.image is defined or _bookbag.imageBuild is defined %}
   bookbag:
