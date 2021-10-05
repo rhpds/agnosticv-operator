@@ -102,5 +102,5 @@ spec:
   termsOfService: {{ _catalog.terms_of_service | to_json }}
 {% endif %}
 {% if _catalog.user_data is defined %}
-  userdata: {{ _catalog.user_data }}
+  userdata: {{ _catalog.user_data | to_json }}
 {% endif %}
