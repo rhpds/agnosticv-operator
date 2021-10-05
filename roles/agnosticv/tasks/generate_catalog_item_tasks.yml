@@ -82,6 +82,7 @@
     _bookbag: "{{ merged_vars.__meta__.bookbag | default({}) }}"
     _catalog: "{{ merged_vars.__meta__.catalog }}"
     _current_resource_version: "{{ r_get_catalog_item.resources[0].metadata.resourceVersion | default('') }}"
+    _icon: "{{ merged_vars.__meta__.catalog.icon | default('') }}"
     _namespace: "{{ catalog_item_namespace }}"
     _name: "{{ catalog_item_name }}"
     _stage: "{{ stage }}"
@@ -147,6 +148,7 @@
     vars:
       _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
       _current_resource_version: "{{ r_get_user_catalog_item.resources[0].metadata.resourceVersion | default('') }}"
+      _icon: "{{ merged_vars.__meta__.catalog.icon | default('') }}"
       _namespace: "{{ user_catalog_item_namespace }}"
       _name: "{{ catalog_item_name }}"
       _stage: "{{ stage }}"
