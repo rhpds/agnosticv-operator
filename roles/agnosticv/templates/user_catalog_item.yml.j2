@@ -47,6 +47,6 @@ spec:
       metadata:
         labels:
           babylon.gpte.redhat.com/catalogItem: {{ (_name ~ '.user') | to_json }}
-{% if _catalog.user_data %}
+{% if _catalog.user_data is defined %}
   userData: {{ _catalog.user_data }}
 {% endif %}
