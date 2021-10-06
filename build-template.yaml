@@ -40,8 +40,6 @@ objects:
     strategy:
       type: Docker
       dockerStrategy:
+        dockerfilePath: build/Dockerfile
         forcePull: true
-        from:
-          kind: DockerImage
-          name: ${KOPF_S2I_IMAGE}
     triggers: []
