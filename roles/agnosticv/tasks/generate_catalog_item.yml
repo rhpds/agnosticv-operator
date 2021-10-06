@@ -12,13 +12,7 @@
         msg: |
           FAIL {{ agnosticv_path }} > {{ account }} > {{ catalog_item }} > {{ stage }}
 
-    - when: google_chat_webhook_url is defined
-      name: Notify error to google chat room
-      uri:
-        url: "{{ google_chat_webhook_url }}"
-        method: POST
-        status_code: 200
-        body_format: json
-        body:
-          text: |-
-            FAIL {{ url }} > {{ account }} > {{ catalog_item }} > {{ stage }}
+    - name: Add line to text to be sent to google chat room
+      lineinfile:
+        path: "{{ google_chat_text_file }}"
+        line: FAIL {{ url }} > {{ account }} > {{ catalog_item }} > {{ stage }}

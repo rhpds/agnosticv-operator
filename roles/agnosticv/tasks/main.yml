@@ -170,3 +170,14 @@
         account: "{{ c_i.split('/')[-3] }}"
         catalog_item: "{{ c_i.split('/')[-2] }}"
         stage: "{{ c_i.split('/')[-1] | regex_replace('\\.ya?ml$', '') }}"
+
+    - when: google_chat_webhook_url is defined
+      name: Notify error to google chat room
+      uri:
+        url: "{{ google_chat_webhook_url }}"
+        method: POST
+        status_code: 200
+        body_format: json
+        body:
+          text: |-
+            {{ lookup(file, google_chat_text_file) }}

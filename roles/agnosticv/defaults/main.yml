@@ -72,3 +72,4 @@ anarchy_governor_standard_actions:
 - status
 
 google_chat_webhook_secret: google-chat-webhook
+google_chat_text_file: /tmp/google_text.txt
