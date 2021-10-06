@@ -12,9 +12,7 @@
         msg: |
           FAIL {{ agnosticv_path }} > {{ account }} > {{ catalog_item }} > {{ stage }}
 
-    - when:
-        - google_chat_webhook_url is defined
-        - r_catalogitems.stderr_lines | length > 0
+    - when: google_chat_webhook_url is defined
       uri:
         url: "{{ google_chat_webhook_url }}"
         method: POST
