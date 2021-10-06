@@ -13,6 +13,7 @@
           FAIL {{ agnosticv_path }} > {{ account }} > {{ catalog_item }} > {{ stage }}
 
     - when: google_chat_webhook_url is defined
+      name: Notify error to google chat room
       uri:
         url: "{{ google_chat_webhook_url }}"
         method: POST

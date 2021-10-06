@@ -95,6 +95,7 @@
     - when:
         - google_chat_webhook_url is defined
         - r_catalogitems.stderr_lines | length > 0
+      name: Notify errors to google chat room
       uri:
         url: "{{ google_chat_webhook_url }}"
         method: POST
