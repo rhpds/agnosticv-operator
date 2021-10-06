@@ -8,7 +8,7 @@ metadata:
     babylon.gpte.redhat.com/description: {{ _description | to_json }}
     babylon.gpte.redhat.com/descriptionFormat: {{ _description_format | to_json }}
     babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}
-    babylon.gpte.redhat.com/icon: {% if _icon is mapping %}{{ _icon | to_json | to_json }}{% else %}{{ _icon | to_json }}{% endif %}
+    babylon.gpte.redhat.com/icon: {{ _icon | to_json if _icon is string else _icon | to_json | to_json }}
     babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
   labels:
     babylon.gpte.redhat.com/category: {{ _catalog.category | default(default_category) | to_json }}

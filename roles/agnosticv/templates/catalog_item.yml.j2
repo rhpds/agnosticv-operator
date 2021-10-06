@@ -8,7 +8,7 @@ metadata:
     babylon.gpte.redhat.com/description: {{ _description | to_json }}
     babylon.gpte.redhat.com/descriptionFormat: {{ _description_format | to_json }}
     babylon.gpte.redhat.com/displayName: {{ (_catalog.display_name | default(_name) ~ (' (infra)' if _catalog.multiuser | default(false) | bool else '')) | to_json }}
-    babylon.gpte.redhat.com/icon: {% if _icon is mapping %}{{ _icon | to_json | to_json }}{% else %}{{ _icon | to_json }}{% endif %}
+    babylon.gpte.redhat.com/icon: {{ _icon | to_json if _icon is string else _icon | to_json | to_json }}
     babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
 {% for _component in vars.merged_vars.__meta__.components | default([]) %}
 {%   if _component.display_name is defined %}
@@ -102,5 +102,5 @@ spec:
   termsOfService: {{ _catalog.terms_of_service | to_json }}
 {% endif %}
 {% if _catalog.user_data is defined %}
-  userdata: {{ _catalog.user_data | to_json }}
+  userData: {{ _catalog.user_data | to_json }}
 {% endif %}
