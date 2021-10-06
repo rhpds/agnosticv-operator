@@ -70,3 +70,5 @@ anarchy_governor_standard_actions:
 - start
 - stop
 - status
+
+google_chat_webhook_secret: google-chat-webhook

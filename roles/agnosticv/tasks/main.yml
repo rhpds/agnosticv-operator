@@ -95,9 +95,10 @@
     - when:
         - google_chat_webhook_url is defined
         - r_catalogitems.stderr_lines | length > 0
-      url:
-        uri: "{{ google_chat_webhook_url }}"
+      uri:
+        url: "{{ google_chat_webhook_url }}"
         method: POST
+        status_code: 200
         body_format: json
         body:
           text: |
