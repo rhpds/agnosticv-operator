@@ -13,6 +13,12 @@
 #     msg: "{{ msg.split('\n') }}"
 #   tags: debug_info
 
+- name: Load Google Chat webhook url
+  when:
+    - enable_google_chat | default(false) | bool
+    - google_chat_webhook_secret is defined
+  include_tasks: load_google_chat_secret.yaml
+
 - when: ssh_key is defined
   block:
     - name: Get SSH secret key
@@ -85,6 +91,21 @@
       args:
         chdir: "{{ agnosticv_path }}"
       register: r_catalogitems
+
+    - when:
+        - google_chat_webhook_url is defined
+        - r_catalogitems.stderr_lines | length > 0
+      url:
+        uri: "{{ google_chat_webhook_url }}"
+        method: POST
+        body_format: json
+        body:
+          text: |
+            Errors using agnosticV with repo {{ url }}
+
+            stderr:
+            ```{{ r_catalogitems.stderr }}
+            ```
 
     - name: Print stderr lines
       loop: "{{ r_catalogitems.stderr_lines }}"
