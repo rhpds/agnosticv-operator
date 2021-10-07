@@ -11,3 +11,7 @@
     - debug:
         msg: |
           FAIL {{ agnosticv_path }} > {{ account }} > {{ catalog_item }} > {{ stage }}
+
+    - name: Set flag_fail to true
+      set_fact:
+        flag_fail: true

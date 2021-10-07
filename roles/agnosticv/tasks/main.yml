@@ -13,6 +13,10 @@
 #     msg: "{{ msg.split('\n') }}"
 #   tags: debug_info
 
+- name: Init flag_fail
+  set_fact:
+    flag_fail: false
+
 - when: ssh_key is defined
   block:
     - name: Get SSH secret key
@@ -92,6 +96,11 @@
         loop_var: line
       include_tasks: print_error.yaml
 
+    - when: r_catalogitems.stderr_lines|length > 0
+      name: Set flag_fail to true
+      set_fact:
+        flag_fail: true
+
     - loop: "{{ r_catalogitems.stdout_lines }}"
       loop_control:
         loop_var: c_i
@@ -147,3 +156,7 @@
         account: "{{ c_i.split('/')[-3] }}"
         catalog_item: "{{ c_i.split('/')[-2] }}"
         stage: "{{ c_i.split('/')[-1] | regex_replace('\\.ya?ml$', '') }}"
+
+- name: Fail if any catalog item failed
+  when: flag_fail
+  fail:
