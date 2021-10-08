@@ -64,7 +64,7 @@
   register: r_git_public
 
 - when: >-
-    'summit' in repo and
+    "summit" in url and
     (
     r_git_private is changed
     or r_git_public is changed
