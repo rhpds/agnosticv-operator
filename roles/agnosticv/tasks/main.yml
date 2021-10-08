@@ -64,11 +64,8 @@
   register: r_git_public
 
 - when: >-
-    "summit" in url and
-    (
     r_git_private is changed
     or r_git_public is changed
-    )
 
   block:
     - name: Create output_dir directory
