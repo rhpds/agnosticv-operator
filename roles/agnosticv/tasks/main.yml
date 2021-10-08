@@ -64,8 +64,11 @@
   register: r_git_public
 
 - when: >-
+    'summit' in repo and
+    (
     r_git_private is changed
     or r_git_public is changed
+    )
 
   block:
     - name: Create output_dir directory
@@ -89,10 +92,8 @@
       register: r_changed
 
     - name: Find all catalog items
-      shell: >-
+      command: >-
         {{ agnosticv_client_path }} --list --has __meta__.catalog
-        | grep ppmbu
-        || true
       args:
         chdir: "{{ agnosticv_path }}"
       register: r_catalogitems
