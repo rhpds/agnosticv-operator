@@ -91,7 +91,8 @@
     - name: Find all catalog items
       shell: >-
         {{ agnosticv_client_path }} --list --has __meta__.catalog
-        | grep saorg || true
+        | grep mgtbu
+        || true
       args:
         chdir: "{{ agnosticv_path }}"
       register: r_catalogitems
