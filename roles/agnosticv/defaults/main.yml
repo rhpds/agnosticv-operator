@@ -9,7 +9,14 @@ default_message: |-
 default_labels:
   generated_by: agnosticv
 
-repo_path: /opt/ansible/agnosticv/{{ url | b64encode }}
+repo_uniq_name_long: >-
+  {{ url|default('')
+  + ref|default('')
+  | sha1  }}
+
+repo_uniq_name: "{{ repo_uniq_name_long[:8] }}"
+
+repo_path: /opt/ansible/agnosticv/{{ repo_uniq_name }}
 context_dir: ''
 
 # Process only catalog items that changed in git
@@ -71,4 +78,4 @@ anarchy_governor_standard_actions:
 - stop
 - status
 
-error_log_file: /tmp/{{ url | b64encode }}_errors.txt
+error_log_file: /tmp/{{ repo_uniq_name }}_errors.txt
