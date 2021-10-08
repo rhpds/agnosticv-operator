@@ -15,3 +15,20 @@
     - name: Set flag_fail to true
       set_fact:
         flag_fail: true
+
+    - name: Save error to log file
+      lineinfile:
+        path: "{{ error_log_file }}"
+        line: "{{ _line }}"
+      loop_control:
+        loop_var: _line
+      loop:
+        - >-
+          FAIL {{ agnosticv_path }}
+          > {{ account }}
+          > {{ catalog_item }}
+          > {{ stage }}
+        - ""
+        - task {{ ansible_failed_task }}
+        - ""
+        - "{{ ansible_failed_result }}"

@@ -70,3 +70,5 @@ anarchy_governor_standard_actions:
 - start
 - stop
 - status
+
+error_log_file: /tmp/errors.txt

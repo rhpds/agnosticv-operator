@@ -90,11 +90,6 @@
         chdir: "{{ agnosticv_path }}"
       register: r_catalogitems
 
-
-    - name: Fail test
-      when: flag_fail or true
-      fail:
-
     - name: Print stderr lines
       loop: "{{ r_catalogitems.stderr_lines }}"
       loop_control:
@@ -102,9 +97,15 @@
       include_tasks: print_error.yaml
 
     - when: r_catalogitems.stderr_lines|length > 0
-      name: Set flag_fail to true
-      set_fact:
-        flag_fail: true
+      block:
+        - name: Set flag_fail to true
+          set_fact:
+            flag_fail: true
+
+        - name: Save stderr to file
+          copy:
+            dest: "{{ error_log_file }}"
+            content: "{{ r_catalogitems.stderr }}"
 
     - loop: "{{ r_catalogitems.stdout_lines }}"
       loop_control:
@@ -165,3 +166,4 @@
 - name: Fail if any catalog item failed
   when: flag_fail
   fail:
+    msg: "{{ lookup(file, error_log_file) }}"
