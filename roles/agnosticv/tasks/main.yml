@@ -89,8 +89,8 @@
       register: r_changed
 
     - name: Find all catalog items
-      command: >-
-        {{ agnosticv_client_path }} --list --has __meta__.catalog
+      shell: >-
+        {{ agnosticv_client_path }} --list --has __meta__.catalog | grep saorg
       args:
         chdir: "{{ agnosticv_path }}"
       register: r_catalogitems
