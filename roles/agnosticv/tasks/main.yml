@@ -63,9 +63,20 @@
     dest: "{{ repo_path }}"
   register: r_git_public
 
+- name: Stat retry file
+  stat:
+    path: "{{ retry_log_file }}"
+  register: r_stat_retry_file
+
+# If the repo has changed or if there are files to retry
 - when: >-
     r_git_private is changed
     or r_git_public is changed
+    or (
+    r_stat_retry_file.stat.exists
+    and
+    r_stat_retry_file.size > 2
+    )
 
   block:
     - name: Create output_dir directory
@@ -112,7 +123,16 @@
             dest: "{{ error_log_file }}"
             content: "{{ r_catalogitems.stderr }}"
 
-    - loop: "{{ r_catalogitems.stdout_lines }}"
+    - name: Load retry file
+      set_fact:
+        catalogitems_retry: "{{ lookup('file', retry_log_file).splitlines() }}"
+
+    - name: Reset retry file
+      file:
+        path: "{{ retry_log_file }}"
+        state: absent
+
+    - loop: "{{ r_catalogitems.stdout_lines | union(catalogitems_retry) }}"
       loop_control:
         loop_var: c_i
         label: c_i

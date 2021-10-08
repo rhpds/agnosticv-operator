@@ -16,6 +16,11 @@
       set_fact:
         flag_fail: true
 
+    - name: Save catalog item to retry file
+      lineinfile:
+        path: "{{ retry_log_file }}"
+        line: "{{ c_i }}"
+
     - name: Save error to log file
       lineinfile:
         path: "{{ error_log_file }}"

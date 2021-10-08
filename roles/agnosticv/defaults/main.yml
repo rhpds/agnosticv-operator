@@ -77,3 +77,4 @@ anarchy_governor_standard_actions:
 - status
 
 error_log_file: /tmp/{{ repo_uniq_name }}_errors.txt
+retry_log_file: /tmp/{{ repo_uniq_name }}_retry.txt
