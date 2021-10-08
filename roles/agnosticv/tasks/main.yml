@@ -80,7 +80,7 @@
     or (
     r_stat_retry_file.stat.exists
     and
-    r_stat_retry_file.size > 2
+    r_stat_retry_file.stat.size > 2
     )
 
   block:
@@ -133,9 +133,9 @@
         catalogitems_retry: "{{ lookup('file', retry_log_file).splitlines() }}"
 
     - name: Reset retry file
-      file:
-        path: "{{ retry_log_file }}"
-        state: absent
+      copy:
+        dest: "{{ retry_log_file }}"
+        content: ''
 
     - loop: "{{ r_catalogitems.stdout_lines | union(catalogitems_retry) }}"
       loop_control:
