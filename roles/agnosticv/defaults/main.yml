@@ -71,4 +71,4 @@ anarchy_governor_standard_actions:
 - stop
 - status
 
-error_log_file: /tmp/errors.txt
+error_log_file: /tmp/{{ url | b64encode }}_errors.txt
