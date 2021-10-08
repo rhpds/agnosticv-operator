@@ -90,6 +90,11 @@
         chdir: "{{ agnosticv_path }}"
       register: r_catalogitems
 
+
+    - name: Fail test
+      when: flag_fail or true
+      fail:
+
     - name: Print stderr lines
       loop: "{{ r_catalogitems.stderr_lines }}"
       loop_control:
