@@ -9,12 +9,10 @@ default_message: |-
 default_labels:
   generated_by: agnosticv
 
-repo_uniq_name_long: >-
-  {{ url|default('')
-  + ref|default('')
-  | sha1  }}
+# take the first chars of checksum(url + ref) for uniq agnosticv name
+repo_uniq_name: >-
+  {{ ( ( url|default('') + ref|default('') ) | checksum)[:10] }}
 
-repo_uniq_name: "{{ repo_uniq_name_long[:8] }}"
 
 repo_path: /opt/ansible/agnosticv/{{ repo_uniq_name }}
 context_dir: ''
