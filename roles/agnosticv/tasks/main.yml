@@ -17,6 +17,11 @@
   set_fact:
     flag_fail: false
 
+- name: Init log file
+  copy:
+    dest: "{{ error_log_file }}"
+    content: ""
+
 - when: ssh_key is defined
   block:
     - name: Get SSH secret key
@@ -102,7 +107,7 @@
           set_fact:
             flag_fail: true
 
-        - name: Save stderr to file
+        - name: Save stderr to log file
           copy:
             dest: "{{ error_log_file }}"
             content: "{{ r_catalogitems.stderr }}"
