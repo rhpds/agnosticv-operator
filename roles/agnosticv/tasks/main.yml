@@ -91,7 +91,7 @@
     - name: Find all catalog items
       shell: >-
         {{ agnosticv_client_path }} --list --has __meta__.catalog
-        | grep mgtbu
+        | grep ppmbu
         || true
       args:
         chdir: "{{ agnosticv_path }}"
