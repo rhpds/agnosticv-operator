@@ -13,6 +13,20 @@
 #     msg: "{{ msg.split('\n') }}"
 #   tags: debug_info
 
+- name: Init flag_fail
+  set_fact:
+    flag_fail: false
+
+- name: Init log file
+  copy:
+    dest: "{{ error_log_file }}"
+    content: ""
+
+- name: Init retry file
+  file:
+    path: "{{ retry_log_file }}"
+    state: touch
+
 - when: ssh_key is defined
   block:
     - name: Get SSH secret key
@@ -54,9 +68,20 @@
     dest: "{{ repo_path }}"
   register: r_git_public
 
+- name: Stat retry file
+  stat:
+    path: "{{ retry_log_file }}"
+  register: r_stat_retry_file
+
+# If the repo has changed or if there are files to retry
 - when: >-
     r_git_private is changed
     or r_git_public is changed
+    or (
+    r_stat_retry_file.stat.exists
+    and
+    r_stat_retry_file.stat.size > 2
+    )
 
   block:
     - name: Create output_dir directory
@@ -92,7 +117,27 @@
         loop_var: line
       include_tasks: print_error.yaml
 
-    - loop: "{{ r_catalogitems.stdout_lines }}"
+    - when: r_catalogitems.stderr_lines|length > 0
+      block:
+        - name: Set flag_fail to true
+          set_fact:
+            flag_fail: true
+
+        - name: Save stderr to log file
+          copy:
+            dest: "{{ error_log_file }}"
+            content: "{{ r_catalogitems.stderr }}"
+
+    - name: Load retry file
+      set_fact:
+        catalogitems_retry: "{{ lookup('file', retry_log_file).splitlines() }}"
+
+    - name: Reset retry file
+      copy:
+        dest: "{{ retry_log_file }}"
+        content: ''
+
+    - loop: "{{ r_catalogitems.stdout_lines | union(catalogitems_retry) }}"
       loop_control:
         loop_var: c_i
         label: c_i
@@ -147,3 +192,8 @@
         account: "{{ c_i.split('/')[-3] }}"
         catalog_item: "{{ c_i.split('/')[-2] }}"
         stage: "{{ c_i.split('/')[-1] | regex_replace('\\.ya?ml$', '') }}"
+
+- name: Fail if any catalog item failed
+  when: flag_fail
+  fail:
+    msg: "{{ lookup(file, error_log_file) }}"

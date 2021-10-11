@@ -9,7 +9,12 @@ default_message: |-
 default_labels:
   generated_by: agnosticv
 
-repo_path: /opt/ansible/agnosticv/{{ url | b64encode }}
+# take the first chars of checksum(url + ref) for uniq agnosticv name
+repo_uniq_name: >-
+  {{ ( ( url|default('') + ref|default('') ) | checksum)[:10] }}
+
+
+repo_path: /opt/ansible/agnosticv/{{ repo_uniq_name }}
 context_dir: ''
 
 # Process only catalog items that changed in git
@@ -70,3 +75,6 @@ anarchy_governor_standard_actions:
 - start
 - stop
 - status
+
+error_log_file: /tmp/{{ repo_uniq_name }}_errors.txt
+retry_log_file: /tmp/{{ repo_uniq_name }}_retry.txt
