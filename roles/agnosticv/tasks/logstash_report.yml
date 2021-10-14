@@ -19,3 +19,6 @@
       status: "{{ _status }}"
       message: "{{ _message | default('') }}"
       timestamp: "{{ lookup('pipe', 'date -Iseconds') }}"
+
+  # Reporting should not affect production if logstash is down.
+  ignore_errors: true
