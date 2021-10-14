@@ -197,3 +197,12 @@ output {
   }
 }
 ----
+
+.Configuration vars in the AgnosticV repository
+----
+logstashReport: true
+logstashUsername: agnosticv-operator
+logstashPassword: ...
+logstashProtocol: https
+logstashPort: 1102
+----
