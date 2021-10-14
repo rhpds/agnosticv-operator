@@ -1,0 +1,21 @@
+---
+- when: logstash_report | bool
+  name: Report to logstash
+  uri:
+    url: >-
+      {{logstash_protocol}}://{{ logstash_hostname }}:{{ logstash_port }}
+    user: "{{ logstash_user | default(omit)}}"
+    password: "{{ logstash_password | default(omit) }}"
+    method: POST
+    body_format: json
+    status_code: 200
+    body:
+      codename: "{{ catalog_item }}"
+      account: "{{ account }}"
+      stage: "{{ stage }}"
+      catalog_item: "{{ c_i }}"
+      repository: "{{ url }}"
+      version: "{{ ref }}"
+      status: "{{ _status }}"
+      message: "{{ _message | default('') }}"
+      timestamp: "{{ lookup('pipe', 'date -Iseconds') }}"

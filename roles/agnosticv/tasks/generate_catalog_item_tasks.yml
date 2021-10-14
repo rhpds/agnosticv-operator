@@ -123,7 +123,7 @@
                   'service-deleted-message-template.html.j2') | join('/'),
                   errors='ignore')
       }}
-    register: create_catalog_item
+  register: r_create_catalog_item
 
 - name: Manage Babylon User Catalog Item object
   when:
@@ -145,6 +145,7 @@
       state: present
       definition: "{{ lookup('template', 'user_catalog_item.yml.j2') | from_yaml }}"
       force: true
+    register: r_create_user_catalog_item
     vars:
       _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
       _current_resource_version: "{{ r_get_user_catalog_item.resources[0].metadata.resourceVersion | default('') }}"
@@ -178,6 +179,7 @@
 
 - name: Create / Update AnarchyGovernor
   when: None != vars.merged_vars.__meta__.deployer.type | default(None)
+  register: r_create_governor
   k8s:
     state: present
     definition: "{{ lookup('template', 'governor.yml.j2') | from_yaml }}"
@@ -188,6 +190,7 @@
 
 - name: Create / Update Poolboy ResourceProvider
   when: None != vars.merged_vars.__meta__.deployer.type | default(None)
+  register: r_create_resource_provider
   k8s:
     state: present
     definition: "{{ lookup('template', 'resource_provider.yml.j2') | from_yaml }}"
@@ -197,3 +200,16 @@
     _namespace: "{{ poolboy_namespace }}"
     _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
     _governor: "{{ catalog_item_name }}"
+
+- when: >-
+    logstash_report | bool
+    and (
+      r_create_catalog_item is changed
+      or r_create_user_catalog_item is changed
+      or r_create_governor is changed
+      or r_create_resource_provider is changed
+    )
+  name: Report to logstash
+  vars:
+    _status: updated
+  include_tasks: logstash_report.yml
