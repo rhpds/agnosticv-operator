@@ -128,6 +128,13 @@
             dest: "{{ error_log_file }}"
             content: "{{ r_catalogitems.stderr }}"
 
+        - name: Report to logstash
+          when: logstash_report | bool
+          vars:
+            _status: error
+            _message: "{{ r_catalogitems.stderr }}"
+          include_tasks: logstash_report.yml
+
     - name: Load retry file
       set_fact:
         catalogitems_retry: "{{ lookup('file', retry_log_file).splitlines() }}"

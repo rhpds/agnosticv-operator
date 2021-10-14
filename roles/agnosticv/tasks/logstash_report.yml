@@ -10,14 +10,14 @@
     body_format: json
     status_code: 200
     body:
-      codename: "{{ catalog_item }}"
-      account: "{{ account }}"
-      stage: "{{ stage }}"
-      catalog_item: "{{ c_i }}"
+      codename: "{{ catalog_item | default(omit)}}"
+      account: "{{ account | default(omit) }}"
+      stage: "{{ stage | default(omit) }}"
+      catalog_item: "{{ c_i | default(omit) }}"
       repository: "{{ url }}"
       version: "{{ ref }}"
       status: "{{ _status }}"
-      message: "{{ _message | default('') }}"
+      message: "{{ _message | default(omit) }}"
       timestamp: "{{ lookup('pipe', 'date -Iseconds') }}"
 
   # Reporting should not affect production if logstash is down.
