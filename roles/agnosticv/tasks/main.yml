@@ -92,7 +92,7 @@
     - name: Get list of files changed
       vars:
         r_repo: >-
-          {{ r_git_private if r_git_private is changed
+          {{ r_git_private if ssh_key is defined
           else r_git_public }}
       when: process_changes_only and r_repo.before | default(false)
       command: >-
