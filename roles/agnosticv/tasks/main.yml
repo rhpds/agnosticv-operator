@@ -94,7 +94,7 @@
         r_repo: >-
           {{ r_git_private if r_git_private is changed
           else r_git_public }}
-      when: process_changes_only and 'before' in r_repo and r_repo.before
+      when: process_changes_only and r_repo.before | default(false)
       command: >-
         git diff --name-only
         {{ r_repo.before | quote }}
