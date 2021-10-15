@@ -26,6 +26,7 @@
   file:
     path: "{{ retry_log_file }}"
     state: touch
+  changed_when: false
 
 - when: ssh_key is defined
   block:
