@@ -170,9 +170,16 @@ agnosticv-operator-7d6f867c56-jkwcn   2/2     Running   0          105s
 
 == Report to logstash ==
 
-If you have logstash setup, agnosticv-operator can send reports automatically
+If you have logstash setup, agnosticv-operator can be configured to send reports.
 
-.Example of pipeline sending logs to elasticsearch
+AgnosticV Operator logs are difficult to parse because it's built with the ansible operator SDK. Those "reports", or notifications if you like, include:
+
+* agnosticv CLI has stderr
+* catalog item update or creation failed
+* catalog item update or creation succeeded
+
+
+.Example of logstash pipeline. Input HTTPS, output elasticsearch
 ----
 input {
   http {
@@ -181,7 +188,7 @@ input {
      ssl_certificate => "/etc/logstash/certs_agv/logstash.crt"
      ssl_key => "/etc/logstash/certs_agv/logstash.key"
      user => "agnosticv-operator"
-     password => "..."
+     password => "CHANGEME"
   }
 }
 
@@ -198,11 +205,11 @@ output {
 }
 ----
 
-.Configuration vars in the AgnosticV repository
+.Example configuration vars in the AgnosticV repository for the above pipeline
 ----
 logstashReport: true
 logstashUsername: agnosticv-operator
-logstashPassword: ...
+logstashPassword: CHANGEME
 logstashProtocol: https
 logstashPort: 1102
 ----
