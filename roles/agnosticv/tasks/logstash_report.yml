@@ -17,6 +17,11 @@
       repository: "{{ url }}"
       version: "{{ ref }}"
       status: "{{ _status }}"
+      success: >-
+        {{ _success | default(
+          0 if _status|lower in [ "error", "failed", "failure", "fail" ]
+          else 1
+        ) }}
       message: "{{ _message | default(omit) }}"
       timestamp: "{{ lookup('pipe', 'date -Iseconds') }}"
 
