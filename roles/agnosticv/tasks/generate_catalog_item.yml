@@ -37,3 +37,12 @@
         - task {{ ansible_failed_task }}
         - ""
         - "{{ ansible_failed_result }}"
+
+    - when: logstash_report | bool
+      include_tasks: logstash_report.yml
+      vars:
+        _status: error
+        _message: |
+          task {{ ansible_failed_task }}
+
+          {{ ansible_failed_result }}

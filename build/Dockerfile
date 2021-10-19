@@ -4,6 +4,8 @@ USER root
 
 RUN yum install -y git
 RUN yum clean all
+COPY ipa.crt /etc/pki/ca-trust/source/anchors/
+RUN update-ca-trust
 
 USER ${USER_UID}
 

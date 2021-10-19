@@ -26,6 +26,7 @@
   file:
     path: "{{ retry_log_file }}"
     state: touch
+  changed_when: false
 
 - when: ssh_key is defined
   block:
@@ -92,9 +93,9 @@
     - name: Get list of files changed
       vars:
         r_repo: >-
-          {{ r_git_private if r_git_private is changed
+          {{ r_git_private if ssh_key is defined
           else r_git_public }}
-      when: process_changes_only and r_repo.before
+      when: process_changes_only and r_repo.before | default(false)
       command: >-
         git diff --name-only
         {{ r_repo.before | quote }}
@@ -127,6 +128,13 @@
           copy:
             dest: "{{ error_log_file }}"
             content: "{{ r_catalogitems.stderr }}"
+
+        - name: Report to logstash
+          when: logstash_report | bool
+          vars:
+            _status: error
+            _message: "{{ r_catalogitems.stderr }}"
+          include_tasks: logstash_report.yml
 
     - name: Load retry file
       set_fact:

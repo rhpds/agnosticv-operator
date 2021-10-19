@@ -11,6 +11,9 @@ spec:
 {{- if $agnosticvRepo.contextDir }}
   contextDir: {{ $agnosticvRepo.contextDir | quote }}
 {{- end }}
+{{- if $agnosticvRepo.logstashReport }}
+  {{- toYaml $agnosticvRepo.logstashReport | nindent 2 }}
+{{- end }}
   babylonAnarchyRoles:
     {{- toYaml $.Values.babylonAnarchyRoles | nindent 4 }}
   {{- with $agnosticvRepo.sshKey }}

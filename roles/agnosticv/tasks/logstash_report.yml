@@ -1,0 +1,30 @@
+---
+- when: logstash_report | bool
+  name: Report to logstash
+  uri:
+    url: >-
+      {{logstash_protocol}}://{{ logstash_hostname }}:{{ logstash_port }}
+    user: "{{ logstash_user | default(omit)}}"
+    password: "{{ logstash_password | default(omit) }}"
+    method: POST
+    body_format: json
+    status_code: 200
+    body:
+      codename: "{{ catalog_item | default(omit)}}"
+      account: "{{ account | default(omit) }}"
+      stage: "{{ stage | default(omit) }}"
+      catalog_item: "{{ c_i | default(omit) }}"
+      repository: "{{ url }}"
+      version: "{{ ref }}"
+      status: "{{ _status }}"
+      from: "{{ logstash_from | default(omit) }}"
+      success: >-
+        {{ _success | default(
+          0 if _status|lower in [ "error", "failed", "failure", "fail" ]
+          else 1
+        ) }}
+      message: "{{ _message | default(omit) }}"
+      timestamp: "{{ lookup('pipe', 'date -Iseconds') }}"
+
+  # Reporting should not affect production if logstash is down.
+  ignore_errors: true
