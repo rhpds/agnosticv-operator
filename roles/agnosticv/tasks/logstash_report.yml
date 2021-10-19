@@ -17,6 +17,7 @@
       repository: "{{ url }}"
       version: "{{ ref }}"
       status: "{{ _status }}"
+      from: "{{ logstash_from | default(omit) }}"
       success: >-
         {{ _success | default(
           0 if _status|lower in [ "error", "failed", "failure", "fail" ]
