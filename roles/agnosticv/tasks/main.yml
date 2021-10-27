@@ -157,12 +157,11 @@
       copy:
         dest: "{{ retry_log_file }}"
         content: ''
-        backup: true
 
     - loop: >-
         {{ catalogitems_retry if
           r_repo.before | default(false)
-          and changed|length == 0
+          and changed | length == 0
         else r_catalogitems.stdout_lines | union(catalogitems_retry) }}
       loop_control:
         loop_var: c_i
