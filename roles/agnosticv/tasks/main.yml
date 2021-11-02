@@ -184,4 +184,4 @@
 - name: Fail if any catalog item failed
   when: flag_fail
   fail:
-    msg: "{{ lookup(file, error_log_file) }}"
+    msg: "{{ lookup('file', error_log_file) }}"
