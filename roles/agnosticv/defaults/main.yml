@@ -2,9 +2,10 @@
 # defaults file for agnosticv
 
 default_description: |-
-  Missing description, please define catalog_description in agnosticv
+  Missing description, please define __meta__.catalog.description in agnosticv
+  or add a description.adoc file.
 default_message: |-
-  Missing message, please define catalog_message in agnosticv
+  Missing message, please define in AgnosticV.
 
 default_labels:
   generated_by: agnosticv
