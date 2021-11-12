@@ -65,6 +65,13 @@ spec:
     - add
     - replace
     pathMatch: /spec/vars/desired_state
+{% if merged_vars.__meta__.catalog.parameters | default([]) | length > 0 %}
+{%   for parameter in merged_vars.__meta__.catalog.parameters %}
+{%     if allowUpdate | default(false) | bool %}
+  - pathMatch: /spec/vars/job_vars/{{ parameter.name }}(/.*)?
+{%     endif %}
+{%   endfor %}
+{% endif %}
   validation:
     openAPIV3Schema:
       type: object
