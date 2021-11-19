@@ -41,6 +41,8 @@ spec:
                 fieldPath: metadata.name
           - name: ANARCHY_NAMESPACE
             value: {{ .Values.anarchy.namespace }}
+          - name: POOLBOY_NAMESPACE
+            value: {{ .Values.poolboy.namespace }}
           resources:
             {{- toYaml .Values.resources.ansible | nindent 12 }}
       serviceAccountName: {{ include "agnosticv.name" . }}
