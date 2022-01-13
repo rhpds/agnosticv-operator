@@ -66,21 +66,24 @@ spec:
 {% for __action in anarchy_governor_standard_actions
  | union((merged_vars.__meta__.deployer.entry_points | default({})).keys() | list)
 %}
+{%   if merged_vars.__meta__.deployer.entry_points[__action] is not defined or merged_vars.__meta__.deployer.entry_points[__action] | default('', true) != '' %}
     {{ __action }}:
       roles:
-{%   for __role in babylon_anarchy_roles %}
+{%     for __role in babylon_anarchy_roles %}
       - role: {{ __role.name }}
-{%   endfor %}
+{%     endfor %}
       finishOnSuccessfulRun: true
       callbackHandlers:
         complete:
           roles:
-{%   for __role in babylon_anarchy_roles %}
+{%     for __role in babylon_anarchy_roles %}
           - role: {{ __role.name }}
-{%   endfor %}
+{%     endfor %}
+{%   endif %}
 {% endfor %}
 
   removeFinishedActions:
     after: "{{ merged_vars.__meta__.anarchy.remove_finished_actions_after | default('12h') }}"
+
   removeSuccessfulRuns:
     after: "{{ merged_vars.__meta__.anarchy.remove_successful_runs_after | default('3h') }}"
