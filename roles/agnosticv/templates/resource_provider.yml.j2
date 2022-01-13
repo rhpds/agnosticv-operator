@@ -14,9 +14,25 @@ spec:
         action_schedule:
           start: '{% raw %}{{ timestamp.utcnow }}{% endraw %}'
           stop: '{% raw %}{{ timestamp.utcnow.add(resource_provider.spec.override.spec.vars.action_schedule.default_runtime) }}{% endraw %}'
+
   lifespan: {{ merged_vars.__meta__.lifespan | default(resource_provider_default_lifespan) | to_json }}
+
+{% if vars.merged_vars.__meta__.components | default([]) | length > 0 %}
+  linkedResourceProviders:
+{%   for _component in vars.merged_vars.__meta__.components | default([]) %}
+  - name: "{{ _component.item | lower | replace('_', '-') | replace('/', '.') }}.{{ stage }}"
+    waitFor: current_state_{{ loop.index0 }} == 'started'
+    templateVars:
+    - name: current_state_{{ loop.index0 }}
+      from: /spec/vars/current_state
+    - name: provision_data_{{ loop.index0 }}
+      from: /spec/vars/provision_data
+{%   endfor %}
+{% endif %}
+
   matchIgnore:
   - /spec/vars/action_schedule(/.*)?
+
   override:
     apiVersion: anarchy.gpte.redhat.com/v1
     kind: AnarchySubject
@@ -44,6 +60,13 @@ spec:
         job_vars:
           guid: '{{ resource_handle.metadata.name[5:] if resource_handle.metadata.name.startswith(''guid-'') else resource_handle.metadata.name }}'
 {% endraw %}
+{% for _component in vars.merged_vars.__meta__.components | default([]) %}
+{%   set _component_index = loop.index0 %}
+{%   for _propagate_item in _component.propagate_provision_data | default([]) %}
+          {{ _propagate_item.var }}: >-
+            {{ '{{ provision_data_' ~ _component_index ~ '.' ~ _propagate_item.name ~ '}}' }}
+{%   endfor %}
+{% endfor %}
 {% if merged_vars.__meta__.catalog.requester_parameters | default([]) | length > 0 %}
 {%   for parameter in merged_vars.__meta__.catalog.requester_parameters %}
           {{ parameter.name }}: {{ parameter.value | to_json }}
