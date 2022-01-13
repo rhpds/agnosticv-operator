@@ -75,24 +75,43 @@ spec:
   resourceRequiresClaim: {{ merged_vars.__meta__.catalog.provision_requires_request | default(merged_vars.__meta__.catalog.requester_parameters | default([]) | length > 0) | bool | to_json }}
   template:
     enable: true
+
   updateFilters:
-  - allowedOps:
+
+{# Allow changing start schedule if not explicitly disabled #}
+{% if 'start' not in _entry_points or _entry_points.start | default('', true) != '' %}
+  - pathMatch: /spec/vars/action_schedule/start
+    allowedOps:
     - add
     - replace
-    pathMatch: /spec/vars/action_schedule/start
-  - allowedOps:
+  # DEPRECATED - Set set start/stop by setting desired_state
+  - pathMatch: /spec/vars/desired_state
+    allowedOps:
+    - add
+{% endif %}
+
+{# Allow changing stop schedule if not explicitly disabled #}
+{% if 'stop' not in _entry_points or _entry_points.stop | default('', true) != '' %}
+  - pathMatch: /spec/vars/action_schedule/stop
+    allowedOps:
     - add
     - replace
-    pathMatch: /spec/vars/action_schedule/stop
-  - allowedOps:
+{% endif %}
+
+{# Allow requesting status checks if not explicitly disabled #}
+{% if 'status' not in _entry_points or _entry_points.status | default('', true) != '' %}
+  - pathMatch: /spec/vars/check_status_request_timestamp
+    allowedOps:
     - add
     - replace
-    pathMatch: /spec/vars/desired_state
+{% endif %}
+
 {% for parameter in merged_vars.__meta__.catalog.parameters | default([]) %}
 {%   if parameter.allowUpdate | default(false) | bool %}
   - pathMatch: /spec/vars/job_vars/{{ parameter.name }}(/.*)?
 {%   endif %}
 {% endfor %}
+
   validation:
     openAPIV3Schema:
       type: object

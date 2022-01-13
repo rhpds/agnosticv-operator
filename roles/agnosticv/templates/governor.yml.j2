@@ -64,10 +64,10 @@ spec:
 
   actions:
 {% for __action in anarchy_governor_standard_actions
- | union((merged_vars.__meta__.deployer.entry_points | default({})).keys() | list)
+ | union(_entry_points.keys() | list)
 %}
 {#   Skip action if entry point is explicitly set to null or empty string. #}
-{%   if merged_vars.__meta__.deployer.entry_points[__action] is not defined or merged_vars.__meta__.deployer.entry_points[__action] | default('', true) != '' %}
+{%   if __action not in _entry_points or _entry_points[__action] | default('', true) != '' %}
     {{ __action }}:
       roles:
 {%     for __role in babylon_anarchy_roles %}
