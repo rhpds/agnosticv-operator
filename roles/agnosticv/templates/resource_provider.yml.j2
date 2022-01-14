@@ -77,9 +77,11 @@ spec:
     enable: true
 
   updateFilters:
+{% set _update_filters_empty = true %}
 
 {# Allow changing start schedule if not explicitly disabled #}
 {% if 'start' not in _entry_points or _entry_points.start | default('', true) != '' %}
+{%   set _update_filters_empty = false %}
   - pathMatch: /spec/vars/action_schedule/start
     allowedOps:
     - add
@@ -92,6 +94,7 @@ spec:
 
 {# Allow changing stop schedule if not explicitly disabled #}
 {% if 'stop' not in _entry_points or _entry_points.stop | default('', true) != '' %}
+{%   set _update_filters_empty = false %}
   - pathMatch: /spec/vars/action_schedule/stop
     allowedOps:
     - add
@@ -100,6 +103,7 @@ spec:
 
 {# Allow requesting status checks if not explicitly disabled #}
 {% if 'status' not in _entry_points or _entry_points.status | default('', true) != '' %}
+{%   set _update_filters_empty = false %}
   - pathMatch: /spec/vars/check_status_request_timestamp
     allowedOps:
     - add
@@ -108,9 +112,14 @@ spec:
 
 {% for parameter in merged_vars.__meta__.catalog.parameters | default([]) %}
 {%   if parameter.allowUpdate | default(false) | bool %}
+{%   set _update_filters_empty = false %}
   - pathMatch: /spec/vars/job_vars/{{ parameter.name }}(/.*)?
 {%   endif %}
 {% endfor %}
+
+{% if _update_filters_empty %}
+    []
+{% endif %}
 
   validation:
     openAPIV3Schema:
