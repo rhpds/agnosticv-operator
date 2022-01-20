@@ -86,16 +86,17 @@ spec:
     allowedOps:
     - add
     - replace
-  # DEPRECATED - Set set start/stop by setting desired_state
-  - pathMatch: /spec/vars/desired_state
-    allowedOps:
-    - add
 {% endif %}
 
 {# Allow changing stop schedule if not explicitly disabled #}
 {% if 'stop' not in _entry_points or _entry_points.stop | default('', true) != '' %}
 {%   set _update_filters_empty = false %}
   - pathMatch: /spec/vars/action_schedule/stop
+    allowedOps:
+    - add
+    - replace
+  # Allow updates to action schedule to set the desired state
+  - pathMatch: /spec/vars/desired_state
     allowedOps:
     - add
     - replace
