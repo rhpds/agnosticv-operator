@@ -28,7 +28,7 @@ output_dir: /tmp/output_dir
 # Ansible collections to install with AnsibleGalaxy
 babylon_anarchy_collections:
 - name: awx.awx
-  version: 15.0.1
+  version: 19.4.0
 
 # Ansible roles to install with AnsibleGalaxy and order in which to execute
 babylon_anarchy_roles:
