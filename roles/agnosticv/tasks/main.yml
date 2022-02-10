@@ -169,7 +169,6 @@
       include_tasks: generate_catalog_item.yml
       when: >-
         account != 'EXAMPLE_ACCOUNT'
-        and account == 'tests'
       vars:
         changed: "{{ r_changed.stdout_lines | default([]) }}"
         context_prefix: >-
