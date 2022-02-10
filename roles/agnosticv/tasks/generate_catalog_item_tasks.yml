@@ -60,6 +60,18 @@
       | default(merged_vars.__meta__.catalog.description, true)
       | default(default_description)
       }}
+    # Parameters that set variables either do not specify annotation or explicitly set the variable name
+    _annotation_parameters: >-
+      {{ merged_vars.__meta__.catalog.parameters
+      | default([])
+      | json_query('[?annotation]')
+      }}
+    # Parameters that set variables either do not specify annotation or explicitly set the variable name
+    _job_vars_parameters: >-
+      {{ merged_vars.__meta__.catalog.parameters
+      | default([])
+      | json_query('[?(variable || !annotation)]')
+      }}
 
 # Need to get current resource version and force replace because catalog item
 # resources with descriptions are too large to apply.
@@ -185,8 +197,16 @@
     definition: "{{ lookup('template', 'governor.yml.j2') | from_yaml }}"
     apply: true
   vars:
+    _entry_points: "{{ merged_vars.__meta__.deployer.entry_points | default({}) }}"
     _name: "{{ catalog_item_name }}"
     _namespace: "{{ anarchy_namespace }}"
+    # List of job_vars that are set by parameters and so should not appear in the governor.
+    _job_vars_from_parameters: >-
+      {{ merged_vars.__meta__.catalog.parameters
+      | default([])
+      | json_query('[?(variable || !annotation)].name')
+      | union(merged_vars.__meta__.catalog.requester_parameters | default([]) | json_query('[].name'))
+      }}
 
 - name: Create / Update Poolboy ResourceProvider
   when: None != vars.merged_vars.__meta__.deployer.type | default(None)
@@ -199,7 +219,14 @@
     _name: "{{ catalog_item_name }}"
     _namespace: "{{ poolboy_namespace }}"
     _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
+    _entry_points: "{{ merged_vars.__meta__.deployer.entry_points | default({}) }}"
     _governor: "{{ catalog_item_name }}"
+    # Parameters that set variables either do not specify annotation or explicitly set the variable name
+    _job_vars_parameters: >-
+      {{ merged_vars.__meta__.catalog.parameters
+      | default([])
+      | json_query('[?(variable || !annotation)]')
+      }}
 
 - when: >-
     logstash_report | bool
