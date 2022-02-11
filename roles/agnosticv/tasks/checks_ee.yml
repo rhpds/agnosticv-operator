@@ -8,7 +8,8 @@
     loop_var: check
     label: "{{ check.fail_msg }}"
   loop:
-    - fail_msg: Execution Environment is not allowed: {{ execution_environment }}
+    - fail_msg: >-
+        Execution Environment is not allowed: {{ execution_environment }}
       that: >-
         execution_environment
         | ee_is_allowed( execution_environment_allow_list
