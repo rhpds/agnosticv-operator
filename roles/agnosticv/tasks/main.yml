@@ -169,6 +169,11 @@
       include_tasks: generate_catalog_item.yml
       when: >-
         account != 'EXAMPLE_ACCOUNT'
+        and account == 'tests'
+        and catalog_item in
+        ['EMPTY_CONFIG_AWS_SANDBOX_AAP2',
+        'BABYLON_SCHEDULED_EMPTY_CONFIG',
+        'TEST_COMBINED']
       vars:
         changed: "{{ r_changed.stdout_lines | default([]) }}"
         context_prefix: >-
