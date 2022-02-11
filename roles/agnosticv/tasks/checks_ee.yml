@@ -1,0 +1,11 @@
+---
+- name: Ensure Execution Environment is allowed
+  assert:
+    fail_msg: Execution Environment is not allowed {{ execution_environment }}
+    quiet: true
+    that: >-
+      execution_environment
+      | ee_is_allowed(
+         execution_environment_allow_list
+         + execution_environment_allow_list_extra
+        )

@@ -1,5 +1,6 @@
 ---
-- include_tasks: checks.yml
+- include_tasks: checks_ee.yml
+  when: execution_environment | default('', true) != ''
 - include_tasks: specified_behaviors.yml
 
 - set_fact:
