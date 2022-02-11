@@ -144,6 +144,7 @@ spec:
     version: main
 ----
 
+
 [source,shell]
 ----
 oc create -f agnosticv-gpte-private-repo.yaml
@@ -155,6 +156,45 @@ If you repo is public, then you can use HTTP repo for `spec.url` and you don't n
 [source,shell]
 ----
 oc create secret generic -n agnosticv-operator agnosticv-operator-sshkey --from-file=id_rsa=/home/ec2-user/.ssh/id_rsa
+----
+
+
+==== Parameters for AgnosticVRepo
+
+
+* `spec.custom_dir` -- Specify the sub-directory for the catalog inside the agnosticV repository.
+* `spec.catalog_item_list` - Process only the specified list of catalog items
++
+[source,yaml]
+.example
+----
+spec:
+  catalog_item_list:
+    - tests/EMPTY_CONFIG/dev.yaml
+----
+* `spec.logstash*` -- See below section 'Report to logstash'
+* `spec.execution_environment_allow_list_extra` - Allow additional execution environments
++
+[source,yaml]
+.example
+----
+spec:
+  execution_environment_allow_list_extra:
+    - image: ^image-registry.apps(-dev|-test)?.open.redhat.com/agnosticd/ee-.*?-v[0-9]+[.][0-9]+[.][0-9]+$
+      pull: missing
+    - image: ^image-registry.apps(-dev|-test)?.open.redhat.com/agnosticd/ee-.*?-(pr-[0-9]+|latest|dev|test)$
+      pull: always
+    - name: My custom EE
+----
+* `spec.default_execution_environment` -- When `\\__meta__.ansible_control_plane` is set to `controller` in a catalog item and if `\\__meta__.deployer.execution_environment` is not defined, this setting allows you to override the execution environment. This is useful if you want to build a default based on another variable of the merged vars.
++
+[source,yaml]
+.example
+----
+spec:
+  default_execution_environment:
+    image: image-registry.apps-dev.open.redhat.com/ee-{{ merged_vars.__meta__.deployer.virtualenv | default('ansible2.9-python3.6-2021-11-30') }}
+    private: true
 ----
 
 == Troubleshooting
@@ -207,9 +247,10 @@ output {
 
 .Example configuration vars in the AgnosticV repository for the above pipeline
 ----
-logstashReport: true
-logstashUsername: agnosticv-operator
-logstashPassword: CHANGEME
-logstashProtocol: https
-logstashPort: 1102
+spec:
+  logstashReport: true
+  logstashUsername: agnosticv-operator
+  logstashPassword: CHANGEME
+  logstashProtocol: https
+  logstashPort: 1102
 ----
