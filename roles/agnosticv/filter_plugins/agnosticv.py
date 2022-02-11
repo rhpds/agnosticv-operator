@@ -7,6 +7,18 @@ __metaclass__ = type
 
 from ansible.errors import AnsibleFilterError
 
+def sanitize_bool(s):
+    if isinstance(s, bool):
+        return s
+
+    if isinstance(s, str):
+        if s.lower() in ['true', 'y', 'yes']:
+            return True
+        if s.lower() in ['false', 'n', 'no']:
+            return False
+
+    return s
+
 def ee_is_allowed(ee, allow_list):
     """Filter to validate an Execution Environment against a list of regexes.
     If one regex matches, the EE is allowed.
@@ -36,19 +48,33 @@ def ee_is_allowed(ee, allow_list):
     ee = deepcopy(ee)
     if 'pull' not in ee:
         ee['pull'] = 'missing'
+    if 'private' not in ee:
+        # Default to false
+        ee['private'] = False
+    else:
+        ee['private'] = sanitize_bool(ee['private'])
 
     for v in allow_list:
         for k in v:
             if k not in ee:
                 break
 
-            regex = v[k]
-            try:
-                p = re.compile(regex)
-                if not p.match(ee[k].strip()):
+            if k == 'private':
+                v[k] = sanitize_bool(v[k])
+                if not isinstance(v[k], bool):
+                    raise AnsibleFilterError("%s: wrong type '%s' for private, expect bool" %(function_name, v[k]))
+                if v[k] != ee[k]:
                     break
-            except Exception as err:
-                raise AnsibleFilterError("%s: wrong regex '%s'" %(function_name, regex))
+            elif isinstance(v[k], str):
+                regex = v[k]
+                try:
+                    p = re.compile(regex)
+                    if not p.match(ee[k].strip()):
+                        break
+                except Exception as err:
+                    raise AnsibleFilterError("%s: wrong regex '%s'" %(function_name, regex))
+            else:
+                raise AnsibleFilterError("%s: unexpected type for '%s'" %(function_name, v[k]))
 
         else:
             return True

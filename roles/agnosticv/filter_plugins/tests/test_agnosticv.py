@@ -13,6 +13,9 @@ def test_ee_is_allowed():
       pull: missing
     - image: ^quay.io/redhat-gpte/agnosticd-images:ee-.*?-(pr-[0-9]+|latest|dev|test)$
       pull: always
+    - image: ^image-registry.apps(-dev|-test)?.open.redhat.com/agnosticd/ee-ansible2.9-python3.6-2021-11-30$
+      pull: missing
+      private: true
     - image: ^registry.redhat.io/ansible-automation-platform-21/ee-
     - image: ^quay.io/redhat-gpte/agnosticd-images:ee-ansible2.9-python3.6-2021-11-30$
     - image: ^quay.io/redhat-gpte/agnosticd-images:ee-equinix_metal-ansible2.9-python3.6-2021-07-02$
@@ -27,6 +30,9 @@ def test_ee_is_allowed():
     - name: ^Control Plane Execution Environment$
     - name: ^Default execution environment$
     - name: ^Minimal execution environment$
+    """)
+    al2 = yaml.safe_load("""
+    - image: ^image-registry.apps(-dev|-test)?.open.redhat.com/agnosticd/ee-ansible2.9-python3.6-2021-11-30$
     """)
     testcases = [
         {
@@ -102,6 +108,22 @@ def test_ee_is_allowed():
         },
         {
             "ee": {"image": "registry.redhat.io/ansible-automation-platform-21/ee-29-rhel8:1.0.0-33"},
+            "allow_list": al,
+            "expected": True,
+        },
+        {
+            "ee": {"image": "image-registry.apps-dev.open.redhat.com/agnosticd/ee-ansible2.9-python3.6-2021-11-30"},
+            "allow_list": al,
+            "expected": False,
+        },
+        {
+            "ee": {"image": "image-registry.apps-dev.open.redhat.com/agnosticd/ee-ansible2.9-python3.6-2021-11-30"},
+            "allow_list": al2,
+            "expected": True,
+        },
+        {
+            "ee": {"image": "image-registry.apps-dev.open.redhat.com/agnosticd/ee-ansible2.9-python3.6-2021-11-30",
+                   "private":True},
             "allow_list": al,
             "expected": True,
         },
