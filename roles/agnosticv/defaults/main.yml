@@ -111,6 +111,8 @@ execution_environment_allow_list:
   - name: ^Default execution environment$
   - name: ^Minimal execution environment$
 
+execution_environment_allow_list_extra: []
+
 # Define execution environment in case automation-controller is selected
 execution_environment: >-
   {%- if ansible_control_plane == 'controller' -%}

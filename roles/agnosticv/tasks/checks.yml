@@ -11,4 +11,4 @@
   - msg: Execution Environment is not allowed {{ execution_environment }}
     that: >-
       execution_environment | default('', true) == ''
-      or execution_environment | ee_is_allowed(execution_environment_allow_list)
+      or execution_environment | ee_is_allowed(execution_environment_allow_list + execution_environment_allow_list_extra)
