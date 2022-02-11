@@ -1,0 +1,14 @@
+---
+- name: Sanity checks
+  assert:
+    that: "{{ check.that }}"
+    fail_msg: "{{ check.msg }}"
+    quiet: true
+  loop_control:
+    loop_var: check
+    label: "{{ check.msg }}"
+  loop:
+  - msg: Execution Environment is not allowed {{ execution_environment }}
+    that: >-
+      execution_environment | default('', true) == ''
+      or execution_environment | ee_is_allowed(execution_environment_allow_list)
