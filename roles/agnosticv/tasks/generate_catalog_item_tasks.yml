@@ -1,7 +1,7 @@
 ---
+- include_tasks: specified_behaviors.yml
 - include_tasks: checks_ee.yml
   when: execution_environment | default('', true) != ''
-- include_tasks: specified_behaviors.yml
 
 - set_fact:
     catalog_item_name: "{{ account | replace('_', '-') }}.{{ catalog_item | lower | regex_replace('_', '-') }}.{{ stage }}"

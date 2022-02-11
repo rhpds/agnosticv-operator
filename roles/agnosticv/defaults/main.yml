@@ -117,8 +117,8 @@ execution_environment_allow_list_extra: []
 execution_environment: >-
   {%- if ansible_control_plane == 'controller' -%}
   {{ merged_vars.__meta__.deployer.execution_environment
-  | default(default_execution_environment) }}
+  | default({}) }}
   {%- endif -%}
 
-# use default EE set in controller
+# Override __meta__.deployer.execution_environment
 default_execution_environment: {}
