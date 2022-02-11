@@ -11,3 +11,18 @@
 
   set_fact:
     gpte_reporting: true
+
+# RHPDS virtualenvs -> EE  automatic creation
+- name: Override EE with default_execution_environment if not defined
+  when: >-
+    ansible_control_plane == 'controller'
+    and execution_environment | default('', true) == ''
+    and default_execution_environment | default('', true) != ''
+  vars:
+    to_merge:
+      __meta__:
+        deployer:
+          execution_environment: "{{ default_execution_environment }}"
+
+  set_fact:
+    merged_vars: "{{ merged_vars | combine(to_merge, recursive=True) }}"

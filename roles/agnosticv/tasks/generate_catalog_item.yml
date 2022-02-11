@@ -6,7 +6,9 @@
 
     - include_tasks: include_vars.yml
     - include_tasks: generate_catalog_item_tasks.yml
-      when: merged_vars.__meta__.catalog is defined
+      when:
+        - merged_vars.__meta__.catalog is defined
+        - not merged_vars.__meta__.catalog.disable | default(false) | bool
 
   rescue:
     - debug:

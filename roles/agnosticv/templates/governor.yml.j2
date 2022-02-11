@@ -31,8 +31,13 @@ spec:
 {% endfor %}
 
   varSecrets:
+{% if vars.merged_vars.__meta__.ansible_control_plane.secret | default('') != '' %}
+  - name: {{ vars.merged_vars.__meta__.ansible_control_plane.secret | to_json }}
+    var: babylon_tower
+{% else %}
   - name: babylon-tower
     var: babylon_tower
+{% endif %}
 {% for secret in vars.merged_vars.__meta__.secrets | default([]) %}
 {%   if secret is mapping %}
 {%     if 'name' in secret %}

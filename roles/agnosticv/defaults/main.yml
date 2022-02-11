@@ -28,7 +28,7 @@ output_dir: /tmp/output_dir
 # Ansible collections to install with AnsibleGalaxy
 babylon_anarchy_collections:
 - name: awx.awx
-  version: 15.0.1
+  version: 19.4.0
 
 # Ansible roles to install with AnsibleGalaxy and order in which to execute
 babylon_anarchy_roles:
@@ -89,3 +89,37 @@ logstash_protocol: https
 # logstash_user: ...
 # logstash_password: ...
 # logstash_from: ...
+
+############## Execution Environment #################
+# Allowed Execution environments
+# Each regex is validated against the corresponding keys of the EE
+# name and image keys cannot be defined at the same time in agnosticV.
+# name is defined: use the  EE, must exists in Controller
+# image is defined: create EE if it doesn't exist. Use the image as the name of the EE.
+ansible_control_plane: >-
+  {{ merged_vars.__meta__.ansible_control_plane.type | default('tower') }}
+
+execution_environment_allow_list:
+  # Allow everything from redhat official registry
+  - image: ^registry.redhat.io/
+  - image: ^registry.access.redhat.com/
+  # Allow EE built-in AAP2
+  - name: ^Ansible Engine 2.9 execution environment$
+  - name: ^Automation Hub Ansible Engine 2.9 execution environment$
+  - name: ^Automation Hub Default execution environment$
+  - name: ^Automation Hub Minimal execution environment$
+  - name: ^Control Plane Execution Environment$
+  - name: ^Default execution environment$
+  - name: ^Minimal execution environment$
+
+execution_environment_allow_list_extra: []
+
+# Define execution environment in case automation-controller is selected
+execution_environment: >-
+  {%- if ansible_control_plane == 'controller' -%}
+  {{ merged_vars.__meta__.deployer.execution_environment
+  | default({}) }}
+  {%- endif -%}
+
+# Override __meta__.deployer.execution_environment
+default_execution_environment: {}

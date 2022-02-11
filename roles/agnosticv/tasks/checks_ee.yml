@@ -1,0 +1,24 @@
+---
+- name: Ensure Execution Environment is allowed
+  assert:
+    that: "{{ check.that }}"
+    fail_msg: "{{ check.fail_msg }}"
+    quiet: true
+  loop_control:
+    loop_var: check
+    label: "{{ check.fail_msg }}"
+  loop:
+    - fail_msg: >-
+        Execution Environment is not allowed: {{ execution_environment }}
+      that: >-
+        execution_environment
+        | ee_is_allowed( execution_environment_allow_list
+          + execution_environment_allow_list_extra )
+
+    - fail_msg: >-
+        Execution Environment can't have both name
+        and image defined: {{ execution_environment }}
+      that: >-
+        execution_environment.image | default('', true) == ''
+        or
+        execution_environment.name | default('', true) == ''

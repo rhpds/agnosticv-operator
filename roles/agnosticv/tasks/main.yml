@@ -169,6 +169,10 @@
       include_tasks: generate_catalog_item.yml
       when: >-
         account != 'EXAMPLE_ACCOUNT'
+        and (
+          catalog_item_list is not defined
+          or c_i in catalog_item_list
+        )
       vars:
         changed: "{{ r_changed.stdout_lines | default([]) }}"
         context_prefix: >-
