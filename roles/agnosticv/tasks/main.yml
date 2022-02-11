@@ -170,7 +170,6 @@
       when: >-
         account != 'EXAMPLE_ACCOUNT'
         and account == 'tests'
-        and catalog_item == 'EMPTY_CONFIG_AWS_SANDBOX_AAP2'
       vars:
         changed: "{{ r_changed.stdout_lines | default([]) }}"
         context_prefix: >-
