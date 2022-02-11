@@ -11,10 +11,9 @@
     - fail_msg: Execution Environment is not allowed: {{ execution_environment }}
       that: >-
         execution_environment
-        | ee_is_allowed(
-          execution_environment_allow_list
-          + execution_environment_allow_list_extra
-          )
+        | ee_is_allowed( execution_environment_allow_list
+          + execution_environment_allow_list_extra )
+
     - fail_msg: >-
         Execution Environment can't have both name
         and image defined: {{ execution_environment }}
