@@ -101,7 +101,7 @@ ansible_control_plane: >-
 
 execution_environment_allow_list:
   # Allow everything from redhat official registry
-  - image: ^registry.redhat.io
+  - image: ^registry.redhat.io/
   # Allow EE built-in AAP2
   - name: ^Ansible Engine 2.9 execution environment$
   - name: ^Automation Hub Ansible Engine 2.9 execution environment$
