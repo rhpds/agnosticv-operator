@@ -25,4 +25,4 @@
           execution_environment: "{{ default_execution_environment }}"
 
   set_fact:
-    merged_vars: "{{ merged_vars | combine(to_merge) }}"
+    merged_vars: "{{ merged_vars | combine(to_merge, recursive=True) }}"
