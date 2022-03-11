@@ -19,6 +19,6 @@
         Execution Environment can't have both name
         and image defined: {{ execution_environment }}
       that: >-
-        execution_environment.image | default('', true) == ''
-        or
-        execution_environment.name | default('', true) == ''
+        execution_environment.image | default('', true) != ''
+        and
+        execution_environment.name | default('', true) != ''
