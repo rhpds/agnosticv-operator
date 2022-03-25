@@ -9,20 +9,12 @@
 - name: Use namespace defined in the catalog item YAML
   vars:
     _catalog_item_namespace: >-
-      {%- if merged_vars.__meta__.catalog.multiuser | default(false) | bool -%}
-      {{ merged_vars.__meta__.catalog.multiuser_infra_namespace | default(merged_vars.__meta__.catalog.namespace) | default(default_catalog_namespace) }}
-      {%- else -%}
-      {{ merged_vars.__meta__.catalog.namespace | default(default_catalog_namespace) }}
-      {%- endif -%}
-    _user_catalog_item_namespace: >-
       {{ merged_vars.__meta__.catalog.namespace | default(default_catalog_namespace) }}
   set_fact:
     anarchy_namespace: >-
       {{ lookup('template_string', merged_vars.__meta__.anarchy.namespace | default(default_anarchy_namespace)) | replace('_', '-') }}
     catalog_item_namespace: >-
       {{ lookup('template_string', _catalog_item_namespace) | replace('_', '-') }}
-    user_catalog_item_namespace: >-
-      {{ lookup('template_string', _user_catalog_item_namespace) | replace('_', '-') }}
 
 # FIXME - Deploy Anarchy into the namespace?
 - name: Create Anarchy Namespace
@@ -135,56 +127,6 @@
       }}
   register: r_create_catalog_item
 
-- name: Manage Babylon User Catalog Item object
-  when: vars.merged_vars.__meta__.catalog.multiuser | default(false) | bool
-  block:
-  # Need to get current resource version and force replace because catalog
-  # item resources with descriptions are too large to apply.
-  - name: Get current state of Babylon User Catalog Item object
-    k8s_info:
-      api_version: babylon.gpte.redhat.com/v1
-      kind: CatalogItem
-      namespace: "{{ user_catalog_item_namespace }}"
-      name: "{{ catalog_item_name }}.user"
-    register: r_get_user_catalog_item
-
-  - name: Create / Update Babylon User Catalog Item object
-    k8s:
-      state: present
-      definition: "{{ lookup('template', 'user_catalog_item.yml.j2') | from_yaml }}"
-      force: true
-    register: r_create_user_catalog_item
-    vars:
-      _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
-      _current_resource_version: "{{ r_get_user_catalog_item.resources[0].metadata.resourceVersion | default('') }}"
-      _icon: "{{ vars.merged_vars.__meta__.catalog.icon | default('') }}"
-      _namespace: "{{ user_catalog_item_namespace }}"
-      _name: "{{ catalog_item_name }}"
-      _stage: "{{ stage }}"
-      # Use description.adoc first, then variables
-      _description_adoc: >-
-        {{ lookup('file',
-                  ( agnosticv_path,
-                    c_i | dirname,
-                    'description.adoc') | join('/'),
-                    errors='ignore')
-        }}
-      _description_html: >-
-        {{ lookup('file',
-                  ( agnosticv_path,
-                    c_i | dirname,
-                    'description.html') | join('/'),
-                    errors='ignore')
-        }}
-      _description: >-
-        {{ _description_html
-        | default(_description_adoc, true)
-        | default(merged_vars.__meta__.catalog.description, true)
-        | default(default_description)
-        }}
-      _description_format: >-
-        {{ (_description_html == '') | ternary('asciidoc', 'html') }}
-
 - name: Create / Update AnarchyGovernor
   when: None != vars.merged_vars.__meta__.deployer.type | default(None)
   register: r_create_governor
@@ -228,7 +170,6 @@
     logstash_report | bool
     and (
       r_create_catalog_item is changed
-      or r_create_user_catalog_item is changed
       or r_create_governor is changed
       or r_create_resource_provider is changed
     )
