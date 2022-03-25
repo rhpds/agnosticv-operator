@@ -7,7 +7,7 @@ metadata:
   annotations:
     babylon.gpte.redhat.com/description: {{ _description | to_json }}
     babylon.gpte.redhat.com/descriptionFormat: {{ _description_format | to_json }}
-    babylon.gpte.redhat.com/displayName: {{ (_catalog.display_name | default(_name) ~ (' (infra)' if _catalog.multiuser | default(false) | bool else '')) | to_json }}
+    babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}
     babylon.gpte.redhat.com/icon: {{ _icon | to_json if _icon is string else _icon | to_json | to_json }}
     babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
 {% for _component in vars.merged_vars.__meta__.components | default([]) %}
@@ -25,9 +25,6 @@ metadata:
 {%   endfor %}
 {%   if _stage in ['dev','test','prod'] %}
     babylon.gpte.redhat.com/stage: {{ _stage | to_json }}
-{%   endif %}
-{%   if _catalog.multiuser | default(false) | bool %}
-    babylon.gpte.redhat.com/userCatalogItem: {{ (_name ~ '.user') | to_json }}
 {%   endif %}
 {% if _current_resource_version | default('') != '' %}
   resourceVersion: "{{ _current_resource_version }}"
@@ -77,6 +74,9 @@ spec:
       templateFormat: jinja2
       outputFormat: html
 {%   endif %}
+{% endif %}
+{% if _catalog.multiuser | default(false) | bool %}
+  multiuser: true
 {% endif %}
 {% if _catalog.parameters is defined %}
   parameters: {{ _catalog.parameters | to_json }}
