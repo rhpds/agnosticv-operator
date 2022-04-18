@@ -135,6 +135,10 @@
     definition: "{{ lookup('template', 'governor.yml.j2') | from_yaml }}"
     apply: true
   vars:
+    _actions: >-
+      {{ anarchy_governor_default_actions
+       | combine(merged_vars.__meta__.deployer.actions | default({}), recursive=true)
+      }}
     _entry_points: "{{ merged_vars.__meta__.deployer.entry_points | default({}) }}"
     _name: "{{ catalog_item_name }}"
     _namespace: "{{ anarchy_namespace }}"
@@ -156,6 +160,10 @@
   vars:
     _name: "{{ catalog_item_name }}"
     _namespace: "{{ poolboy_namespace }}"
+    _actions: >-
+      {{ anarchy_governor_default_actions
+       | combine(merged_vars.__meta__.deployer.actions | default({}), recursive=true)
+      }}
     _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
     _entry_points: "{{ merged_vars.__meta__.deployer.entry_points | default({}) }}"
     _governor: "{{ catalog_item_name }}"
