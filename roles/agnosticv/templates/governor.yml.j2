@@ -67,7 +67,7 @@ spec:
 
   actions:
 {% for __action, __action_config in _actions.items() %}
-{%   if not __action_config.disabled | default(false) boolean %}
+{%   if not __action_config.disabled | default(false) | bool %}
     {{ __action }}:
       roles:
 {%     for __role in babylon_anarchy_roles %}
