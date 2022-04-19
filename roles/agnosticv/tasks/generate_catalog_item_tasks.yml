@@ -87,6 +87,11 @@
     _icon: "{{ vars.merged_vars.__meta__.catalog.icon | default('') }}"
     _namespace: "{{ catalog_item_namespace }}"
     _name: "{{ catalog_item_name }}"
+    _provision_time_estimate: >-
+      {{ vars.merged_vars.__meta__.catalog.provision_time_estimate
+       | default(vars.merged_vars.__meta__.deployer.actions.provision.time_estimate)
+       | default('')
+      }}
     _stage: "{{ stage }}"
     # Use description.adoc first, then variables
     _description_adoc: >-
