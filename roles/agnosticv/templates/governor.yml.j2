@@ -80,6 +80,9 @@ spec:
 {%     for __role in babylon_anarchy_roles %}
           - role: {{ __role.name }}
 {%     endfor %}
+{%     if __action_config.time_estimate is defined %}
+      timeEstimate: {{ __action_config.time_estimate | to_json }}
+{%     endif %}
 {%   endif %}
 {% endfor %}
 
