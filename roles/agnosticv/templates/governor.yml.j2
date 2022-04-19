@@ -67,8 +67,7 @@ spec:
 
   actions:
 {% for __action, __action_config in _actions.items() %}
-{#   Skip action if disabled or entry point is explicitly set to null or empty string. #}
-{%   if not __action_config.disabled | default(false) boolean and (__action not in _entry_points or _entry_points[__action] | default('', true) != '') %}
+{%   if not __action_config.disabled | default(false) boolean %}
     {{ __action }}:
       roles:
 {%     for __role in babylon_anarchy_roles %}
