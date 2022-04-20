@@ -87,6 +87,7 @@
     _icon: "{{ vars.merged_vars.__meta__.catalog.icon | default('') }}"
     _namespace: "{{ catalog_item_namespace }}"
     _name: "{{ catalog_item_name }}"
+    _provision_time_estimate: "{{ vars.merged_vars.__meta__.deployer.actions.provision.time_estimate | default('') }}"
     _stage: "{{ stage }}"
     # Use description.adoc first, then variables
     _description_adoc: >-
@@ -135,7 +136,11 @@
     definition: "{{ lookup('template', 'governor.yml.j2') | from_yaml }}"
     apply: true
   vars:
-    _entry_points: "{{ merged_vars.__meta__.deployer.entry_points | default({}) }}"
+    _actions: >-
+      {{ anarchy_governor_default_actions
+       | combine(merged_vars.__meta__.deployer.actions | default({}), recursive=true)
+       | combine(merged_vars.__meta__.deployer.entry_points | default({}) | dict2items | json_query("[].{key:key, value:{disabled:contains(['', null], value)}}") | items2dict, recursive=true)
+      }}
     _name: "{{ catalog_item_name }}"
     _namespace: "{{ anarchy_namespace }}"
     # List of job_vars that are set by parameters and so should not appear in the governor.
@@ -156,8 +161,12 @@
   vars:
     _name: "{{ catalog_item_name }}"
     _namespace: "{{ poolboy_namespace }}"
+    _actions: >-
+      {{ anarchy_governor_default_actions
+       | combine(merged_vars.__meta__.deployer.actions | default({}), recursive=true)
+       | combine(merged_vars.__meta__.deployer.entry_points | default({}) | dict2items | json_query("[].{key:key, value:{disabled:contains(['', null], value)}}") | items2dict, recursive=true)
+      }}
     _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
-    _entry_points: "{{ merged_vars.__meta__.deployer.entry_points | default({}) }}"
     _governor: "{{ catalog_item_name }}"
     # Parameters that set variables either do not specify annotation or explicitly set the variable name
     _job_vars_parameters: >-

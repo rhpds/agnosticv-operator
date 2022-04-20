@@ -66,11 +66,8 @@ spec:
 {% endfor %}
 
   actions:
-{% for __action in anarchy_governor_standard_actions
- | union(_entry_points.keys() | list)
-%}
-{#   Skip action if entry point is explicitly set to null or empty string. #}
-{%   if __action not in _entry_points or _entry_points[__action] | default('', true) != '' %}
+{% for __action, __action_config in _actions.items() %}
+{%   if not __action_config.disabled | default(false) | bool %}
     {{ __action }}:
       roles:
 {%     for __role in babylon_anarchy_roles %}
@@ -83,6 +80,9 @@ spec:
 {%     for __role in babylon_anarchy_roles %}
           - role: {{ __role.name }}
 {%     endfor %}
+{%     if __action_config.time_estimate is defined %}
+      timeEstimate: {{ __action_config.time_estimate | to_json }}
+{%     endif %}
 {%   endif %}
 {% endfor %}
 

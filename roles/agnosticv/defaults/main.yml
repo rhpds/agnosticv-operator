@@ -70,12 +70,12 @@ resource_provider_default_lifespan:
 resource_provider_runtime_default: 4h
 resource_provider_runtime_maximum: 8h
 
-anarchy_governor_standard_actions:
-- provision
-- destroy
-- start
-- stop
-- status
+anarchy_governor_default_actions:
+  destroy: {}
+  provision: {}
+  start: {}
+  status: {}
+  stop: {}
 
 error_log_file: /tmp/{{ repo_uniq_name }}_errors.txt
 retry_log_file: /tmp/{{ repo_uniq_name }}_retry.txt

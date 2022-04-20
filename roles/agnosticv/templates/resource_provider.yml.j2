@@ -80,7 +80,7 @@ spec:
 {% set _update_filters_empty = true %}
 
 {# Allow changing start schedule if not explicitly disabled #}
-{% if 'start' not in _entry_points or _entry_points.start | default('', true) != '' %}
+{% if not _actions.start.disabled | default(false) | bool %}
 {%   set _update_filters_empty = false %}
   - pathMatch: /spec/vars/action_schedule/start
     allowedOps:
@@ -89,7 +89,7 @@ spec:
 {% endif %}
 
 {# Allow changing stop schedule if not explicitly disabled #}
-{% if 'stop' not in _entry_points or _entry_points.stop | default('', true) != '' %}
+{% if not _actions.stop.disabled | default(false) | bool %}
 {%   set _update_filters_empty = false %}
   - pathMatch: /spec/vars/action_schedule/stop
     allowedOps:
@@ -103,7 +103,7 @@ spec:
 {% endif %}
 
 {# Allow requesting status checks if not explicitly disabled #}
-{% if 'status' not in _entry_points or _entry_points.status | default('', true) != '' %}
+{% if not _actions.status.disabled | default(false) | bool %}
 {%   set _update_filters_empty = false %}
   - pathMatch: /spec/vars/check_status_request_timestamp
     allowedOps:
