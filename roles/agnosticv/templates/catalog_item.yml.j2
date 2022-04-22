@@ -84,6 +84,7 @@ spec:
 {% if _provision_time_estimate != '' %}
   provisionTimeEstimate: {{ __provision_time_estimate | to_json }}
 {% endif %}
+  resources:
 {% for _component in vars.merged_vars.__meta__.components | default([]) %}
   - name: {{ _component.name | default(_component.item | regex_replace('^.*/', '') | replace('_', '-') | lower) }}
     provider:
