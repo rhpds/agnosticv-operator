@@ -82,7 +82,7 @@ spec:
   parameters: {{ _catalog.parameters | to_json }}
 {% endif %}
 {% if _provision_time_estimate != '' %}
-  provisionTimeEstimate: {{ __provision_time_estimate | to_json }}
+  provisionTimeEstimate: {{ _provision_time_estimate | to_json }}
 {% endif %}
   resources:
 {% for _component in vars.merged_vars.__meta__.components | default([]) %}
