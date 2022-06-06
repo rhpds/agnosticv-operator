@@ -43,6 +43,7 @@ spec:
             description: >-
               Definition of how to create AgnosticV Repo
             type: object
+            x-kubernetes-preserve-unknown-fields: true
             properties:
               url:
                 description: >-
@@ -60,7 +61,7 @@ spec:
                 description: >-
                   Relative path to directory with AgnosticV repo definitions
                 type: string
-              babylon_anarchy_roles:
+              babylonAnarchyRoles:
                 description: >-
                   List of the Babylon Anarchy roles
                 type: array
@@ -82,7 +83,7 @@ spec:
                       description: >-
                         Repository tag
                       type: string
-              babylon_anarchy_collections:
+              babylonAnarchyCollections:
                 description: >-
                   List of the galaxy collections required for Babylon Anarchy
                 type: array
@@ -97,3 +98,6 @@ spec:
                       description: >-
                         Collection version
                       type: string
+          status:
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
