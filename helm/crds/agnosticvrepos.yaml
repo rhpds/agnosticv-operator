@@ -45,22 +45,21 @@ spec:
             type: object
             x-kubernetes-preserve-unknown-fields: true
             properties:
-              url:
+              babylonAnarchyCollections:
                 description: >-
-                  Url to Git repository containing agnosticv repo definitions
-                type: string
-              ref:
-                description: >-
-                  Git branch
-                type: string
-              sshKey:
-                description: >-
-                  Secret name containing Git access key
-                type: string
-              contextDir:
-                description: >-
-                  Relative path to directory with AgnosticV repo definitions
-                type: string
+                  List of the galaxy collections required for Babylon Anarchy
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      description: >-
+                        Name of the collection
+                      type: string
+                    version:
+                      description: >-
+                        Collection version
+                      type: string
               babylonAnarchyRoles:
                 description: >-
                   List of the Babylon Anarchy roles
@@ -83,21 +82,22 @@ spec:
                       description: >-
                         Repository tag
                       type: string
-              babylonAnarchyCollections:
+              contextDir:
                 description: >-
-                  List of the galaxy collections required for Babylon Anarchy
-                type: array
-                items:
-                  type: object
-                  properties:
-                    name:
-                      description: >-
-                        Name of the collection
-                      type: string
-                    version:
-                      description: >-
-                        Collection version
-                      type: string
+                  Relative path to directory with AgnosticV repo definitions
+                type: string
+              ref:
+                description: >-
+                  Git branch
+                type: string
+              sshKey:
+                description: >-
+                  Secret name containing Git access key
+                type: string
+              url:
+                description: >-
+                  Url to Git repository containing agnosticv repo definitions
+                type: string
           status:
             type: object
             x-kubernetes-preserve-unknown-fields: true
