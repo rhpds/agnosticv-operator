@@ -58,7 +58,7 @@ spec:
           {%- endif -%}
         healthy: true
         job_vars:
-          guid: '{{ resource_handle.metadata.name[5:] if resource_handle.metadata.name.startswith(''guid-'') else resource_handle.metadata.name }}'
+          guid: '{{ guid }}{% if resource_handle.spec.resources | length > 1 %}-{{ resource_index }}{% endif %}'
 {% endraw %}
 {% for _component in vars.merged_vars.__meta__.components | default([]) %}
 {%   set _component_index = loop.index0 %}
