@@ -63,8 +63,13 @@ spec:
 {% for _component in vars.merged_vars.__meta__.components | default([]) %}
 {%   set _component_index = loop.index0 %}
 {%   for _propagate_item in _component.propagate_provision_data | default([]) %}
+{%     if _propagate_item.name | default('*') == '*' %}
+          {{ _propagate_item.var }}: >-
+            {{ '{{ provision_data_' ~ _component_index ~ ' | object }}' }}
+{%     else %}
           {{ _propagate_item.var }}: >-
             {{ '{{ provision_data_' ~ _component_index ~ '.' ~ _propagate_item.name ~ '}}' }}
+{%     endif %}
 {%   endfor %}
 {% endfor %}
 {% if merged_vars.__meta__.catalog.requester_parameters | default([]) | length > 0 %}
