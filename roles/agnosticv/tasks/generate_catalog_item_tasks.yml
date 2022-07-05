@@ -84,9 +84,11 @@
     _bookbag: "{{ vars.merged_vars.__meta__.bookbag | default({}) }}"
     _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
     _current_resource_version: "{{ r_get_catalog_item.resources[0].metadata.resourceVersion | default('') }}"
+    _disabled_label: "{{ r_get_catalog-item.resources[0].metadata.labels['babylon.gpte.redhat.com/disabled'] | default('') }}"
     _icon: "{{ vars.merged_vars.__meta__.catalog.icon | default('') }}"
     _namespace: "{{ catalog_item_namespace }}"
     _name: "{{ catalog_item_name }}"
+    _ops_annotation: "{{ r_get_catalog_item.resources[0].metadata.annotations['babylon.gpte.redhat.com/ops'] | default('') }}"
     _provision_time_estimate: "{{ vars.merged_vars.__meta__.deployer.actions.provision.time_estimate | default('') }}"
     _stage: "{{ stage }}"
     # Use description.adoc first, then variables
