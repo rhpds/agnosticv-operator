@@ -80,6 +80,18 @@ spec:
       templateFormat: jinja2
       outputFormat: html
 {%   endif %}
+{%   if _start_complete_message_template_html_j2 != '' %}
+    startComplete:
+      template: {{ _start_complete_message_template_html_j2 | to_json }}
+      templateFormat: jinja2
+      outputFormat: html
+{%   endif %}
+{%   if _stop_complete_message_template_html_j2 != '' %}
+    stopComplete:
+      template: {{ _stop_complete_message_template_html_j2 | to_json }}
+      templateFormat: jinja2
+      outputFormat: html
+{%   endif %}
 {% endif %}
 {% if _catalog.multiuser | default(false) | bool %}
   multiuser: true

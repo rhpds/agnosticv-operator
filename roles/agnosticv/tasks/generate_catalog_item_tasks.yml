@@ -128,6 +128,20 @@
                   'service-deleted-message-template.html.j2') | join('/'),
                   errors='ignore')
       }}
+    _start_complete_message_template_html_j2: >-
+      {{ lookup('file',
+                ( agnosticv_path,
+                  c_i | dirname,
+                  'start-complete-message-template.html.j2') | join('/'),
+                  errors='ignore')
+      }}
+    _stop_complete_message_template_html_j2: >-
+      {{ lookup('file',
+                ( agnosticv_path,
+                  c_i | dirname,
+                  'stop-complete-message-template.html.j2') | join('/'),
+                  errors='ignore')
+      }}
   register: r_create_catalog_item
 
 - name: Create / Update AnarchyGovernor
