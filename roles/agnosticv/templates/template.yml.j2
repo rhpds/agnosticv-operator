@@ -6,9 +6,9 @@ metadata:
   namespace: {{ _namespace | to_json }}
   annotations:
     description: {{ _description | to_json }}
-    openshift.io/display-name: {{ merged_vars.__meta__.catalog.display_name| default(_name) | to_json }}
-    openshift.io/long-description: {{ merged_vars.__meta__.catalog.long_description | d('') | to_json }}
-    tags: quickstart,babylon,{{ account | replace('_', '-') }},{{ merged_vars.__meta__.catalog.tags |  default([]) | join(',') }}
+    openshift.io/display-name: {{ vars.merged_vars.__meta__.catalog.display_name| default(_name) | to_json }}
+    openshift.io/long-description: {{ vars.merged_vars.__meta__.catalog.long_description | d('') | to_json }}
+    tags: quickstart,babylon,{{ account | replace('_', '-') }},{{ vars.merged_vars.__meta__.catalog.tags |  default([]) | join(',') }}
     template.openshift.io/bindable: "false"
 {% if current_resource_version | default('') != '' %}
   resourceVersion: "{{ current_resource_version }}"
@@ -16,15 +16,15 @@ metadata:
   openshift.io/provider-display-name: Red Hat, Inc.
   labels:
     gpte.redhat.com/agnosticv: "true"
-message: {{ merged_vars.__meta__.catalog.message | d(default_message) | to_json }}
+message: {{ vars.merged_vars.__meta__.catalog.message | d(default_message) | to_json }}
 objects:
 - apiVersion: poolboy.gpte.redhat.com/v1
   kind: ResourceClaim
   metadata:
     annotations:
-      description: {{ merged_vars.__meta__.catalog.description | d(default_description) | to_json }}
-      openshift.io/display-name: {{ merged_vars.__meta__.catalog.display_name| default(_name) | to_json }}
-      openshift.io/long-description: {{ merged_vars.__meta__.catalog.long_description | d('') | to_json }}
+      description: {{ vars.merged_vars.__meta__.catalog.description | d(default_description) | to_json }}
+      openshift.io/display-name: {{ vars.merged_vars.__meta__.catalog.display_name| default(_name) | to_json }}
+      openshift.io/long-description: {{ vars.merged_vars.__meta__.catalog.long_description | default('') | to_json }}
 {% for param in _annotation_parameters %}
       {{ param.annotation }}: {{ '${{' ~ param.name ~ '}}' }}
 {% endfor %}
@@ -38,12 +38,12 @@ objects:
         name: {{ _component.item | replace('_', '-') | replace('/', '.') | lower }}.{{ stage }}
         namespace: {{ poolboy_namespace | to_json }}
 {#   Only use parameters for component if explicitly declared with resourceIndexes #}
-{%   if _job_vars_parameters | json_query('[?contains(resourceIndexes, `' ~ loop.index0 ~ '`)]') %}
+{%   if _job_vars_parameters | json_query('[?resourceIndexes!=`null` && contains(resourceIndexes, `' ~ loop.index0 ~ '`)]') %}
       template:
         spec:
           vars:
             job_vars:
-{%     for param in _job_vars_parameters | json_query('[?contains(resourceIndexes, `' ~ loop.index0 ~ '`)]') %}
+{%     for param in _job_vars_parameters | json_query('[?resourceIndexes!=`null` && contains(resourceIndexes, `' ~ loop.index0 ~ '`)]') %}
               {{ param.variable | default(param.name) }}: {{ '${{' ~ param.name ~ '}}' }}
 {%     endfor %}
 {%   endif %}
@@ -65,9 +65,9 @@ objects:
 {%   endif %}
 {% endif %}
 
-{% if merged_vars.__meta__.catalog.parameters is defined %}
+{% if vars.merged_vars.__meta__.catalog.parameters is defined %}
 parameters:
-{%   for parameter in merged_vars.__meta__.catalog.parameters %}
+{%   for parameter in vars.merged_vars.__meta__.catalog.parameters %}
 - name: {{ parameter.name | to_json }}
 {%     if parameter.description is defined %}
   description: {{ parameter.description | to_json }}
@@ -89,4 +89,4 @@ parameters:
 {%     endif %}
 {%   endfor %}
 {% endif %}
-labels: {{ default_labels | combine(merged_vars.__meta__.catalog.labels | d({})) | to_json }}
+labels: {{ default_labels | combine(vars.merged_vars.__meta__.catalog.labels | d({})) | to_json }}

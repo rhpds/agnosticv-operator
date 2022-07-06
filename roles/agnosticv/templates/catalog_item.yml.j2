@@ -10,6 +10,9 @@ metadata:
     babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}
     babylon.gpte.redhat.com/icon: {{ _icon | to_json if _icon is string else _icon | to_json | to_json }}
     babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
+{% if _ops_annotation != '' %}
+    babylon.gpte.redhat.com/ops: {{ _ops_annotation | to_json }}
+{% endif %}
 {% for _component in vars.merged_vars.__meta__.components | default([]) %}
 {%   if _component.display_name is defined %}
     babylon.gpte.redhat.com/displayNameComponent{{ loop.index0 }}: {{ _component.display_name | to_json }}
@@ -25,6 +28,9 @@ metadata:
 {%   endfor %}
 {%   if _stage in ['dev','test','prod'] %}
     babylon.gpte.redhat.com/stage: {{ _stage | to_json }}
+{%   endif %}
+{%   if _disabled_label != '' %}
+    babylon.gpte.redhat.com/disabled: {{ _disabled_label | to_json }}
 {%   endif %}
 {% if _current_resource_version | default('') != '' %}
   resourceVersion: "{{ _current_resource_version }}"
@@ -71,6 +77,18 @@ spec:
 {%   if _service_deleted_message_template_html_j2 != '' %}
     serviceDeleted:
       template: {{ _service_deleted_message_template_html_j2 | to_json }}
+      templateFormat: jinja2
+      outputFormat: html
+{%   endif %}
+{%   if _start_complete_message_template_html_j2 != '' %}
+    startComplete:
+      template: {{ _start_complete_message_template_html_j2 | to_json }}
+      templateFormat: jinja2
+      outputFormat: html
+{%   endif %}
+{%   if _stop_complete_message_template_html_j2 != '' %}
+    stopComplete:
+      template: {{ _stop_complete_message_template_html_j2 | to_json }}
       templateFormat: jinja2
       outputFormat: html
 {%   endif %}

@@ -54,10 +54,10 @@ resources:
   ansible:
     limits:
       cpu: 2
-      memory: 1Gi
+      memory: 1536Mi
     requests:
       cpu: 800m
-      memory: 768Mi
+      memory: 1Gi
 
 nodeSelector: {}
 
