@@ -20,7 +20,7 @@ spec:
 {% if vars.merged_vars.__meta__.components | default([]) | length > 0 %}
   linkedResourceProviders:
 {%   for _component in vars.merged_vars.__meta__.components | default([]) %}
-  - name: "{{ _component.item | lower | replace('_', '-') | replace('/', '.') }}{% if _component.item.split("/") | length < 3 %}.{{ stage }}{% endif %}
+  - name: "{{ _component.item | lower | replace('_', '-') | replace('/', '.') }}{% if _component.item.split("/") | length < 3 %}.{{ stage }}{% endif %}"
     waitFor: current_state_{{ loop.index0 }} == 'started'
     templateVars:
     - name: current_state_{{ loop.index0 }}
