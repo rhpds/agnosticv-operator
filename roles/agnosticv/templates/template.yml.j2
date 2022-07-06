@@ -38,12 +38,12 @@ objects:
         name: {{ _component.item | replace('_', '-') | replace('/', '.') | lower }}.{{ stage }}
         namespace: {{ poolboy_namespace | to_json }}
 {#   Only use parameters for component if explicitly declared with resourceIndexes #}
-{%   if _job_vars_parameters | json_query('[?contains(resourceIndexes, `' ~ loop.index0 ~ '`)]') %}
+{%   if _job_vars_parameters | json_query('[?resourceIndexes!=`null` && contains(resourceIndexes, `' ~ loop.index0 ~ '`)]') %}
       template:
         spec:
           vars:
             job_vars:
-{%     for param in _job_vars_parameters | json_query('[?contains(resourceIndexes, `' ~ loop.index0 ~ '`)]') %}
+{%     for param in _job_vars_parameters | json_query('[?resourceIndexes!=`null` && contains(resourceIndexes, `' ~ loop.index0 ~ '`)]') %}
               {{ param.variable | default(param.name) }}: {{ '${{' ~ param.name ~ '}}' }}
 {%     endfor %}
 {%   endif %}
