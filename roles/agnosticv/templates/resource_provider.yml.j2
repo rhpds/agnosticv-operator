@@ -37,7 +37,7 @@ spec:
     apiVersion: anarchy.gpte.redhat.com/v1
     kind: AnarchySubject
     metadata:
-      name: '{{ _name }}-{% raw %}{{ guid }}{% if resource_index | int > 0 %}-{{ resource_index }}{% endif %}{% endraw %}'
+      name: "{{ _name }}-{% raw %}{{ guid }}{% if resource_index | int > 0 or (resource_reference.name | default('')).endswith('-0') %}-{{ resource_index }}{% endif %}{% endraw %}"
       namespace: {{ anarchy_namespace | to_json }}
     spec:
       governor: {{ _governor | to_json }}
@@ -58,7 +58,7 @@ spec:
           {%- endif -%}
         healthy: true
         job_vars:
-          guid: '{{ guid }}{% if resource_index | int > 0 %}-{{ resource_index }}{% endif %}'
+          guid: "{{ guid }}{% if resource_index | int > 0 or (resource_reference.name | default('')).endswith('-0') %}-{{ resource_index }}{% endif %}"
 {% endraw %}
 {% for _component in vars.merged_vars.__meta__.components | default([]) %}
 {%   set _component_index = loop.index0 %}
