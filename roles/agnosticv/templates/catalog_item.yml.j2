@@ -66,6 +66,7 @@ spec:
     role: {{ _bookbag.role | to_json }}
 {%   endif %}
 {% endif %}
+  lifespan: {{ merged_vars.__meta__.lifespan | default(resource_provider_default_lifespan) | to_json }}
 {% if _service_ready_message_template_html_j2 != '' or _service_deleted_message_template_html_j2 != '' %}
   messageTemplates:
 {%   if _service_ready_message_template_html_j2 != '' %}
@@ -119,6 +120,9 @@ spec:
       name: {{ _name | to_json }}
       namespace: {{ poolboy_namespace | to_json }}
 {% endif %}
+  runtime:
+    default: {{ merged_vars.__meta__.runtime.default | default(resource_provider_runtime_default) | to_json }}
+    maximum: {{ merged_vars.__meta__.runtime.maximum | default(resource_provider_runtime_maximum) | to_json }}
 {% if _catalog.terms_of_service is defined %}
   termsOfService: {{ _catalog.terms_of_service | to_json }}
 {% endif %}
