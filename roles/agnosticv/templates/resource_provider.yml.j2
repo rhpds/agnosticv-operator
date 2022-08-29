@@ -47,14 +47,14 @@ spec:
           maximum_runtime: {{ merged_vars.__meta__.runtime.maximum | default(resource_provider_runtime_maximum) | to_json }}
         desired_state: |-
 {% raw %}
-          {%- if resource_template.spec.vars.action_schedule.start | default('') == ''
-            or resource_template.spec.vars.action_schedule.stop | default('') == '' -%}
-          {{ resource_template.spec.vars.default_desired_state | default('stopped') }}
-          {%- elif timestamp(resource_template.spec.vars.action_schedule.start) > timestamp.utcnow
-            or timestamp(resource_template.spec.vars.action_schedule.stop) < timestamp.utcnow -%}
-          stopped
-          {%- else -%}
+          {%- if 0 < resource_states | json_query("length([?!contains(keys(status.towerJobs.provision || `{}`), 'completeTimestamp')])") -%}
+          {#- desired_state started until all AnarchySubjects have finished provision -#}
           started
+          {%- elif 0 < resource_templates | json_query("length([?spec.vars.action_schedule.start < '" ~ now(True, "%FT%TZ") ~ "' && spec.vars.action_schedule.stop > '" ~ now(True, "%FT%TZ") ~ "'])") -%}
+          {#- desired_state started for all if any should be started -#}
+          started
+          {%- else -%}
+          stopped
           {%- endif -%}
         healthy: true
         job_vars:
