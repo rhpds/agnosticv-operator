@@ -154,8 +154,8 @@
   vars:
     _actions: >-
       {{ anarchy_governor_default_actions
+       | combine(merged_vars.__meta__.deployer.entry_points | default({}) | dict2items | json_query("[].{key:key, value:{disable:contains(['', null], value)}}") | items2dict, recursive=true)
        | combine(merged_vars.__meta__.deployer.actions | default({}), recursive=true)
-       | combine(merged_vars.__meta__.deployer.entry_points | default({}) | dict2items | json_query("[].{key:key, value:{disabled:contains(['', null], value)}}") | items2dict, recursive=true)
       }}
     _name: "{{ catalog_item_name }}"
     _namespace: "{{ anarchy_namespace }}"
@@ -179,8 +179,8 @@
     _namespace: "{{ poolboy_namespace }}"
     _actions: >-
       {{ anarchy_governor_default_actions
+       | combine(merged_vars.__meta__.deployer.entry_points | default({}) | dict2items | json_query("[].{key:key, value:{disable:contains(['', null], value)}}") | items2dict, recursive=true)
        | combine(merged_vars.__meta__.deployer.actions | default({}), recursive=true)
-       | combine(merged_vars.__meta__.deployer.entry_points | default({}) | dict2items | json_query("[].{key:key, value:{disabled:contains(['', null], value)}}") | items2dict, recursive=true)
       }}
     _catalog: "{{ vars.merged_vars.__meta__.catalog }}"
     _governor: "{{ catalog_item_name }}"
