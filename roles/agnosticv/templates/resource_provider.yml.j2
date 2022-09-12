@@ -47,11 +47,14 @@ spec:
           maximum_runtime: {{ merged_vars.__meta__.runtime.maximum | default(resource_provider_runtime_maximum) | to_json }}
         desired_state: |-
 {% raw %}
-          {%- if 0 < resource_states | json_query("length([?!contains(keys(status.towerJobs.provision || `{}`), 'completeTimestamp')])") -%}
+          {%- if 0 < resource_states | map('default', {}, True) | json_query("length([?!contains(keys(status.towerJobs.provision || `{}`), 'completeTimestamp')])") -%}
           {#- desired_state started until all AnarchySubjects have finished provision -#}
           started
           {%- elif 0 < resource_templates | json_query("length([?spec.vars.action_schedule.start < '" ~ now(True, "%FT%TZ") ~ "' && spec.vars.action_schedule.stop > '" ~ now(True, "%FT%TZ") ~ "'])") -%}
-          {#- desired_state started for all if any should be started -#}
+          {#- desired_state started for all if any should be started as determined by action schedule -#}
+          started
+          {%- elif 0 < resource_templates | json_query("length([?spec.vars.default_desired_state == 'started' && !(spec.vars.action_schedule.start || spec.vars.action_schedule.stop)])") -%}
+          {#- desired_state started for all if any should be started as determined by default_desired_state -#}
           started
           {%- else -%}
           stopped
@@ -85,7 +88,7 @@ spec:
 {% set _update_filters_empty = true %}
 
 {# Allow changing start schedule if not explicitly disabled #}
-{% if not _actions.start.disabled | default(false) | bool %}
+{% if not _actions.start.disable | default(false) | bool %}
 {%   set _update_filters_empty = false %}
   - pathMatch: /spec/vars/action_schedule/start
     allowedOps:
@@ -94,7 +97,7 @@ spec:
 {% endif %}
 
 {# Allow changing stop schedule if not explicitly disabled #}
-{% if not _actions.stop.disabled | default(false) | bool %}
+{% if not _actions.stop.disable | default(false) | bool %}
 {%   set _update_filters_empty = false %}
   - pathMatch: /spec/vars/action_schedule/stop
     allowedOps:
@@ -108,7 +111,7 @@ spec:
 {% endif %}
 
 {# Allow requesting status checks if not explicitly disabled #}
-{% if not _actions.status.disabled | default(false) | bool %}
+{% if not _actions.status.disable | default(false) | bool %}
 {%   set _update_filters_empty = false %}
   - pathMatch: /spec/vars/check_status_request_timestamp
     allowedOps:
