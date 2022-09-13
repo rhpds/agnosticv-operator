@@ -16,11 +16,6 @@ spec:
     packaging==20.9
     pymysql==0.9.3
   vars:
-    # Flags to modify scheduled action behavior
-    schedule_destroy_after_provision: {{ merged_vars.__meta__.schedule_destroy_after_provision | default('disabled') }}
-    schedule_stop_after_provision: {{ merged_vars.__meta__.schedule_stop_after_provision | default(merged_vars.__meta__.idle_after_deploy ~ 'h' if merged_vars.__meta__.idle_after_deploy is defined else 'disabled') }}
-    schedule_stop_after_start: {{ merged_vars.__meta__.schedule_stop_after_start | default(merged_vars.__meta__.idle_after_start ~ 'h' if merged_vars.__meta__.idle_after_start is defined else 'disabled') }}
-
     # Job variables to pass to Ansible Tower job runner (dark tower)
     job_vars:
       __meta__:
@@ -67,7 +62,7 @@ spec:
 
   actions:
 {% for __action, __action_config in _actions.items() %}
-{%   if not __action_config.disabled | default(false) | bool %}
+{%   if not __action_config.disable | default(false) | bool %}
     {{ __action }}:
       roles:
 {%     for __role in babylon_anarchy_roles %}
