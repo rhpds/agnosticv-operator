@@ -85,20 +85,10 @@ spec:
     enable: true
 
   updateFilters:
-{% set _update_filters_empty = true %}
-
-{# Allow changing start schedule if not explicitly disabled #}
-{% if not _actions.start.disable | default(false) | bool %}
-{%   set _update_filters_empty = false %}
   - pathMatch: /spec/vars/action_schedule/start
     allowedOps:
     - add
     - replace
-{% endif %}
-
-{# Allow changing stop schedule if not explicitly disabled #}
-{% if not _actions.stop.disable | default(false) | bool %}
-{%   set _update_filters_empty = false %}
   - pathMatch: /spec/vars/action_schedule/stop
     allowedOps:
     - add
@@ -108,7 +98,6 @@ spec:
     allowedOps:
     - add
     - replace
-{% endif %}
 
 {# Allow requesting status checks if not explicitly disabled #}
 {% if not _actions.status.disable | default(false) | bool %}
@@ -125,10 +114,6 @@ spec:
   - pathMatch: /spec/vars/job_vars/{{ parameter.name }}(/.*)?
 {%   endif %}
 {% endfor %}
-
-{% if _update_filters_empty %}
-    []
-{% endif %}
 
   validation:
     openAPIV3Schema:
