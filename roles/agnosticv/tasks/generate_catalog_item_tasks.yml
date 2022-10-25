@@ -151,6 +151,8 @@
     state: present
     definition: "{{ lookup('template', 'governor.yml.j2') | from_yaml }}"
     apply: true
+    server_side_apply:
+      field_manager: OpenAPI-Generator
   vars:
     _actions: >-
       {{ anarchy_governor_default_actions
