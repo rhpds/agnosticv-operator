@@ -167,6 +167,9 @@
       | union(merged_vars.__meta__.catalog.requester_parameters | default([]) | json_query('[].name'))
       }}
 
+- debug:
+    var: r_create_governor
+
 - name: Create / Update Poolboy ResourceProvider
   when: None != vars.merged_vars.__meta__.deployer.type | default(None)
   register: r_create_resource_provider
