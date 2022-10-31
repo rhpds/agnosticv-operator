@@ -13,6 +13,9 @@ metadata:
 {% if _ops_annotation %}
     babylon.gpte.redhat.com/ops: {{ _ops_annotation | to_json | to_json }}
 {% endif %}
+{% if vars.merged_vars.__meta__.last_update is defined %}
+    babylon.gpte.redhat.com/last_update: {{ vars.merged_vars.__meta__.last_update | to_json }}
+{% endif %}
 {% for _component in vars.merged_vars.__meta__.components | default([]) %}
 {%   if _component.display_name is defined %}
     babylon.gpte.redhat.com/displayNameComponent{{ loop.index0 }}: {{ _component.display_name | to_json }}
