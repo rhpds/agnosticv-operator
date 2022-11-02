@@ -10,7 +10,7 @@ metadata:
     babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}
     babylon.gpte.redhat.com/icon: {{ _icon | to_json if _icon is string else _icon | to_json | to_json }}
     babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
-    babylon.gpte.redhat.com/last_update: {{ _last_update | to_json }}
+    babylon.gpte.redhat.com/last_update: {{ _last_update | to_json | to_json }}
 {% if _ops_annotation %}
     babylon.gpte.redhat.com/ops: {{ _ops_annotation | to_json | to_json }}
 {% endif %}
