@@ -90,7 +90,7 @@
     _name: "{{ catalog_item_name }}"
     _ops_annotation: "{{ r_get_catalog_item.resources[0].metadata.annotations['babylon.gpte.redhat.com/ops'] | default('null') | from_yaml }}"
     _provision_time_estimate: "{{ vars.merged_vars.__meta__.deployer.actions.provision.time_estimate | default('') }}"
-    _last_update: "{{ vars.merged_vars.__meta__.last_update | default('null') | from_yaml }}
+    _last_update: "{{ vars.merged_vars.__meta__.last_update | default({}) }}"
     _stage: "{{ stage }}"
     # Use description.adoc first, then variables
     _description_adoc: >-
