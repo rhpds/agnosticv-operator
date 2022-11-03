@@ -66,6 +66,7 @@ spec:
     role: {{ _bookbag.role | to_json }}
 {%   endif %}
 {% endif %}
+  lastUpdate: {{ _last_update | to_json }}
   lifespan: {{ merged_vars.__meta__.lifespan | default(resource_provider_default_lifespan) | to_json }}
 {% if _service_ready_message_template_html_j2 != '' or _service_deleted_message_template_html_j2 != '' %}
   messageTemplates:
