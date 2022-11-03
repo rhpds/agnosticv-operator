@@ -10,7 +10,6 @@ metadata:
     babylon.gpte.redhat.com/displayName: {{ _catalog.display_name | default(_name) | to_json }}
     babylon.gpte.redhat.com/icon: {{ _icon | to_json if _icon is string else _icon | to_json | to_json }}
     babylon.gpte.redhat.com/keywords: {{ _catalog.keywords | default([]) | join(',') | to_json }}
-    babylon.gpte.redhat.com/last_update: {{ _last_update | to_json | to_json }}
 {% if _ops_annotation %}
     babylon.gpte.redhat.com/ops: {{ _ops_annotation | to_json | to_json }}
 {% endif %}
@@ -67,6 +66,7 @@ spec:
     role: {{ _bookbag.role | to_json }}
 {%   endif %}
 {% endif %}
+  lastUpdate: {{ _last_update | to_json | to_json }}
   lifespan: {{ merged_vars.__meta__.lifespan | default(resource_provider_default_lifespan) | to_json }}
 {% if _service_ready_message_template_html_j2 != '' or _service_deleted_message_template_html_j2 != '' %}
   messageTemplates:
