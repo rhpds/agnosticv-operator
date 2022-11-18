@@ -15,7 +15,7 @@ image:
 # Ex:
 #agnosticvRepos:
 #- name: gpte-agnosticv
-#  url: git@github.com:redhat-gpe/agnosticv.git
+#  url: git@github.com:rhpds/agnosticv.git
 #  ref: master
 #  contextDir: ''
 #  sshKey: |

@@ -3,12 +3,12 @@ kind: AgnosticVRepo
 metadata:
   name: gpte-agnosticv
 spec:
-  url: git@github.com:redhat-gpe/agnosticv.git
+  url: git@github.com:rhpds/agnosticv.git
   ref: master
   sshKey: agnosticv-operator-sshkey
   contextDir: ''
   babylon_anarchy_roles:
   - name: babylon_anarchy_governor
-    src: https://github.com/redhat-gpte-devopsautomation/babylon_anarchy_governor.git
+    src: https://github.com/rhpds/babylon_anarchy_governor.git
     version: main
 
