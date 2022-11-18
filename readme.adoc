@@ -136,7 +136,7 @@ metadata:
 spec:
   ref: master
   sshKey: agnosticv-operator-sshkey
-  url: git@github.com:redhat-gpe/agnosticv.git
+  url: git@github.com:rhpds/agnosticv.git
   contextDir: ''
   babylon_anarchy_roles:
   - name: babylon_anarchy_governor
