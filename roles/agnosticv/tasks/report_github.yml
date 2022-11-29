@@ -14,6 +14,8 @@
 
 - name: Comment back in PRs
   when: r_prs.stdout_lines | length > 0
+  # Don't rely on github API, ignore any error
+  ignore_errors: true
   environment:
     GITHUB_TOKEN: "{{ github_token }}"
   args:
