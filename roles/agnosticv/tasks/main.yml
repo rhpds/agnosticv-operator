@@ -188,7 +188,7 @@
     - name: Report to Github Pull Requests
       when: >-
         github_token is defined
-        and rhpds_catalog_url is defined
+        and catalog_url is defined
         and r_repo.changed
         and r_repo.before
       include_tasks: report_github.yml
