@@ -1,0 +1,29 @@
+---
+- name: Get list of auto-merged PRs
+  shell: >-
+    git log --pretty=reference
+    {{ r_repo.before | quote }} {{ r_repo.after |quote }}
+    | cut -d' ' -f 1 --complement
+    | grep -E '^\(Auto-merge \#'
+    | perl -pe 's/^\(Auto-merge \#(\d+) .*/$1/'
+    | sort
+    | uniq
+  args:
+    chdir: "{{ agnosticv_path }}"
+  register: r_prs
+
+- name: Comment back in PRs
+  when: r_prs.stdout_lines | length > 0
+  environment:
+    GITHUB_TOKEN: "{{ github_token }}"
+  args:
+    chdir: "{{ agnosticv_path }}"
+
+  shell: |-
+    for PR in {{ r_prs.stdout }}; do
+      {% if flag_fail | default(false) %}
+        gh pr comment ${PR} --body {{ github_comment_failure | quote }}
+      {% else %}
+        gh pr comment ${PR} --body {{ github_comment_success | quote }}
+      {% endif %}
+    done
