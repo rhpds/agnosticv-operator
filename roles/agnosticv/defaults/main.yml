@@ -127,7 +127,7 @@ default_execution_environment: {}
 
 # GitHub integration
 github_comment_success: |
-  AgnosticV operator update for revision {{ r_repo.after }} finished successfully.
+  Update by AgnosticV operator for revision {{ r_repo.after }} finished successfully.
   The change from this PR should be included.
 
   You can see the updated catalog at {{ catalog_url }}
