@@ -27,5 +27,6 @@
         gh pr comment ${PR} --body {{ github_comment_failure | quote }}
       {% else %}
         gh pr comment ${PR} --body {{ github_comment_success | quote }}
+        gh pr edit ${PR} --add-label integration
       {% endif %}
     done
