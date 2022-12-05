@@ -15,7 +15,14 @@ spec:
           start: '{% raw %}{{ timestamp.utcnow }}{% endraw %}'
           stop: '{% raw %}{{ timestamp.utcnow.add(resource_provider.spec.override.spec.vars.action_schedule.default_runtime) }}{% endraw %}'
 
-  lifespan: {{ merged_vars.__meta__.lifespan | default(resource_provider_default_lifespan) | to_json }}
+  lifespan:
+    # Lifespan defaults include templated logic for open environment exceptions.
+    default: >-
+      {% raw %}{% if resource_claim and 'demo.redhat.com/open-environment' in resource_claim.annotations %}365d{% else %}{% endraw %}{{ _lifespan_default }}{% raw %}{% endif %}{% endraw +%}
+    maximum: >-
+      {% raw %}{% if resource_claim and 'demo.redhat.com/open-environment' in resource_claim.annotations %}365d{% else %}{% endraw %}{{ _lifespan_maximum }}{% raw %}{% endif %}{% endraw +%}
+    relativeMaximum: >-
+      {% raw %}{% if resource_claim and 'demo.redhat.com/open-environment' in resource_claim.annotations %}365d{% else %}{% endraw %}{{ _lifespan_relative_maximum }}{% raw %}{% endif %}{% endraw +%}
 
 {% if vars.merged_vars.__meta__.components | default([]) | length > 0 %}
   linkedResourceProviders:
@@ -43,8 +50,10 @@ spec:
       governor: {{ _governor | to_json }}
       vars:
         action_schedule:
-          default_runtime: {{ merged_vars.__meta__.runtime.default | default(resource_provider_runtime_default) | to_json }}
-          maximum_runtime: {{ merged_vars.__meta__.runtime.maximum | default(resource_provider_runtime_maximum) | to_json }}
+          default_runtime: >-
+            {{ _runtime_default }}
+          maximum_runtime: >-
+            {% raw %}{% if resource_claim and 'demo.redhat.com/open-environment' in resource_claim.annotations %}365d{% else %}{% endraw %}{{ _runtime_maximum }}{% raw %}{% endif %}{% endraw +%}
         desired_state: |-
 {% raw %}
           {%- if 0 < resource_states | map('default', {}, True) | list | json_query("length([?!contains(keys(status.towerJobs.provision || `{}`), 'completeTimestamp')])") -%}
@@ -85,11 +94,7 @@ spec:
     enable: true
 
   updateFilters:
-  - pathMatch: /spec/vars/action_schedule/start
-    allowedOps:
-    - add
-    - replace
-  - pathMatch: /spec/vars/action_schedule/stop
+  - pathMatch: /spec/vars/action_schedule/.*
     allowedOps:
     - add
     - replace

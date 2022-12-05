@@ -122,6 +122,19 @@
                   'service-ready-message-template.html.j2') | join('/'),
                   errors='ignore')
       }}
+    _lifespan_default: >-
+      {{ merged_vars.__meta__.lifespan.default
+       | default(resource_provider_lifespan_default)
+      }}
+    _lifespan_maximum: >-
+      {{ merged_vars.__meta__.lifespan.maximum
+       | default(resource_provider_lifespan_maximum)
+      }}
+    _lifespan_relative_maximum: >-
+      {{ merged_vars.__meta__.lifespan.relative_maximum
+       | default(merged_vars.__meta__.lifespan.relativeMaximum)
+       | default(resource_provider_lifespan_relative_maximum)
+      }}
     _service_deleted_message_template_html_j2: >-
       {{ lookup('file',
                 ( agnosticv_path,
@@ -190,6 +203,27 @@
       {{ merged_vars.__meta__.catalog.parameters
       | default([])
       | json_query('[?(variable || !annotation)]')
+      }}
+    _lifespan_default: >-
+      {{ merged_vars.__meta__.lifespan.default
+       | default(resource_provider_lifespan_default)
+      }}
+    _lifespan_maximum: >-
+      {{ merged_vars.__meta__.lifespan.maximum
+       | default(resource_provider_lifespan_maximum)
+      }}
+    _lifespan_relative_maximum: >-
+      {{ merged_vars.__meta__.lifespan.relative_maximum
+       | default(merged_vars.__meta__.lifespan.relativeMaximum)
+       | default(resource_provider_lifespan_relative_maximum)
+      }}
+    _runtime_default: >-
+      {{ merged_vars.__meta__.runtime.default
+       | default(resource_provider_runtime_default)
+      }}
+    _runtime_maximum: >-
+      {{ merged_vars.__meta__.runtime.maximum
+       | default(resource_provider_runtime_maximum)
       }}
 
 - when: >-
