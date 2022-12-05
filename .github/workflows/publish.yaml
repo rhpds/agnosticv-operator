@@ -69,6 +69,8 @@ jobs:
         tags: ${{ steps.image_tags.outputs.IMAGE_TAGS }}
   publish-helm-charts:
     needs: publish
+    permissions:
+      contents: write
     env:
       IMAGE_NAME: agnosticv-operator
     runs-on: ubuntu-latest
