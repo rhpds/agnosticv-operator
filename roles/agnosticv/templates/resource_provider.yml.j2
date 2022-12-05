@@ -18,11 +18,11 @@ spec:
   lifespan:
     # Lifespan defaults include templated logic for open environment exceptions.
     default: >-
-      {% raw %}{% if resource_claim and 'demo.redhat.com/open-environment' in resource_claim.annotations %}365d{% else %}{% endraw %}{{ _lifespan_default }}{% raw %}{% endif %}{% endraw +%}
+      {% raw %}{% if resource_claim.annotations['demo.redhat.com/open-environment'] | default(false) | bool %}365d{% else %}{% endraw %}{{ _lifespan_default }}{% raw %}{% endif %}{% endraw +%}
     maximum: >-
-      {% raw %}{% if resource_claim and 'demo.redhat.com/open-environment' in resource_claim.annotations %}365d{% else %}{% endraw %}{{ _lifespan_maximum }}{% raw %}{% endif %}{% endraw +%}
+      {% raw %}{% if resource_claim.annotations['demo.redhat.com/open-environment'] | default(false) | bool %}365d{% else %}{% endraw %}{{ _lifespan_maximum }}{% raw %}{% endif %}{% endraw +%}
     relativeMaximum: >-
-      {% raw %}{% if resource_claim and 'demo.redhat.com/open-environment' in resource_claim.annotations %}365d{% else %}{% endraw %}{{ _lifespan_relative_maximum }}{% raw %}{% endif %}{% endraw +%}
+      {% raw %}{% if resource_claim.annotations['demo.redhat.com/open-environment'] | default(false) | bool %}365d{% else %}{% endraw %}{{ _lifespan_relative_maximum }}{% raw %}{% endif %}{% endraw +%}
 
 {% if vars.merged_vars.__meta__.components | default([]) | length > 0 %}
   linkedResourceProviders:
@@ -53,7 +53,7 @@ spec:
           default_runtime: >-
             {{ _runtime_default }}
           maximum_runtime: >-
-            {% raw %}{% if resource_claim and 'demo.redhat.com/open-environment' in resource_claim.annotations %}365d{% else %}{% endraw %}{{ _runtime_maximum }}{% raw %}{% endif %}{% endraw +%}
+            {% raw %}{% if resource_claim.annotations['demo.redhat.com/open-environment'] | default(false) | bool %}365d{% else %}{% endraw %}{{ _runtime_maximum }}{% raw %}{% endif %}{% endraw +%}
         desired_state: |-
 {% raw %}
           {%- if 0 < resource_states | map('default', {}, True) | list | json_query("length([?!contains(keys(status.towerJobs.provision || `{}`), 'completeTimestamp')])") -%}
