@@ -110,6 +110,7 @@ execution_environment_allow_list:
   - name: ^Control Plane Execution Environment$
   - name: ^Default execution environment$
   - name: ^Minimal execution environment$
+  - name: ^aap2-workshop$
 
 execution_environment_allow_list_extra: []
 
