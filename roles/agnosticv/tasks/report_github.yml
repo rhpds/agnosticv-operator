@@ -12,9 +12,6 @@
     chdir: "{{ agnosticv_path }}"
   register: r_prs
 
-- debug:
-    var: r_prs
-
 - name: Comment back in PRs
   when: r_prs.stdout_lines | length > 0
   # Don't rely on github API, ignore any error
@@ -27,10 +24,11 @@
   loop_control:
     pause: 2
 
-  shell: |-
-    {% if flag_fail | default(false) %}
-      gh pr comment {{ item }} --body {{ github_comment_failure | quote }}
-    {% else %}
-      gh pr comment {{ item }} --body {{ github_comment_success | quote }}
-      gh pr edit {{ item }} --add-label integration
-    {% endif %}
+  debug:
+    msg: |-
+      {% if flag_fail | default(false) %}
+        gh pr comment {{ item }} --body {{ github_comment_failure | quote }}
+      {% else %}
+        gh pr comment {{ item }} --body {{ github_comment_success | quote }}
+        gh pr edit {{ item }} --add-label integration
+      {% endif %}
