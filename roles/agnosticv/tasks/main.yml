@@ -193,6 +193,7 @@
         and catalog_url is defined
         and r_repo.changed
         and r_repo.before
+        and r_repo.after
       include_tasks: report_github.yml
 
 - name: Fail if any catalog item failed
