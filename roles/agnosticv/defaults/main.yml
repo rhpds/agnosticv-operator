@@ -123,3 +123,20 @@ execution_environment: >-
 
 # Override __meta__.deployer.execution_environment
 default_execution_environment: {}
+
+
+# GitHub integration
+github_comment_success: |
+  Update by AgnosticV operator for revision {{ r_repo.after }} finished successfully.
+  The change from this PR should be included.
+
+  You can see the updated catalog at {{ catalog_url }}
+
+github_comment_failure: |
+  AgnosticV operator failed to update for revision {{ r_repo.after }}.
+
+  Check the logs or loki.
+
+# quick_start=false  Process all catalog items at startup
+# quick_start=true   Wait for the next change
+quick_start: false

@@ -196,6 +196,10 @@ spec:
     image: image-registry.apps-dev.open.redhat.com/agnosticd/ee-{{ merged_vars.__meta__.deployer.virtualenv | default('ansible2.9-python3.6-2021-11-30') }}
     private: true
 ----
+* Github integration
+** `spec.github_token` -- GitHub access token.
+** `spec.github_comment_success` and `spec.github_comment_failure` -- jinaj2 content of the comments.
+** `spec.catalog_url` -- URL of the catalog to pass in GitHub comments.
 
 == Troubleshooting
 
