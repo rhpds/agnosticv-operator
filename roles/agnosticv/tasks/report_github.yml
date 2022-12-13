@@ -5,7 +5,7 @@
 - name: Get list of auto-merged PRs
   shell: >-
     git log --pretty=reference
-    {{ r_repo.before | quote }} {{ r_repo.after |quote }}
+    {{ r_repo.before | quote }}..{{ r_repo.after |quote }}
     | cut -d' ' -f 1 --complement
     | grep -E '^\(Auto-merge \#'
     | perl -pe 's/^\(Auto-merge \#(\d+) .*/$1/'
