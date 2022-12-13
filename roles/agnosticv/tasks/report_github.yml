@@ -20,13 +20,12 @@
     GITHUB_TOKEN: "{{ github_token }}"
   args:
     chdir: "{{ agnosticv_path }}"
+  loop: "{{ r_prs.stdout_lines }}"
 
   shell: |-
-    for PR in {{ r_prs.stdout }}; do
-      {% if flag_fail | default(false) %}
-        gh pr comment ${PR} --body {{ github_comment_failure | quote }}
-      {% else %}
-        gh pr comment ${PR} --body {{ github_comment_success | quote }}
-        gh pr edit ${PR} --add-label integration
-      {% endif %}
-    done
+    {% if flag_fail | default(false) %}
+      gh pr comment {{ item }} --body {{ github_comment_failure | quote }}
+    {% else %}
+      gh pr comment {{ item }} --body {{ github_comment_success | quote }}
+      gh pr edit {{ item }} --add-label integration
+    {% endif %}
