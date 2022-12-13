@@ -118,7 +118,9 @@
       # Fail safe: if the change list is too long (> 1000), just process all.
       command: >-
         {{ agnosticv_client_path }} --list --has __meta__.catalog
-        {%- if changed | length > 0 and changed | length < 1000 %}
+        {%- if changed | length == 0 and quick_start %}
+        --related /dev/null
+        {%- elif changed | length > 0 and changed | length < 1000 %}
         --related {{ changed | join(' --or-related ') }}
         {%- endif %}
       args:

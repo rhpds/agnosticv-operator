@@ -136,3 +136,7 @@ github_comment_failure: |
   AgnosticV operator failed to update for revision {{ r_repo.after }}.
 
   Check the logs or loki.
+
+# quick_start=false  Process all catalog items at startup
+# quick_start=true   Wait for the next change
+quick_start: false
