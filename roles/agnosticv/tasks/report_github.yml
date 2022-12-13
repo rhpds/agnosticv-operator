@@ -24,6 +24,8 @@
   args:
     chdir: "{{ agnosticv_path }}"
   loop: "{{ r_prs.stdout_lines }}"
+  loop_control:
+    pause: 2
 
   shell: |-
     {% if flag_fail | default(false) %}
