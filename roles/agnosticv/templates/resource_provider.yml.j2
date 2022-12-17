@@ -18,7 +18,7 @@ spec:
   lifespan:
     # Lifespan defaults include templated logic for open environment exceptions.
     default: >-
-      {% raw %}{% if resource_claim.annotations['demo.redhat.com/open-environment'] | default(false) | bool %}365d{% else %}{% endraw %}{{ _lifespan_default }}{% raw %}{% endif %}{% endraw +%}
+      {{ _lifespan_default }}
     maximum: >-
       {% raw %}{% if resource_claim.annotations['demo.redhat.com/open-environment'] | default(false) | bool %}365d{% else %}{% endraw %}{{ _lifespan_maximum }}{% raw %}{% endif %}{% endraw +%}
     relativeMaximum: >-
