@@ -101,6 +101,9 @@ spec:
 {% if _catalog.multiuser | default(false) | bool %}
   multiuser: true
 {% endif %}
+{% if _catalog.workshopUiDisabled | default(false) | bool %}
+  workshopUiDisabled: true
+{% endif %}
 {% if _catalog.parameters is defined %}
   parameters: {{ _catalog.parameters | to_json }}
 {% endif %}
