@@ -92,6 +92,8 @@
     _provision_time_estimate: "{{ vars.merged_vars.__meta__.deployer.actions.provision.time_estimate | default('') }}"
     _last_update: "{{ vars.merged_vars.__meta__.last_update | default({}) }}"
     _stage: "{{ stage }}"
+    _rating: "{{ r_get_catalog_item.resources[0].metadata.labels['babylon.gpte.redhat.com/rating'] | default('null') }}"
+    _total_ratings: "{{ r_get_catalog_item.resources[0].metadata.annotations['babylon.gpte.redhat.com/totalRatings'] | default('null') }}"
     # Use description.adoc first, then variables
     _description_adoc: >-
       {{ lookup('file',
