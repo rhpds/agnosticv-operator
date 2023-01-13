@@ -77,8 +77,14 @@ spec:
     default: {{ _lifespan_default | to_json }}
     maximum: {{ _lifespan_maximum | to_json }}
     relativeMaximum: {{ _lifespan_relative_maximum | to_json }}
-{% if _service_ready_message_template_html_j2 != '' or _service_deleted_message_template_html_j2 != '' %}
+{% if _info_message_template_adoc != '' or _service_ready_message_template_html_j2 != '' or _service_deleted_message_template_html_j2 != '' %}
   messageTemplates:
+{%   if _info_message_template_adoc != '' %}
+    info:
+      template: {{ _info_message_template_adoc | to_json }}
+      templateFormat: asciidoc
+      outputFormat: html
+{%   endif %}
 {%   if _service_ready_message_template_html_j2 != '' %}
     serviceReady:
       template: {{ _service_ready_message_template_html_j2 | to_json }}

@@ -124,6 +124,13 @@
                   'service-ready-message-template.html.j2') | join('/'),
                   errors='ignore')
       }}
+    _info_message_template_adoc: >-
+      {{ lookup('file',
+                ( agnosticv_path,
+                  c_i | dirname,
+                  'info-message-template.adoc') | join('/'),
+                  errors='ignore')
+      }}
     _lifespan_default: >-
       {{ merged_vars.__meta__.lifespan.default
        | default(resource_provider_lifespan_default)
