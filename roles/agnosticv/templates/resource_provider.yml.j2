@@ -156,7 +156,7 @@ spec:
 {% if _job_vars_parameters | length > 0 %}
                   properties:
 {%   for parameter in _job_vars_parameters %}
-                    {{ parameter.name }}: {{ parameter.openAPIV3Schema | default({}) | combine({"description": parameter.description} if "description" in parameter else {}) | to_json }}
+                    {{ parameter.variable | default(parameter.name) }}: {{ parameter.openAPIV3Schema | default({}) | combine({"description": parameter.description} if "description" in parameter else {}) | to_json }}
 {%   endfor %}
                   required: {{ _job_vars_parameters | json_query('[?required].name') | to_json }}
 {% endif %}
