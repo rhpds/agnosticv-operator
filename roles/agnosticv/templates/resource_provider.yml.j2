@@ -59,7 +59,7 @@ spec:
           {%- if 0 < resource_states | map('default', {}, True) | list | json_query("length([?!contains(keys(status.towerJobs.provision || `{}`), 'completeTimestamp')])") -%}
           {#- desired_state started until all AnarchySubjects have finished provision -#}
           started
-          {%- elif 0 < resource_templates | json_query("length([?spec.vars.action_schedule.start < '" ~ now(True, "%FT%TZ") ~ "' && spec.vars.action_schedule.stop > '" ~ now(True, "%FT%TZ") ~ "'])") -%}
+          {%- elif 0 < resource_templates | json_query("length([?spec.vars.action_schedule.start <= '" ~ now(True, "%FT%TZ") ~ "' && spec.vars.action_schedule.stop > '" ~ now(True, "%FT%TZ") ~ "'])") -%}
           {#- desired_state started for all if any should be started as determined by action schedule -#}
           started
           {%- elif 0 < resource_templates | json_query("length([?spec.vars.default_desired_state == 'started' && !(spec.vars.action_schedule.start || spec.vars.action_schedule.stop)])") -%}
