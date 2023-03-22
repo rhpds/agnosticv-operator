@@ -14,10 +14,10 @@ metadata:
     babylon.gpte.redhat.com/ops: {{ _ops_annotation | to_json | to_json }}
 {% endif %}
 {% if _total_ratings_annotation != '' %}
-    babylon.gpte.redhat.com/totalRatings: {{ _total_ratings_annotation | to_json }}
+    catalog-manager.demo.redhat.com/totalRatings: {{ _total_ratings_annotation | to_json }}
 {% endif %}
 {% if _last_successful_provision_annotation != '' %}
-    babylon.gpte.redhat.com/lastSuccessfulProvision: {{ _last_successful_provision_annotation | to_json }}
+    catalog-manager.demo.redhat.com/lastSuccessfulProvision: {{ _last_successful_provision_annotation | to_json }}
 {% endif %}
 {% for _component in vars.merged_vars.__meta__.components | default([]) %}
 {%   if _component.display_name is defined %}
@@ -39,7 +39,7 @@ metadata:
     babylon.gpte.redhat.com/disabled: {{ _disabled_label | to_json }}
 {%   endif %}
 {%   if _rating_label != '' %}
-    babylon.gpte.redhat.com/rating: {{ _rating_label | to_json }}
+    catalog-manager.demo.redhat.com/rating: {{ _rating_label | to_json }}
 {%   endif %}
 {% if _current_resource_version | default('') != '' %}
   resourceVersion: "{{ _current_resource_version }}"
