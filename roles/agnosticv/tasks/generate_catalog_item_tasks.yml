@@ -92,9 +92,9 @@
     _provision_time_estimate: "{{ vars.merged_vars.__meta__.deployer.actions.provision.time_estimate | default('') }}"
     _last_update: "{{ vars.merged_vars.__meta__.last_update | default({}) }}"
     _stage: "{{ stage }}"
-    _rating_label: "{{ r_get_catalog_item.resources[0].metadata.labels['babylon.gpte.redhat.com/rating'] | default('') }}"
-    _total_ratings_annotation: "{{ r_get_catalog_item.resources[0].metadata.annotations['babylon.gpte.redhat.com/totalRatings'] | default('') }}"
-    _last_successful_provision_annotation: "{{ r_get_catalog_item.resources[0].metadata.annotations['babylon.gpte.redhat.com/lastSuccessfulProvision'] | default('') }}"
+    _rating_label: "{{ r_get_catalog_item.resources[0].metadata.labels['catalog-manager.demo.redhat.com/rating'] | default('') }}"
+    _total_ratings_annotation: "{{ r_get_catalog_item.resources[0].metadata.annotations['catalog-manager.demo.redhat.com/totalRatings'] | default('') }}"
+    _last_successful_provision_annotation: "{{ r_get_catalog_item.resources[0].metadata.annotations['catalog-manager.demo.redhat.com/lastSuccessfulProvision'] | default('') }}"
     # Use description.adoc first, then variables
     _description_adoc: >-
       {{ lookup('file',
