@@ -49,6 +49,7 @@
                   c_i | dirname,
                   'description.adoc') | join('/'),
                   errors='ignore')
+      | default(merged_vars.__meta__.catalog.description.content, true)
       | default(merged_vars.__meta__.catalog.description, true)
       | default(default_description)
       }}
@@ -112,6 +113,7 @@
     _description: >-
       {{ _description_html
       | default(_description_adoc, true)
+      | default(merged_vars.__meta__.catalog.description.content, true)
       | default(merged_vars.__meta__.catalog.description, true)
       | default(default_description)
       }}
