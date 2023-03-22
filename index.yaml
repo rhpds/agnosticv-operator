@@ -2,8 +2,18 @@ apiVersion: v1
 entries:
   agnosticv-operator:
   - apiVersion: v2
+    appVersion: 0.31.9
+    created: "2023-03-22T01:08:25.06909696Z"
+    description: A Helm chart for Agnosticv Operator
+    digest: 897febeaf7ed066c5fa1c8222f31fc191f4264bb66a72be9229059f7b8fadf8f
+    name: agnosticv-operator
+    type: application
+    urls:
+    - https://redhat-cop.github.io/agnosticv-operator/agnosticv-operator-0.31.9.tgz
+    version: 0.31.9
+  - apiVersion: v2
     appVersion: 0.31.8
-    created: "2023-02-06T01:49:32.647382392Z"
+    created: "2023-03-22T01:08:25.068629054Z"
     description: A Helm chart for Agnosticv Operator
     digest: 7c7c8c7aeeb9aa7adb226996532fd2a991edfd362257acdaca3a49f30b1f2aaa
     name: agnosticv-operator
@@ -13,7 +23,7 @@ entries:
     version: 0.31.8
   - apiVersion: v2
     appVersion: 0.31.7
-    created: "2023-02-06T01:49:32.646974694Z"
+    created: "2023-03-22T01:08:25.068155448Z"
     description: A Helm chart for Agnosticv Operator
     digest: 1876a16a3654848a6e2236d2e127abb29a113ea7ecdfa9b6534f1beea9825421
     name: agnosticv-operator
@@ -23,7 +33,7 @@ entries:
     version: 0.31.7
   - apiVersion: v2
     appVersion: 0.31.6
-    created: "2023-02-06T01:49:32.646579797Z"
+    created: "2023-03-22T01:08:25.067654842Z"
     description: A Helm chart for Agnosticv Operator
     digest: e5488e8f1ff08e67222d740e75d9da8c366c823b85088a410cd0dc25c3152e9f
     name: agnosticv-operator
@@ -33,7 +43,7 @@ entries:
     version: 0.31.6
   - apiVersion: v2
     appVersion: 0.31.5
-    created: "2023-02-06T01:49:32.646172299Z"
+    created: "2023-03-22T01:08:25.067138535Z"
     description: A Helm chart for Agnosticv Operator
     digest: 6f91856a8e8aec6609b1a036bf67387ebe8838e2666033a721a2e04f0f55f5dc
     name: agnosticv-operator
@@ -43,7 +53,7 @@ entries:
     version: 0.31.5
   - apiVersion: v2
     appVersion: 0.31.4
-    created: "2023-02-06T01:49:32.645766601Z"
+    created: "2023-03-22T01:08:25.066678829Z"
     description: A Helm chart for Agnosticv Operator
     digest: 64041880ab9663e3a5af7cd7f4055a4d5d760c6e64c5aecdf1bbe1309b36ba5e
     name: agnosticv-operator
@@ -53,7 +63,7 @@ entries:
     version: 0.31.4
   - apiVersion: v2
     appVersion: 0.31.3
-    created: "2023-02-06T01:49:32.645334804Z"
+    created: "2023-03-22T01:08:25.066224124Z"
     description: A Helm chart for Agnosticv Operator
     digest: eef41f923b8f09d44e382133e6f97c5da543dc1d34aee341b99a8d7746b9b3a3
     name: agnosticv-operator
@@ -63,7 +73,7 @@ entries:
     version: 0.31.3
   - apiVersion: v2
     appVersion: 0.31.2
-    created: "2023-02-06T01:49:32.644912606Z"
+    created: "2023-03-22T01:08:25.065690917Z"
     description: A Helm chart for Agnosticv Operator
     digest: 438481aaa4a41ca164a367b1fc550d3aa3fd223d07615badb49701fa2549dba5
     name: agnosticv-operator
@@ -73,7 +83,7 @@ entries:
     version: 0.31.2
   - apiVersion: v2
     appVersion: 0.31.1
-    created: "2023-02-06T01:49:32.644504208Z"
+    created: "2023-03-22T01:08:25.065234911Z"
     description: A Helm chart for Agnosticv Operator
     digest: 6b218ac7f09a0486b4e97742035fe33d1854e4ab01cecd729e1359bd8d932ff2
     name: agnosticv-operator
@@ -83,7 +93,7 @@ entries:
     version: 0.31.1
   - apiVersion: v2
     appVersion: 0.31.0
-    created: "2023-02-06T01:49:32.644074911Z"
+    created: "2023-03-22T01:08:25.064757105Z"
     description: A Helm chart for Agnosticv Operator
     digest: 670f9e875f185525407a123d3e57cdafc5823a1ca5a6135fc4e46b2e4809ef4d
     name: agnosticv-operator
@@ -93,7 +103,7 @@ entries:
     version: 0.31.0
   - apiVersion: v2
     appVersion: 0.30.2
-    created: "2023-02-06T01:49:32.643614313Z"
+    created: "2023-03-22T01:08:25.064073696Z"
     description: A Helm chart for Agnosticv Operator
     digest: cb777ba98bfca56a99a9c5923899ff03791cf1c180441a15b44c08227a3539d5
     name: agnosticv-operator
@@ -103,7 +113,7 @@ entries:
     version: 0.30.2
   - apiVersion: v2
     appVersion: 0.30.1
-    created: "2023-02-06T01:49:32.642905818Z"
+    created: "2023-03-22T01:08:25.063454288Z"
     description: A Helm chart for Agnosticv Operator
     digest: 1c3b85188f1054ebc32a98a406e2bb891668b0005862c7521b0538b9cf390e02
     name: agnosticv-operator
@@ -113,7 +123,7 @@ entries:
     version: 0.30.1
   - apiVersion: v2
     appVersion: 0.27.0
-    created: "2023-02-06T01:49:32.642309521Z"
+    created: "2023-03-22T01:08:25.06278438Z"
     description: A Helm chart for Agnosticv Operator
     digest: 7021a8735c4dd079d4d4b96490561fa067f26b1c386f70fadbee403ffff5eedf
     name: agnosticv-operator
@@ -123,7 +133,7 @@ entries:
     version: 0.27.0
   - apiVersion: v2
     appVersion: 0.26.1
-    created: "2023-02-06T01:49:32.641692224Z"
+    created: "2023-03-22T01:08:25.062118772Z"
     description: A Helm chart for Agnosticv Operator
     digest: 502f414e1ff948aa2dacc2d1b4be57eeed54aa4fb3c981f39edfe3c0fedd8343
     name: agnosticv-operator
@@ -133,7 +143,7 @@ entries:
     version: 0.26.1
   - apiVersion: v2
     appVersion: 0.26.0
-    created: "2023-02-06T01:49:32.640972929Z"
+    created: "2023-03-22T01:08:25.061449163Z"
     description: A Helm chart for Agnosticv Operator
     digest: 079044acac223d82b3d85dc7e441fcbb11c511b080851b370c665673c5b83dba
     name: agnosticv-operator
@@ -143,7 +153,7 @@ entries:
     version: 0.26.0
   - apiVersion: v2
     appVersion: 0.25.2
-    created: "2023-02-06T01:49:32.640171233Z"
+    created: "2023-03-22T01:08:25.060813555Z"
     description: A Helm chart for Agnosticv Operator
     digest: 8eba6ec770a40001191b2f5e9bf9c863ec914cae955f559579719e27a86788f8
     name: agnosticv-operator
@@ -153,7 +163,7 @@ entries:
     version: 0.25.2
   - apiVersion: v2
     appVersion: 0.25.1
-    created: "2023-02-06T01:49:32.639742636Z"
+    created: "2023-03-22T01:08:25.060130546Z"
     description: A Helm chart for Agnosticv Operator
     digest: fa35c8b7be7e7a65b8d783f85ab10316bf905c8b57ce6cfdc18ef09de1d573cd
     name: agnosticv-operator
@@ -163,7 +173,7 @@ entries:
     version: 0.25.1
   - apiVersion: v2
     appVersion: 0.25.0
-    created: "2023-02-06T01:49:32.639301838Z"
+    created: "2023-03-22T01:08:25.056299698Z"
     description: A Helm chart for Agnosticv Operator
     digest: 9120ab28be704aa5e0b323d594f7dd9b3219bbb6dd8c9155d7d13e15f1362f5f
     name: agnosticv-operator
@@ -173,7 +183,7 @@ entries:
     version: 0.25.0
   - apiVersion: v2
     appVersion: 0.24.0
-    created: "2023-02-06T01:49:32.638845641Z"
+    created: "2023-03-22T01:08:25.055794292Z"
     description: A Helm chart for Agnosticv Operator
     digest: 14064482f14417fe1028c6ada6577ad864049e80bcbcd8d8477bd9f036032758
     name: agnosticv-operator
@@ -183,7 +193,7 @@ entries:
     version: 0.24.0
   - apiVersion: v2
     appVersion: 0.23.0
-    created: "2023-02-06T01:49:32.638416543Z"
+    created: "2023-03-22T01:08:25.055334186Z"
     description: A Helm chart for Agnosticv Operator
     digest: 1b72a32d19a75736eec6725bf1f0f9ef82515b2a0064b59fb38388b79cf20053
     name: agnosticv-operator
@@ -193,7 +203,7 @@ entries:
     version: 0.23.0
   - apiVersion: v2
     appVersion: 0.22.2
-    created: "2023-02-06T01:49:32.637995746Z"
+    created: "2023-03-22T01:08:25.05487768Z"
     description: A Helm chart for Agnosticv Operator
     digest: 8fad22c30cb493bb59469cfc71960dd070565833b7ee2e852e3ea0dfb84f9d47
     name: agnosticv-operator
@@ -203,7 +213,7 @@ entries:
     version: 0.22.2
   - apiVersion: v2
     appVersion: 0.22.1
-    created: "2023-02-06T01:49:32.637555648Z"
+    created: "2023-03-22T01:08:25.054424774Z"
     description: A Helm chart for Agnosticv Operator
     digest: 9cceb0ecc65db396d124c2dd503b3de62f22161f5b4006089fff9d78a57719b2
     name: agnosticv-operator
@@ -213,7 +223,7 @@ entries:
     version: 0.22.1
   - apiVersion: v2
     appVersion: 0.22.0
-    created: "2023-02-06T01:49:32.63715215Z"
+    created: "2023-03-22T01:08:25.053980069Z"
     description: A Helm chart for Agnosticv Operator
     digest: 8e45fa74ea08d6ab70e14d55fdc689d9391a4d8c33eb2cb9c885bbf133bf9a08
     name: agnosticv-operator
@@ -223,7 +233,7 @@ entries:
     version: 0.22.0
   - apiVersion: v2
     appVersion: 0.21.2
-    created: "2023-02-06T01:49:32.636726853Z"
+    created: "2023-03-22T01:08:25.053468062Z"
     description: A Helm chart for Agnosticv Operator
     digest: 15b3217cd186a4cf13f344eb9b2ed492fa16c10ae636540babcbea233440d597
     name: agnosticv-operator
@@ -233,7 +243,7 @@ entries:
     version: 0.21.2
   - apiVersion: v2
     appVersion: 0.21.1
-    created: "2023-02-06T01:49:32.636325255Z"
+    created: "2023-03-22T01:08:25.052978956Z"
     description: A Helm chart for Agnosticv Operator
     digest: 4d863473a9856021cf4efb91e80caacbd75de94395b7d9b4fab35f446893c550
     name: agnosticv-operator
@@ -243,7 +253,7 @@ entries:
     version: 0.21.1
   - apiVersion: v2
     appVersion: 0.21.0
-    created: "2023-02-06T01:49:32.635923357Z"
+    created: "2023-03-22T01:08:25.05250845Z"
     description: A Helm chart for Agnosticv Operator
     digest: 1bb95a54d9899528fed881c98eeef6b6146c05625744d4d50223318ab892c3fb
     name: agnosticv-operator
@@ -253,7 +263,7 @@ entries:
     version: 0.21.0
   - apiVersion: v2
     appVersion: 0.20.3
-    created: "2023-02-06T01:49:32.63551976Z"
+    created: "2023-03-22T01:08:25.052001543Z"
     description: A Helm chart for Agnosticv Operator
     digest: f52176df779288bb95f290dc829b40df3c0e1d489fa0e45d1261ca5d572cb35b
     name: agnosticv-operator
@@ -263,7 +273,7 @@ entries:
     version: 0.20.3
   - apiVersion: v2
     appVersion: 0.20.2
-    created: "2023-02-06T01:49:32.635108762Z"
+    created: "2023-03-22T01:08:25.051563238Z"
     description: A Helm chart for Agnosticv Operator
     digest: 3841c570be02c16d8d9e08104455dcc8c69e6e71d35934b4009872701274d449
     name: agnosticv-operator
@@ -273,7 +283,7 @@ entries:
     version: 0.20.2
   - apiVersion: v2
     appVersion: 0.20.1
-    created: "2023-02-06T01:49:32.634676265Z"
+    created: "2023-03-22T01:08:25.051123932Z"
     description: A Helm chart for Agnosticv Operator
     digest: cc549b6ff54d282c3bcb3a86b850a13a373d8a3ee2f73aad6a5cee8f4d3e9030
     name: agnosticv-operator
@@ -283,7 +293,7 @@ entries:
     version: 0.20.1
   - apiVersion: v2
     appVersion: 0.20.0
-    created: "2023-02-06T01:49:32.634256467Z"
+    created: "2023-03-22T01:08:25.050674727Z"
     description: A Helm chart for Agnosticv Operator
     digest: 1deae9343e4d807713708652c76d8c8f06ad481e4730ca4ab4ddc41f612696f2
     name: agnosticv-operator
@@ -293,7 +303,7 @@ entries:
     version: 0.20.0
   - apiVersion: v2
     appVersion: 0.19.0
-    created: "2023-02-06T01:49:32.633820969Z"
+    created: "2023-03-22T01:08:25.050203621Z"
     description: A Helm chart for Agnosticv Operator
     digest: f7b0db58a45a24a166f4ec202bfb4a9731d11b1a8c799ef96cd329b0b76fa885
     name: agnosticv-operator
@@ -303,7 +313,7 @@ entries:
     version: 0.19.0
   - apiVersion: v2
     appVersion: 0.18.0
-    created: "2023-02-06T01:49:32.633353872Z"
+    created: "2023-03-22T01:08:25.049733215Z"
     description: A Helm chart for Agnosticv Operator
     digest: c5f8ebddfad7aa0fbc17b6201f5354c0afc3bde1fe6f78c1e7d3821eda506cf9
     name: agnosticv-operator
@@ -313,7 +323,7 @@ entries:
     version: 0.18.0
   - apiVersion: v2
     appVersion: 0.17.3
-    created: "2023-02-06T01:49:32.632674676Z"
+    created: "2023-03-22T01:08:25.049288109Z"
     description: A Helm chart for Agnosticv Operator
     digest: 34f206d275d3204e4403d88fd00499b75ba117011723540176129406fb128323
     name: agnosticv-operator
@@ -323,7 +333,7 @@ entries:
     version: 0.17.3
   - apiVersion: v2
     appVersion: 0.17.2
-    created: "2023-02-06T01:49:32.632100379Z"
+    created: "2023-03-22T01:08:25.048832103Z"
     description: A Helm chart for Agnosticv Operator
     digest: bf3cf86ea16f5a4726cb88d939e75161632f758895562f40f8e308b2bf19df39
     name: agnosticv-operator
@@ -333,7 +343,7 @@ entries:
     version: 0.17.2
   - apiVersion: v2
     appVersion: 0.17.1
-    created: "2023-02-06T01:49:32.631508883Z"
+    created: "2023-03-22T01:08:25.048346697Z"
     description: A Helm chart for Agnosticv Operator
     digest: eb583c3bf38e6367616c6981b6afe0e0f2fa12b5fc20c4808099a58fc20f2847
     name: agnosticv-operator
@@ -343,7 +353,7 @@ entries:
     version: 0.17.1
   - apiVersion: v2
     appVersion: 0.17.0
-    created: "2023-02-06T01:49:32.630672787Z"
+    created: "2023-03-22T01:08:25.047871391Z"
     description: A Helm chart for Agnosticv Operator
     digest: be04a4bf78afffd231075b9fcec0741bff3b8554972b6b69db14d2ed13bd8b7a
     name: agnosticv-operator
@@ -353,7 +363,7 @@ entries:
     version: 0.17.0
   - apiVersion: v2
     appVersion: 0.16.2
-    created: "2023-02-06T01:49:32.63027099Z"
+    created: "2023-03-22T01:08:25.046684176Z"
     description: A Helm chart for Agnosticv Operator
     digest: 04be766b097a5a285e41555b89892cfc0383082c0011b9bdca0c9abd140e556a
     name: agnosticv-operator
@@ -363,7 +373,7 @@ entries:
     version: 0.16.2
   - apiVersion: v2
     appVersion: 0.16.1
-    created: "2023-02-06T01:49:32.629527394Z"
+    created: "2023-03-22T01:08:25.046056268Z"
     description: A Helm chart for Agnosticv Operator
     digest: ffa96505e2ffd056fd6fb524cb030d15d8cc6a45d5c47c4e5fa55a4e950c53d0
     name: agnosticv-operator
@@ -373,7 +383,7 @@ entries:
     version: 0.16.1
   - apiVersion: v2
     appVersion: 0.16.0
-    created: "2023-02-06T01:49:32.629111096Z"
+    created: "2023-03-22T01:08:25.045346859Z"
     description: A Helm chart for Agnosticv Operator
     digest: 921ad74d1e552f5b2c9d769453fb672fbe82a3dc339eef6c69c6d1ed793788bd
     name: agnosticv-operator
@@ -383,7 +393,7 @@ entries:
     version: 0.16.0
   - apiVersion: v2
     appVersion: 0.15.9
-    created: "2023-02-06T01:49:32.628681899Z"
+    created: "2023-03-22T01:08:25.04462805Z"
     description: A Helm chart for Agnosticv Operator
     digest: 6e8ab3d2f5525ed91841cb7e233daea5d02c8def8f772bc4fefbbb0b464c7d1d
     name: agnosticv-operator
@@ -393,7 +403,7 @@ entries:
     version: 0.15.9
   - apiVersion: v2
     appVersion: 0.15.8
-    created: "2023-02-06T01:49:32.628277601Z"
+    created: "2023-03-22T01:08:25.043967142Z"
     description: A Helm chart for Agnosticv Operator
     digest: 555099c88ac479c76d4ce4328cb6de4646debb9fded71e2e834a1b113b2ee2c2
     name: agnosticv-operator
@@ -403,7 +413,7 @@ entries:
     version: 0.15.8
   - apiVersion: v2
     appVersion: 0.15.7
-    created: "2023-02-06T01:49:32.627885103Z"
+    created: "2023-03-22T01:08:25.043532436Z"
     description: A Helm chart for Agnosticv Operator
     digest: 4a7a1b8ef6a485509078d249cdc94dcb362586d4136fa8e148263607d1bf5084
     name: agnosticv-operator
@@ -413,7 +423,7 @@ entries:
     version: 0.15.7
   - apiVersion: v2
     appVersion: 0.15.6
-    created: "2023-02-06T01:49:32.627484906Z"
+    created: "2023-03-22T01:08:25.042914928Z"
     description: A Helm chart for Agnosticv Operator
     digest: 89227caefc217f9909ec268c8beab0a20bdc013309fcaa6a7ed8fc79fa6e5dcf
     name: agnosticv-operator
@@ -423,7 +433,7 @@ entries:
     version: 0.15.6
   - apiVersion: v2
     appVersion: 0.15.5
-    created: "2023-02-06T01:49:32.627082908Z"
+    created: "2023-03-22T01:08:25.042486423Z"
     description: A Helm chart for Agnosticv Operator
     digest: db062e184a7ac23169895d10ebaed5d9c79f3b2f1190a89a3d0a149bd104b00f
     name: agnosticv-operator
@@ -433,7 +443,7 @@ entries:
     version: 0.15.5
   - apiVersion: v2
     appVersion: 0.15.4
-    created: "2023-02-06T01:49:32.62668271Z"
+    created: "2023-03-22T01:08:25.042043317Z"
     description: A Helm chart for Agnosticv Operator
     digest: 935323930924feb6767d5e3f0e353f176e909387eb9c9c609d872ddea1d5aded
     name: agnosticv-operator
@@ -443,7 +453,7 @@ entries:
     version: 0.15.4
   - apiVersion: v2
     appVersion: 0.15.3
-    created: "2023-02-06T01:49:32.626277513Z"
+    created: "2023-03-22T01:08:25.041564211Z"
     description: A Helm chart for Agnosticv Operator
     digest: d6052eb0b099a12f16f616ba1a015fe21a99dd7d7097bf1613d4b4abc72bb222
     name: agnosticv-operator
@@ -453,7 +463,7 @@ entries:
     version: 0.15.3
   - apiVersion: v2
     appVersion: 0.15.2
-    created: "2023-02-06T01:49:32.625872115Z"
+    created: "2023-03-22T01:08:25.041104906Z"
     description: A Helm chart for Agnosticv Operator
     digest: c50899ac3291c58e104afb923ccdac37f6d9b49da0fc3f558aa436860632ed80
     name: agnosticv-operator
@@ -463,7 +473,7 @@ entries:
     version: 0.15.2
   - apiVersion: v2
     appVersion: 0.15.1
-    created: "2023-02-06T01:49:32.625442817Z"
+    created: "2023-03-22T01:08:25.040597099Z"
     description: A Helm chart for Agnosticv Operator
     digest: 4da457884b530f898a87ee86fbb8cbe39ec13da312745b4f69e7de6e06bb2f9b
     name: agnosticv-operator
@@ -473,7 +483,7 @@ entries:
     version: 0.15.1
   - apiVersion: v2
     appVersion: 0.14.4
-    created: "2023-02-06T01:49:32.623786627Z"
+    created: "2023-03-22T01:08:25.040153294Z"
     description: A Helm chart for Agnosticv Operator
     digest: 0f02f2ff76a0440cebf13ceb3d10c673341cff83ccd7b4f045e813a647183cb4
     name: agnosticv-operator
@@ -483,7 +493,7 @@ entries:
     version: 0.14.4
   - apiVersion: v2
     appVersion: 0.14.3
-    created: "2023-02-06T01:49:32.623396129Z"
+    created: "2023-03-22T01:08:25.039716888Z"
     description: A Helm chart for Agnosticv Operator
     digest: ea6ccae22cdb33deba8046e12adac7c22c665e5f8cd3b3c596789c0bacf1c18b
     name: agnosticv-operator
@@ -493,7 +503,7 @@ entries:
     version: 0.14.3
   - apiVersion: v2
     appVersion: 0.14.2
-    created: "2023-02-06T01:49:32.622983931Z"
+    created: "2023-03-22T01:08:25.039266482Z"
     description: A Helm chart for Agnosticv Operator
     digest: 88016ab71471438712abfab0a15e2d73780dacdaec3015c9ded8ade87fb595ab
     name: agnosticv-operator
@@ -503,7 +513,7 @@ entries:
     version: 0.14.2
   - apiVersion: v2
     appVersion: 0.14.1
-    created: "2023-02-06T01:49:32.622563934Z"
+    created: "2023-03-22T01:08:25.038813077Z"
     description: A Helm chart for Agnosticv Operator
     digest: e9e160f90a7e96625b49eca5412fdf5fc71a6aaa415ffa58d9e9c5edcaf76916
     name: agnosticv-operator
@@ -513,7 +523,7 @@ entries:
     version: 0.14.1
   - apiVersion: v2
     appVersion: 0.14.0
-    created: "2023-02-06T01:49:32.622152736Z"
+    created: "2023-03-22T01:08:25.038374371Z"
     description: A Helm chart for Agnosticv Operator
     digest: 8fa35e418e4d8d3c18f32552b5541d51da2716cb3c4548a8c31cc275644e9efd
     name: agnosticv-operator
@@ -523,7 +533,7 @@ entries:
     version: 0.14.0
   - apiVersion: v2
     appVersion: 0.13.4
-    created: "2023-02-06T01:49:32.621729639Z"
+    created: "2023-03-22T01:08:25.037929265Z"
     description: A Helm chart for Agnosticv Operator
     digest: bb28a4197ec77f468c436a466f6f16e8da433793b797c779bf8d60b0f95f652d
     name: agnosticv-operator
@@ -533,7 +543,7 @@ entries:
     version: 0.13.4
   - apiVersion: v2
     appVersion: 0.13.3
-    created: "2023-02-06T01:49:32.621293141Z"
+    created: "2023-03-22T01:08:25.037452759Z"
     description: A Helm chart for Agnosticv Operator
     digest: e3f834d7cc4be6259bee442245b243d0fef303731a65ae11d279e877839fa677
     name: agnosticv-operator
@@ -543,7 +553,7 @@ entries:
     version: 0.13.3
   - apiVersion: v2
     appVersion: 0.13.2
-    created: "2023-02-06T01:49:32.620677445Z"
+    created: "2023-03-22T01:08:25.037006754Z"
     description: A Helm chart for Agnosticv Operator
     digest: 3cfc3ddae850d14190169ccd67baf0efeb138af5a90d004d210b1346800e678f
     name: agnosticv-operator
@@ -553,7 +563,7 @@ entries:
     version: 0.13.2
   - apiVersion: v2
     appVersion: 0.13.1
-    created: "2023-02-06T01:49:32.620135848Z"
+    created: "2023-03-22T01:08:25.036555748Z"
     description: A Helm chart for Agnosticv Operator
     digest: 61efd33e2bf4044eb10cc5940266d3acbae6a0d90ab81cddc1a849cea360955c
     name: agnosticv-operator
@@ -563,7 +573,7 @@ entries:
     version: 0.13.1
   - apiVersion: v2
     appVersion: 0.13.0
-    created: "2023-02-06T01:49:32.619573351Z"
+    created: "2023-03-22T01:08:25.036028741Z"
     description: A Helm chart for Agnosticv Operator
     digest: 9978e3ded457f8e783142bf52287bbf56d08287d3b3587b09b8181ba35aa7f67
     name: agnosticv-operator
@@ -573,7 +583,7 @@ entries:
     version: 0.13.0
   - apiVersion: v2
     appVersion: 0.12.2
-    created: "2023-02-06T01:49:32.619019454Z"
+    created: "2023-03-22T01:08:25.035270632Z"
     description: A Helm chart for Agnosticv Operator
     digest: fe0155fa21dd35e2c1843a799ed2c29f02e5420dfbd6a1a2969f684798756769
     name: agnosticv-operator
@@ -583,7 +593,7 @@ entries:
     version: 0.12.2
   - apiVersion: v2
     appVersion: 0.12.1
-    created: "2023-02-06T01:49:32.618465957Z"
+    created: "2023-03-22T01:08:25.034670724Z"
     description: A Helm chart for Agnosticv Operator
     digest: 7b5a585e2d2b7f8d450b1951908cb8e444fd2adec41f6209726167cc40f5f9a1
     name: agnosticv-operator
@@ -593,7 +603,7 @@ entries:
     version: 0.12.1
   - apiVersion: v2
     appVersion: 0.12.0
-    created: "2023-02-06T01:49:32.617875761Z"
+    created: "2023-03-22T01:08:25.034066616Z"
     description: A Helm chart for Agnosticv Operator
     digest: 823b66433971a5f49f147aaf0363fea8add1f20d0d30b1876b1c53622af6f333
     name: agnosticv-operator
@@ -603,7 +613,7 @@ entries:
     version: 0.12.0
   - apiVersion: v2
     appVersion: 0.11.3
-    created: "2023-02-06T01:49:32.617250864Z"
+    created: "2023-03-22T01:08:25.033409508Z"
     description: A Helm chart for Agnosticv Operator
     digest: 45aaf7e4d9bfbe4db464356bc2329b7d419719225e39bdbdb32689636f73bac6
     name: agnosticv-operator
@@ -613,7 +623,7 @@ entries:
     version: 0.11.3
   - apiVersion: v2
     appVersion: 0.11.2
-    created: "2023-02-06T01:49:32.61616717Z"
+    created: "2023-03-22T01:08:25.03199259Z"
     description: A Helm chart for Agnosticv Operator
     digest: de70acf120a2999e703c2e4942dd8f8e2f0e30f2b9400a120b2254201a389c2d
     name: agnosticv-operator
@@ -623,7 +633,7 @@ entries:
     version: 0.11.2
   - apiVersion: v2
     appVersion: 0.11.1
-    created: "2023-02-06T01:49:32.615567674Z"
+    created: "2023-03-22T01:08:25.031561085Z"
     description: A Helm chart for Agnosticv Operator
     digest: d6bdae42e6bac3f7b191425e06ade8217c4038aa3dbc8b34e8c571af5cb04d47
     name: agnosticv-operator
@@ -633,7 +643,7 @@ entries:
     version: 0.11.1
   - apiVersion: v2
     appVersion: 0.11.0
-    created: "2023-02-06T01:49:32.614667079Z"
+    created: "2023-03-22T01:08:25.031129979Z"
     description: A Helm chart for Agnosticv Operator
     digest: 0230425551dd5cb3b740c90a75d927c1535b7a9db32ae07360433bc7a261f77a
     name: agnosticv-operator
@@ -643,7 +653,7 @@ entries:
     version: 0.11.0
   - apiVersion: v2
     appVersion: 0.10.1
-    created: "2023-02-06T01:49:32.614251581Z"
+    created: "2023-03-22T01:08:25.030684574Z"
     description: A Helm chart for Agnosticv Operator
     digest: 9a0694522bf917468a6b9cb7cb8ee0794afabda249fe88d572b20b9b8cc7ebeb
     name: agnosticv-operator
@@ -653,7 +663,7 @@ entries:
     version: 0.10.1
   - apiVersion: v2
     appVersion: 0.10.0
-    created: "2023-02-06T01:49:32.613805884Z"
+    created: "2023-03-22T01:08:25.030201468Z"
     description: A Helm chart for Agnosticv Operator
     digest: d9a9dcea97168e8dc074465db5d0bbad1eb4f9b12092b2abee65910390f804ff
     name: agnosticv-operator
@@ -663,7 +673,7 @@ entries:
     version: 0.10.0
   - apiVersion: v2
     appVersion: 0.9.3
-    created: "2023-02-06T01:49:32.648673285Z"
+    created: "2023-03-22T01:08:25.070616279Z"
     description: A Helm chart for Agnosticv Operator
     digest: ea1864c50436304e497a9651203e22511a32842d06d5ddb241dac442576ea7a2
     name: agnosticv-operator
@@ -673,7 +683,7 @@ entries:
     version: 0.9.3
   - apiVersion: v2
     appVersion: 0.9.2
-    created: "2023-02-06T01:49:32.648244187Z"
+    created: "2023-03-22T01:08:25.070111773Z"
     description: A Helm chart for Agnosticv Operator
     digest: 8ad573c3ef312c41c9a3888c9ec7303e16a70bcd43277de4681d5df5815426cf
     name: agnosticv-operator
@@ -683,7 +693,7 @@ entries:
     version: 0.9.2
   - apiVersion: v2
     appVersion: 0.9.1
-    created: "2023-02-06T01:49:32.64780539Z"
+    created: "2023-03-22T01:08:25.069588466Z"
     description: A Helm chart for Agnosticv Operator
     digest: 5031d0c32e7357696f17f89214b2365b9d9afeadb7a17d976f5776fcf573f41a
     name: agnosticv-operator
@@ -691,4 +701,4 @@ entries:
     urls:
     - https://redhat-cop.github.io/agnosticv-operator/agnosticv-operator-0.9.1.tgz
     version: 0.9.1
-generated: "2023-02-06T01:49:32.613144988Z"
+generated: "2023-03-22T01:08:25.029428158Z"
