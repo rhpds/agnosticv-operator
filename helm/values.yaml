@@ -19,9 +19,9 @@ image:
 #  ref: master
 #  contextDir: ''
 #  sshKey: |
-#    -----BEGIN RSA PRIVATE KEY-----
+#    -----BEGIN-----
 #    ...
-#    -----END RSA PRIVATE KEY-----
+#    -----END-----
 agnosticvRepos: []
 
 anarchy:
