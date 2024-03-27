@@ -1,5 +1,5 @@
 :toc2:
-= AgnosticV Operator
+= AgnosticV Operator (MOVED TO link:https://github.com/redhat-cop/babylon[Babylon])
 
 AgnosticV operator is an implementation of link:https://github.com/redhat-cop/agnosticv[agnosticv] running in OpenShift / k8s.
 In short, AgnosticV is vars for the deployer link:https://github.com/redhat-cop/agnosticd[agnosticD].
